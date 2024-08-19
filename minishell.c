@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/18 19:44:26 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/19 18:23:05 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,22 @@ void	init(t_data *data)
 	getcwd(data->cwd, PATH_MAX);
 }
 
+void	signal_handler(int signum)
+{
+	(void)signum;
+	printf("\ninterrupted\n");
+}
+
 int	main(void)
 {
-	t_data	data;
-	char	*cmd;
+	t_data				data;
+	char				*cmd;
+	struct sigaction	sa;
 
+	sigemptyset(&sa.sa_mask);
+	sa.sa_handler = signal_handler;
+	sigaddset(&sa.sa_mask, SIGINT);
+	sigaction(SIGINT, &sa, NULL);
 	init(&data);
 	while (!data.exit)
 	{

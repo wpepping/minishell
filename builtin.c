@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 20:03:10 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/18 20:17:51 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/19 15:48:28 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,21 @@ void	cd(t_data *data, char *cmd)
 	free(base);
 	free(path);
 	getcwd(data->cwd, PATH_MAX);
+}
+
+void echo(char *cmd)
+{
+	int newline;
+	char *arg;
+	
+	newline = 1;
+	if (ft_strncmp(cmd, "echo -n", 7) == 0)
+	{
+		newline = 0;
+		arg = ft_substr(cmd, 7, ft_strlen(cmd));
+	}
+	arg = ft_substr(cmd, 5, ft_strlen(cmd));
+	printf("%s", arg);
+	if (newline)
+		printf("\n");
 }
