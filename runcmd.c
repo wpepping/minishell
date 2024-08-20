@@ -1,0 +1,66 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   runcmd.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/05 21:20:00 by wouter            #+#    #+#             */
+/*   Updated: 2024/08/20 18:32:24 by wpepping         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+static char	**get_path(void)
+{
+	char	*path_var;
+
+	path_var = getenv("PATH");
+	if (path_var == NULL)
+		return (ft_split("", ':'));
+	return (ft_split(path_var, ':'));
+}
+
+static char	*find_full_path(char *cmd, char *path[])
+{
+	char	*fullcmd;
+
+	if (ft_strchr(cmd, '/') != NULL)
+		return (cmd);
+	while (*path)
+	{
+		fullcmd = ft_pathjoin(*path, cmd);
+		if (access(fullcmd, X_OK) == 0)
+			return (fullcmd);
+		path++;
+	}
+	return (NULL);
+}
+
+static void	err_handl(char *message, char *cmd, t_data *data, t_exec_node *node)
+{
+	ft_putstr_fd(message, STDERR_FILENO);
+	ft_putendl_fd(cmd, STDERR_FILENO);
+	cleanup(data, node);
+	exit(1);
+}
+
+void	runcmd(t_data *data, t_exec_node *node)
+{
+	char	**path;
+	char	*fullcmd;
+
+	path = get_path();
+	if (path == NULL)
+		err_handl("ERR_OUT_OF_MEMORY", NULL, data, node);
+	fullcmd = find_full_path(node->parse->argv[0], path);
+	if (fullcmd == NULL)
+	{
+		free_array((void **)path);
+		err_handl(ERR_COMMAND_NOT_FOUND, node->parse->argv[0], data, node);
+	}
+	close_fds(node);
+	if (execve(fullcmd, node->parse->argv, data->envp) < 0)
+		exit(1);
+}
