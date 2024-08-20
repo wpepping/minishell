@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/20 18:11:40 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/20 19:08:14 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ typedef struct s_list
 typedef struct s_parse_node
 {
 	bool	is_builtin;
+	bool 	append;
+	bool 	heredoc;
 	char	*exec;
 	char 	**argv;
 	char 	**output_dest;
@@ -64,7 +66,7 @@ void	print_prompt(t_data *data);
 t_parse_node	*create_parse_node(void);
 int	get_builtin_index(char *token);
 int	get_args(int index, char **tokens, t_parse_node *node);
-char *find_executable_path(char *token);
+//char *find_executable_path(char *token);
 
 // Builtins
 void	cd(t_data *data, char *cmd);

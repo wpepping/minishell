@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/20 18:11:35 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/20 19:09:01 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	parse(t_data *data, char *cmd)
 	{
 		if (access(tokens[i], X_OK) == 0)
 		{
-			node->exec = find_executable_path(tokens[i]);
+			node->exec = ft_strdup(tokens[i]);
 			i += get_args(i, tokens, node);
 		}
 		else if (get_builtin_index(tokens[i]) != -1)
@@ -39,6 +39,12 @@ void	parse(t_data *data, char *cmd)
 			node->is_builtin = true;
 			node->exec = ft_strdup(tokens[i]);
 			i += get_args(i, tokens, node);
+		}
+		if(tokens[i] && strcmp(tokens[i], "<") == 0)
+		{
+			i++;
+			node->input_src = ft_split(tokens[i], ' ');
+			i++;
 		}
 		i++;
 	}
@@ -60,10 +66,11 @@ t_parse_node	*create_parse_node(void)
 		exit(1);
 	}
 	node->is_builtin = false;
+	node-> append = false;
 	node->exec = NULL;
 	node->argv = NULL;
-	node->output_dest = NULL;
-	node->input_src = NULL;
+	node->output_dest = STDOUT_FILENO;
+	node->input_src = STDIN_FILENO;
 	return (node);
 }
 
@@ -106,28 +113,17 @@ int	get_args(int index, char **tokens, t_parse_node *node)
 	return (argc);
 }
 
-char *find_executable_path(char *token)
+void handle_redirects(char **tokens, int index, t_parse_node *node)
 {
-		char cwd[PATH_MAX];
-		char *full_path;
-		char *temp;
-		
-		if(ft_strchr(token, '/') != NULL)
-			return (ft_strdup(token));
-		else
-		{
-			if(getcwd(cwd, sizeof(cwd)) != NULL)
-			{
-				full_path = ft_strjoin(cwd, "/");
-				temp = full_path;
-				full_path = ft_strjoin(full_path, token);
-				free(temp);
-				return (full_path);
-			}
-			else
-			{
-				printf("Error: getcwd failed\n");
-				exit(1);
-			}
-		}
+	if (ft_strncmp(tokens[index], ">>", 2) == 0)
+		node->append = true;
+	if (ft_strncmp(tokens[index], ">", 1) == 0)
+		node->input_src = ft_strdup(tokens[index + 1]);
+	if (ft_strncmp(tokens[index], "<<", 2) == 0)
+		node->heredoc = true;
+	if (ft_strncmp(tokens[index], "<", 1) == 0)
+		node->input_src = ft_strdup(tokens[index + 1]);
 }
+
+	
+
