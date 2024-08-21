@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 18:43:25 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/20 18:43:46 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/21 22:07:01 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 int	**create_pipes(int n)
 {
-	int	**pfds;
+	int	**pipes;
 	int	i;
 
-	pfds = malloc((n + 1) * sizeof(int *));
-	pfds[n] = NULL;
+	pipes = malloc((n + 1) * sizeof(int *));
+	pipes[n] = NULL;
 	i = 0;
 	while (i < n)
 	{
-		pfds[i] = malloc(2 * sizeof(int));
-		pipe(pfds[i++]);
+		pipes[i] = malloc(2 * sizeof(int));
+		pipe(pipes[i++]);
 	}
-	return (pfds);
+	return (pipes);
 }
 
 int	waitpids(pid_t *pids, int n)
@@ -41,10 +41,9 @@ int	waitpids(pid_t *pids, int n)
 		if (pids[i] != -1)
 		{
 			waitpid(pids[i], &temp, 0);
-			if (WIFEXITED(temp))
-				status = max(status, WEXITSTATUS(temp));
 		}
 		i++;
 	}
+	// need to update status with correct exit status
 	return (status);
 }

@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:20:00 by wouter            #+#    #+#             */
-/*   Updated: 2024/08/20 18:32:24 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/21 22:02:58 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,14 @@ static void	err_handl(char *message, char *cmd, t_data *data, t_exec_node *node)
 {
 	ft_putstr_fd(message, STDERR_FILENO);
 	ft_putendl_fd(cmd, STDERR_FILENO);
-	cleanup(data, node);
+	cleanup(data, node, node->parse);
 	exit(1);
+}
+
+void	runbuiltin(t_data *data, t_exec_node *node)
+{
+	(void)data;
+	(void)node;
 }
 
 void	runcmd(t_data *data, t_exec_node *node)
@@ -53,14 +59,14 @@ void	runcmd(t_data *data, t_exec_node *node)
 
 	path = get_path();
 	if (path == NULL)
-		err_handl("ERR_OUT_OF_MEMORY", NULL, data, node);
+		err_handl(ERR_OUT_OF_MEMORY, NULL, data, node);
 	fullcmd = find_full_path(node->parse->argv[0], path);
 	if (fullcmd == NULL)
 	{
 		free_array((void **)path);
 		err_handl(ERR_COMMAND_NOT_FOUND, node->parse->argv[0], data, node);
 	}
-	close_fds(node);
+	close_fds(node->fd_in, node->fd_out, node->pipes);
 	if (execve(fullcmd, node->parse->argv, data->envp) < 0)
 		exit(1);
 }

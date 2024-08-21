@@ -1,30 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/21 18:31:15 by wpepping         ###   ########.fr       */
+/*   Created: 2024/04/18 12:29:43 by wpepping          #+#    #+#             */
+/*   Updated: 2024/04/18 12:32:44 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-void	parse(t_data *data, char *cmd)
+void	ft_putstr_fd(char *s, int fd)
 {
-	int	strlen;
-
-	strlen = ft_strlen(cmd);
-	if (ft_strncmp(cmd, "exit", 5) == 0)
-		data->exit = 1;
-	else if (ft_strncmp(cmd, "cd ", 3) == 0)
-		cd(data, cmd);
-	else if (ft_strncmp(cmd, "test", 5) == 0)
-		run_execution_test(data);
-	else if (strlen > 0)
-		printf("minishell: command not found: %s\n", cmd);
-	else
-		printf("\n");
+	while (*s != '\0')
+		write(fd, s++, 1);
 }
