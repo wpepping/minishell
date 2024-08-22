@@ -6,56 +6,36 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/22 16:59:12 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/22 18:01:22 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_strrchr(const char *s, int c)
-{
-	size_t			len;
-	unsigned char	uc;
-
-	uc = c;
-	len = ft_strlen(s);
-	if (uc == 0)
-		return ((char *)&s[len]);
-	while (len--)
-	{
-		if (s[len] == uc)
-			return ((char *)&s[len]);
-	}
-	return (NULL);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	size_t			i;
-	unsigned char	uc;
-
-	uc = c;
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == uc)
-			return ((char *)&s[i]);
-		i++;
-	}
-	if (uc == 0)
-		return ((char *)&s[i]);
-	return (NULL);
-}
-
 int	get_builtin_index(char *token)
 {
 	int	i;
-
+	const char *builtin_str[] = {
+    "echo",
+	"cd",
+	"unset",
+	"export",
+	
+	"pwd",
+	"env",
+	"exit"
+	};
+	
 	i = 0;
 	while (i < 7)
 	{
 		if (ft_strncmp(token, builtin_str[i], ft_strlen(builtin_str[i])) == 0)
+		{
+			printf("got here found %s", token);
 			return (i);
+			
+		}
+			
 		i++;
 	}
 	return (-1);
@@ -144,8 +124,10 @@ void	parse(t_data *data, char *cmd)
 	t_parse_node	*node;
 	char			**tokens;
 	int				i;
+	t_list *lst;
 
-	i = 0;
+	lst = data->node_list;
+
 	if (cmd == NULL || ft_strncmp(cmd, "exit", 5) == 0)
 	{
 		data->exit = 1;
@@ -153,6 +135,8 @@ void	parse(t_data *data, char *cmd)
 	}
 	tokens = ft_split(cmd, ' ');
 	node = create_parse_node();
+	t_list *new = ft_lstnew(node);
+	ft_lstadd_back(&lst, new);
 	while (tokens[i])
 	{
 		if((in_quotes(tokens[i]) == 1))
@@ -179,7 +163,8 @@ void	parse(t_data *data, char *cmd)
 			node->exec = ft_strdup(tokens[i]);
 			i += get_args(i, tokens, node);
 		}
-		i += handle_redirects(tokens, i, node);
+		else
+			i += handle_redirects(tokens, i, node);
 	}
 	ft_lstadd_back(&data->node_list, ft_lstnew(node));
 }

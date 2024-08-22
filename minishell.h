@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/22 16:53:26 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:16:07 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,7 @@ typedef struct s_parse_node
 }	t_parse_node;
 
 
-const char *builtin_str[] = {
-    "echo",
-	"cd",
-	"unset",
-	"export",
-	
-	"pwd",
-	"env",
-	"exit"
-};
+
 
 void	parse(t_data *data, char *cmd);
 void	print_prompt(t_data *data);
