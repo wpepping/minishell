@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/23 15:18:39 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/23 19:40:32 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_parse_node	*create_parse_node(void);
 int	get_builtin_index(char *token);
 int	get_args(int index, char **tokens, t_parse_node *node);
 int	handle_redirects(char **tokens, int index, t_parse_node *node);
-int in_quotes(char * token);
+bool in_quotes(char * token);
 void print_argv(t_parse_node *node);
 
 // Builtins

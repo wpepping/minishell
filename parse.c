@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/23 15:26:49 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/23 20:06:14 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,29 +92,35 @@ int	handle_redirects(char **tokens, int index, t_parse_node *node)
 	return (jump);
 }
 
-int in_quotes(char * token)
+bool in_quotes(char * token)
 {
 
-	static int open_quote;
+	static bool open_double_quote;
+	static bool open_single_quote;
     char *first_quote;
     char *last_quote;
-	char quotes[] = {'\'', '\"'};
-	int i;
-	open_quote = 0;
-	i = 0;
-	while(i < 2)
-	{	
-		first_quote = ft_strchr(token, quotes[i]);
-		last_quote = ft_strrchr(token, quotes[i]);
-		if(!open_quote && first_quote && first_quote == last_quote)
-			open_quote = 1;
-		else if(open_quote && first_quote && first_quote == last_quote)
-			open_quote = 0;
-		else if(open_quote && first_quote && last_quote && first_quote != last_quote)
-			open_quote = 1;
-		i++;
+
+	if(ft_strncmp(token, "\"", 1) == 0 && !open_single_quote)
+		open_double_quote = !open_double_quote;
+	else if(ft_strncmp(token, "\'", 1) == 0 && !open_double_quote)
+		open_single_quote = !open_single_quote;
+
+	else if(!open_single_quote)
+	{
+		first_quote = ft_strchr(token, '\"');
+		last_quote = ft_strrchr(token, '\"');
+		if(first_quote && first_quote == last_quote)
+			open_double_quote = !open_double_quote;
 	}
-	return (open_quote);
+	else if(!open_double_quote)
+	{
+		first_quote = ft_strchr(token, '\'');
+		last_quote = ft_strrchr(token, '\'');
+		if(first_quote && first_quote == last_quote)
+			open_single_quote = !open_single_quote;
+	}
+	return (open_double_quote || open_single_quote);
+	
 	
 }
 
@@ -123,6 +129,8 @@ void	parse(t_data *data, char *cmd)
 	t_parse_node	*node;
 	char			**tokens;
 	int				i;
+	char			*quote_arg;
+	quote_arg = NULL;
 	i= 0;
 
 	if (cmd == NULL || ft_strncmp(cmd, "exit", 5) == 0)
@@ -135,8 +143,17 @@ void	parse(t_data *data, char *cmd)
 	
 	while (tokens[i])
 	{
-		if((in_quotes(tokens[i]) == 1))
+		if((in_quotes(tokens[i]) == true))
 		{
+			if(quote_arg == NULL)
+				quote_arg = ft_strdup(tokens[i]);
+			else
+			{
+				char *temp = ft_strjoin(quote_arg, " ");
+				free(quote_arg);
+				quote_arg = ft_strjoin(temp, tokens[i]);
+				free(temp);
+			}
 			i++;
 			continue;
 		}
