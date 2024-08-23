@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/21 22:02:16 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/23 16:16:37 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,9 @@ void	run_execution_test(t_data *data);
 void	parse(t_data *data, char *cmd);
 
 // Execution
-pid_t	*fork_processes(t_data *data, t_list *lst, int lsize);
 int		**create_pipes(int n);
+void	execution(t_data *data, t_list *parse_nodes);
+pid_t	*fork_processes(t_data *data, t_list *lst, int lsize);
 int		waitpids(pid_t *pids, int n);
 void	runcmd(t_data *data, t_exec_node *node);
 void	runbuiltin(t_data *data, t_exec_node *node);
