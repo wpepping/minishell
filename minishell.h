@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/23 19:40:32 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/23 23:26:54 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,22 @@ typedef struct s_data
 	t_list	*node_list;
 	int		exit;
 }	t_data;
+
+typedef enum e_token_type
+{
+	WORD,
+	REDIRECT,
+	PIPE,
+	SEMICOLON,
+	NEWLINE,
+	END
+}	t_token_type;
+
+typedef struct s_token
+{
+	char	*value;
+	t_token_type type;
+}	t_token;
 
 typedef struct s_parse_node
 {
