@@ -9,7 +9,7 @@
                 "-Wall",
                 "-Wextra",
                 "-Werror",
-				"-g",
+                "-g",
                 "*.c",
                 "libft/*.c",
                 "-lreadline",

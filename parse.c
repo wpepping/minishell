@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/22 18:01:22 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/23 15:26:49 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ int	get_builtin_index(char *token)
 	{
 		if (ft_strncmp(token, builtin_str[i], ft_strlen(builtin_str[i])) == 0)
 		{
-			printf("got here found %s", token);
 			return (i);
 			
 		}
@@ -49,7 +48,7 @@ int	get_args(int index, char **tokens, t_parse_node *node)
 	argc = 0;
 	i = 0;
 	while (tokens[index + argc] && strcmp(tokens[index + argc], "<") != 0
-		&& strcmp(tokens[index + argc], ">") != 0 && strcmp(tokens[index],
+		&& strcmp(tokens[index + argc], ">") != 0 && strcmp(tokens[index + argc],
 			"|") != 0)
 		argc++;
 	node->argv = malloc(sizeof(char *) * (argc + 1));
@@ -124,9 +123,7 @@ void	parse(t_data *data, char *cmd)
 	t_parse_node	*node;
 	char			**tokens;
 	int				i;
-	t_list *lst;
-
-	lst = data->node_list;
+	i= 0;
 
 	if (cmd == NULL || ft_strncmp(cmd, "exit", 5) == 0)
 	{
@@ -135,8 +132,7 @@ void	parse(t_data *data, char *cmd)
 	}
 	tokens = ft_split(cmd, ' ');
 	node = create_parse_node();
-	t_list *new = ft_lstnew(node);
-	ft_lstadd_back(&lst, new);
+	
 	while (tokens[i])
 	{
 		if((in_quotes(tokens[i]) == 1))
@@ -146,6 +142,7 @@ void	parse(t_data *data, char *cmd)
 		}
 		if(ft_strncmp(tokens[i], "|", 1) == 0)
 		{
+			print_argv(node);
 			ft_lstadd_back(&data->node_list, ft_lstnew(node));
 			node = create_parse_node();
 			i++;
@@ -166,7 +163,24 @@ void	parse(t_data *data, char *cmd)
 		else
 			i += handle_redirects(tokens, i, node);
 	}
+	node->is_last = true;
+	print_argv(node);
 	ft_lstadd_back(&data->node_list, ft_lstnew(node));
+}
+
+void print_argv(t_parse_node *node)
+{
+    if (node->argv == NULL)
+    {
+        printf("argv is NULL\n");
+        return;
+    }
+
+    printf("argv contents:\n");
+    for (int i = 0; node->argv[i] != NULL; i++)
+    {
+        printf("argv[%d]: %s\n", i, node->argv[i]);
+    }
 }
 
 t_parse_node	*create_parse_node(void)

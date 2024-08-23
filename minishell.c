@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/22 17:48:37 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/23 15:38:41 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	init(t_data *data)
 {
+	data->node_list = NULL;
 	data->exit = 0;
 	getcwd(data->cwd, PATH_MAX);
 }

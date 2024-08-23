@@ -1,15 +1,16 @@
-CC := cc
+CC := gcc
 
-CFLAGS := -Wall -Wextra -Werror
-
-
-SRCS := minishell.c\
-		parse.c\
-		utils.c\
-		buildtin.c
+CFLAGS := -Wall -Wextra -Werror -g
+LIBS = -lreadline
 
 
-LIBFT = ./libftprintf.a
+# SRCS := minishell.c\
+# 		parse.c\
+# 		utils.c\
+# 		buildtin.c
+
+SRCS = $(wildcard *.c) $(wildcard libft/*.c)
+
 
 OBJS := $(SRCS:.c=.o)
 
@@ -18,23 +19,20 @@ OBJS := $(SRCS:.c=.o)
 
 NAME := minishell
 
-$(NAME): $(OBJS) $(LIBFT) 
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) 
+$(NAME): $(OBJS)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME) 
  
-all: $(NAME) $(LIBFT)
+all: $(NAME)
 
 
-$(LIBFT):
-	@make -C ./ft_printf
  
 clean:
 	@rm -f $(OBJS)
-	@make clean -C ./libft
 	
 fclean: clean
-	@make fclean -C ./libft
 	@rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re
+
