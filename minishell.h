@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/23 16:16:37 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/24 13:19:19 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,13 @@ void	runbuiltin(t_data *data, t_exec_node *node);
 
 // Builtins
 void	cd(t_data *data, char *cmd);
+
+// Envp
+char	**envp_create(char **envp);
+void	envp_add(char ***envp, char *value, int n);
+void	envp_remove(char ***envp, char *name);
+void	envp_set(char **envp, char *value);
+char	*envp_get(char **envp, char *name);
 
 // Utils
 void	cleanup(t_data *data, t_exec_node *enode, t_parse_node *pnode);

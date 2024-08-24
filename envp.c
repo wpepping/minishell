@@ -3,16 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 18:31:50 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/23 21:09:25 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/24 13:19:16 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	envp_add_var(char ***envp, char *value, int n)
+char	**envp_create(char **envp)
+{
+	char	**result;
+	int		i;
+
+	i = 0;
+	while (envp[i++])
+		;
+	result = malloc((i + 2) * sizeof(char *));
+	i = 0;
+	while (envp[i])
+	{
+		result[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	result[i] = NULL;
+	return (result);
+}
+
+void	envp_add(char ***envp, char *value, int n)
 {
 	char	**new;
 	int		i;
@@ -29,7 +48,35 @@ void	envp_add_var(char ***envp, char *value, int n)
 	*envp = new;
 }
 
-void	envp_set_var(char **envp, char *value)
+void	envp_remove(char ***envp, char *name)
+{
+	char	**new;
+	int		i;
+	int		n;
+	char	*needle;
+
+	needle = ft_strjoin(name, "=");
+	i = -1;
+	n = 0;
+	while (envp[++i])
+	{
+		if (ft_strncmp((*envp)[i], needle, ft_strlen(needle)) != 0)
+			n++;
+	}
+	new = malloc((n + 1) * sizeof(char *));
+	i = -1;
+	n = 0;
+	while (envp[++i])
+	{
+		if (ft_strncmp((*envp)[i], needle, ft_strlen(needle)) != 0)
+			new[n++] = (*envp)[i];
+	}
+	free(needle);
+	new[i] = NULL;
+	*envp = new;
+}
+
+void	envp_set(char **envp, char *value)
 {
 	int	cmplen;
 	int	i;
@@ -37,6 +84,7 @@ void	envp_set_var(char **envp, char *value)
 	cmplen = 0;
 	while (value[cmplen] != '=' && value[cmplen] != '\0')
 		cmplen++;
+	cmplen++;
 	i = 0;
 	while (envp[i])
 	{
@@ -47,10 +95,10 @@ void	envp_set_var(char **envp, char *value)
 	if (envp[i])
 		envp[i] = value;
 	else
-		envp_add_var(&envp, value, i - 1);
+		envp_add(&envp, value, i - 1);
 }
 
-char	*envp_get_var(char **envp, char *name)
+char	*envp_get(char **envp, char *name)
 {
 	int		i;
 	int		strlen;
@@ -61,12 +109,13 @@ char	*envp_get_var(char **envp, char *name)
 	i = 0;
 	while (envp[i])
 	{
-		if (ft_strncmp(envp[i], name, strlen))
+		if (ft_strncmp(envp[i], needle, strlen))
 		{
+			free(needle);
 			return (ft_strchr(envp[i], '=') + 1);
 		}
 		i++;
 	}
-	return (NULL);
 	free(needle);
+	return (NULL);
 }
