@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:13:41 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/23 18:59:57 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/24 18:37:38 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,22 @@ void	run_execution_test(t_data *data)
 	ft_lstadd_front(&p1.input_src, ft_lstnew("input.txt"));
 	ft_lstadd_front(&p1.output_dest, ft_lstnew("output1.txt"));
 	execution(data, lst);
+}
+
+void	cd(t_data *data, char *cmd)
+{
+	char	*arg;
+	char	*base;
+	char	*path;
+
+	arg = ft_substr(cmd, 3, ft_strlen(cmd));
+	if (arg[0] == '/')
+		base = ft_strdup("");
+	else
+		base = ft_strjoin(data->cwd, "/");
+	path = ft_strjoin(base, arg);
+	chdir(path);
+	free(base);
+	free(path);
+	getcwd(data->cwd, PATH_MAX);
 }

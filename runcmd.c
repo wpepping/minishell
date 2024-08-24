@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:20:00 by wouter            #+#    #+#             */
-/*   Updated: 2024/08/22 16:51:55 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/24 18:43:45 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,18 @@ static void	err_handl(char *message, char *cmd, t_data *data, t_exec_node *node)
 
 void	runbuiltin(t_data *data, t_exec_node *node)
 {
-	(void)data;
-	(void)node;
+	if (ft_strncmp(node->parse->argv[0], "echo", 5) == 0)
+		ft_echo(data, node);
+	if (ft_strncmp(node->parse->argv[0], "cd", 5) == 0)
+		ft_cd(data, node);
+	if (ft_strncmp(node->parse->argv[0], "pwd", 5) == 0)
+		ft_pwd(data, node);
+	if (ft_strncmp(node->parse->argv[0], "export", 5) == 0)
+		ft_export(data, node);
+	if (ft_strncmp(node->parse->argv[0], "unset", 5) == 0)
+		ft_unset(data, node);
+	if (ft_strncmp(node->parse->argv[0], "env", 5) == 0)
+		ft_env(data, node);
 }
 
 void	runcmd(t_data *data, t_exec_node *node)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/24 13:19:19 by wouter           ###   ########.fr       */
+/*   Updated: 2024/08/24 18:59:36 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_data
 
 // TEST FUNCTIONS
 void	run_execution_test(t_data *data);
+void	cd(t_data *data, char *cmd);
 
 // Parsing
 void	parse(t_data *data, char *cmd);
@@ -73,13 +74,18 @@ void	runcmd(t_data *data, t_exec_node *node);
 void	runbuiltin(t_data *data, t_exec_node *node);
 
 // Builtins
-void	cd(t_data *data, char *cmd);
+void	ft_echo(t_data *data, t_exec_node *node);
+void	ft_cd(t_data *data, t_exec_node *node);
+void	ft_pwd(t_data *data, t_exec_node *node);
+void	ft_export(t_data *data, t_exec_node *node);
+void	ft_unset(t_data *data, t_exec_node *node);
+void	ft_env(t_data *data, t_exec_node *node);
 
 // Envp
 char	**envp_create(char **envp);
 void	envp_add(char ***envp, char *value, int n);
-void	envp_remove(char ***envp, char *name);
-void	envp_set(char **envp, char *value);
+char	**envp_remove(char **envp, char *name);
+void	envp_set(char ***envp, char *value);
 char	*envp_get(char **envp, char *name);
 
 // Utils

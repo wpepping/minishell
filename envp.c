@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 18:31:50 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/24 13:19:16 by wouter           ###   ########.fr       */
+/*   Updated: 2024/08/24 19:00:19 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	envp_add(char ***envp, char *value, int n)
 	*envp = new;
 }
 
-void	envp_remove(char ***envp, char *name)
+char	**envp_remove(char **envp, char *name)
 {
 	char	**new;
 	int		i;
@@ -60,7 +60,7 @@ void	envp_remove(char ***envp, char *name)
 	n = 0;
 	while (envp[++i])
 	{
-		if (ft_strncmp((*envp)[i], needle, ft_strlen(needle)) != 0)
+		if (ft_strncmp(envp[i], needle, ft_strlen(needle)) != 0)
 			n++;
 	}
 	new = malloc((n + 1) * sizeof(char *));
@@ -68,34 +68,39 @@ void	envp_remove(char ***envp, char *name)
 	n = 0;
 	while (envp[++i])
 	{
-		if (ft_strncmp((*envp)[i], needle, ft_strlen(needle)) != 0)
-			new[n++] = (*envp)[i];
+		if (ft_strncmp(envp[i], needle, ft_strlen(needle)) != 0)
+			new[n++] = envp[i];
 	}
 	free(needle);
 	new[i] = NULL;
-	*envp = new;
+	return (new);
 }
 
-void	envp_set(char **envp, char *value)
+void	envp_set(char ***envp, char *value)
 {
-	int	cmplen;
-	int	i;
+	int		cmplen;
+	int		i;
+	char	**temp;
 
 	cmplen = 0;
 	while (value[cmplen] != '=' && value[cmplen] != '\0')
 		cmplen++;
 	cmplen++;
 	i = 0;
-	while (envp[i])
+	while ((*envp)[i])
 	{
-		if (ft_strncmp(envp[i], value, cmplen) == 0)
+		if (ft_strncmp((*envp)[i], value, cmplen) == 0)
 			break ;
 		i++;
 	}
-	if (envp[i])
-		envp[i] = value;
+	if ((*envp)[i])
+		(*envp)[i] = value;
 	else
-		envp_add(&envp, value, i - 1);
+	{
+		temp = *envp;
+		envp_add(envp, value, i - 1);
+		free(temp);
+	}
 }
 
 char	*envp_get(char **envp, char *name)
