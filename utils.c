@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:18:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/21 22:03:05 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/26 15:30:33 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,6 @@
 void	print_prompt(t_data *data)
 {
 	printf("%s%s ", data->cwd, PROMPT_END);
-}
-
-void	cleanup(t_data *data, t_exec_node *enode, t_parse_node *pnode)
-{
-	(void)data;
-	(void)enode;
-	(void)pnode;
 }
 
 void	free_array(void **arr)

@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:53:43 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/23 19:01:05 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:35:37 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,12 @@ static void	err_handl(char *msg, char *fname, t_data *data, t_exec_node *node)
 			ft_putstr_fd(fname, STDERR_FILENO);
 		ft_putendl_fd("", STDERR_FILENO);
 	}
-	cleanup(data, node, node->parse);
-	exit(1);
+	if (!node->nofork)
+	{
+		cleanup_exit(data, node, node->parse);
+		exit(1);
+	}
+	cleanup_cmd(data, node, node->parse);
 }
 
 static int	get_file_fd(t_data *d, t_exec_node *node, t_list *files, int oflag)
@@ -49,7 +53,7 @@ static int	get_file_fd(t_data *d, t_exec_node *node, t_list *files, int oflag)
 	return (fd);
 }
 
-static void	get_fds(t_data *data, t_exec_node *node, int **pipes)
+void	get_fds(t_data *data, t_exec_node *node, int **pipes)
 {
 	if (node->parse->input_src)
 		node->fd_in = get_file_fd(data, node, node->parse->input_src, O_RDONLY);
@@ -80,11 +84,15 @@ static pid_t	forkproc(t_data *d, t_parse_node *pnode, int **pipes, int i)
 		enode.parse = pnode;
 		enode.pipes = pipes;
 		enode.pindex = i;
+		enode.nofork = 0;
 		get_fds(d, &enode, pipes);
 		dup2(enode.fd_in, STDIN_FILENO);
 		dup2(enode.fd_out, STDOUT_FILENO);
 		if (pnode->is_builtin)
+		{
 			runbuiltin(d, &enode);
+			exit(0);
+		}
 		else
 			runcmd(d, &enode);
 	}

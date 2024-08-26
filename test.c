@@ -6,13 +6,139 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:13:41 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/24 18:37:38 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/26 18:30:21 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void	run_execution_test(t_data *data)
+{
+	t_parse_node	p0;
+	t_list			*lst;
+
+	lst = NULL;
+
+	p0.argv = malloc(3 * sizeof(char *));
+	p0.argv[0] = ft_strdup("env");
+	p0.argv[1] = NULL;
+	p0.is_builtin = 1;
+	p0.here_doc = 0;
+	p0.is_first = 1;
+	p0.is_last = 1;
+	p0.exec = NULL;
+	p0.input_src = NULL;
+	p0.output_dest = NULL;
+	ft_lstadd_front(&lst, ft_lstnew(&p0));
+
+	execution(data, lst);
+}
+
+void	run_execution_test_cat_cat_ls(t_data *data)
+{
+	t_parse_node	p0;
+	t_parse_node	p1;
+	t_parse_node	p2;
+	t_list			*lst;
+
+	lst = NULL;
+
+	p0.argv = malloc(3 * sizeof(char *));
+	p0.argv[0] = ft_strdup("cat");
+	p0.argv[1] = NULL;
+	p0.is_builtin = 0;
+	p0.here_doc = 0;
+	p0.is_first = 1;
+	p0.is_last = 0;
+	p0.exec = NULL;
+	p0.input_src = NULL;
+	p0.output_dest = NULL;
+
+	p1.argv = malloc(3 * sizeof(char *));
+	p1.argv[0] = ft_strdup("cat");
+	p1.argv[1] = NULL;
+	p1.is_builtin = 0;
+	p1.here_doc = 0;
+	p1.is_first = 0;
+	p1.is_last = 0;
+	p1.exec = NULL;
+	p1.input_src = NULL;
+	p1.output_dest = NULL;
+
+	p2.argv = malloc(2 * sizeof(char *));
+	p2.argv[0] = ft_strdup("ls");
+	p2.argv[1] = NULL;
+	p2.is_builtin = 0;
+	p2.here_doc = 0;
+	p2.is_first = 0;
+	p2.is_last = 1;
+	p2.exec = NULL;
+	p2.input_src = NULL;
+	p2.output_dest = NULL;
+
+	ft_lstadd_front(&lst, ft_lstnew(&p2));
+	ft_lstadd_front(&lst, ft_lstnew(&p1));
+	ft_lstadd_front(&lst, ft_lstnew(&p0));
+
+	execution(data, lst);
+}
+
+void	run_execution_test2(t_data *data)
+{
+	t_parse_node	p0;
+	t_parse_node	p1;
+	t_parse_node	p2;
+	t_list			*lst;
+
+	lst = NULL;
+
+	p0.argv = malloc(3 * sizeof(char *));
+	p0.argv[0] = ft_strdup("rm");
+	p0.argv[1] = ft_strdup("a");
+	p0.argv[2] = NULL;
+	p0.is_builtin = 0;
+	p0.here_doc = 0;
+	p0.is_first = 1;
+	p0.is_last = 0;
+	p0.exec = NULL;
+	p0.input_src = NULL;
+	p0.output_dest = NULL;
+
+	p1.argv = malloc(3 * sizeof(char *));
+	p1.argv[0] = ft_strdup("rm");
+	p1.argv[1] = ft_strdup("b");
+	p1.argv[2] = NULL;
+	p1.is_builtin = 0;
+	p1.here_doc = 0;
+	p1.is_first = 0;
+	p1.is_last = 0;
+	p1.exec = NULL;
+	p1.input_src = NULL;
+	p1.output_dest = NULL;
+
+	p2.argv = malloc(2 * sizeof(char *));
+	p2.argv[0] = ft_strdup("rm");
+	p2.argv[1] = ft_strdup("c");
+	p2.argv[2] = NULL;
+	p2.is_builtin = 0;
+	p2.here_doc = 0;
+	p2.is_first = 0;
+	p2.is_last = 1;
+	p2.exec = NULL;
+	p2.input_src = NULL;
+	p2.output_dest = NULL;
+
+	ft_lstadd_front(&lst, ft_lstnew(&p2));
+	ft_lstadd_front(&lst, ft_lstnew(&p1));
+	ft_lstadd_front(&lst, ft_lstnew(&p0));
+	ft_lstadd_front(&p1.input_src, ft_lstnew("input.txt"));
+	ft_lstadd_front(&p0.input_src, ft_lstnew("input5.txt"));
+	ft_lstadd_front(&p1.input_src, ft_lstnew("input1.txt"));
+	ft_lstadd_front(&p1.input_src, ft_lstnew("input.txt"));
+	execution(data, lst);
+}
+
+void	run_execution_test3(t_data *data)
 {
 	t_parse_node	p0;
 	t_parse_node	p1;

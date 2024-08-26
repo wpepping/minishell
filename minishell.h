@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/24 18:59:36 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/26 18:18:49 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <stdbool.h>
+# include <errno.h>
 # include <linux/limits.h>
 # include <readline/readline.h>
 # include <sys/wait.h>
@@ -47,6 +48,7 @@ typedef struct s_exec_node
 	int				fd_out;
 	int				**pipes;
 	int				pindex;
+	int				nofork;
 	bool			run_cmd;
 }	t_exec_node;
 
@@ -68,6 +70,7 @@ void	parse(t_data *data, char *cmd);
 // Execution
 int		**create_pipes(int n);
 void	execution(t_data *data, t_list *parse_nodes);
+void	get_fds(t_data *data, t_exec_node *node, int **pipes);
 pid_t	*fork_processes(t_data *data, t_list *lst, int lsize);
 int		waitpids(pid_t *pids, int n);
 void	runcmd(t_data *data, t_exec_node *node);
@@ -75,11 +78,12 @@ void	runbuiltin(t_data *data, t_exec_node *node);
 
 // Builtins
 void	ft_echo(t_data *data, t_exec_node *node);
-void	ft_cd(t_data *data, t_exec_node *node);
+int		ft_cd(t_data *data, t_exec_node *node);
 void	ft_pwd(t_data *data, t_exec_node *node);
 void	ft_export(t_data *data, t_exec_node *node);
 void	ft_unset(t_data *data, t_exec_node *node);
 void	ft_env(t_data *data, t_exec_node *node);
+void	invalid_option(char *command, char *option);
 
 // Envp
 char	**envp_create(char **envp);
@@ -89,10 +93,13 @@ void	envp_set(char ***envp, char *value);
 char	*envp_get(char **envp, char *name);
 
 // Utils
-void	cleanup(t_data *data, t_exec_node *enode, t_parse_node *pnode);
+void	cleanup_exit(t_data *data, t_exec_node *enode, t_parse_node *pnode);
+void	cleanup_cmd(t_data *data, t_exec_node *enode, t_parse_node *pnode);
 void	close_fds(int fd_in, int fd_out, int **pipes);
 void	free_array(void **arr);
 char	*ft_pathjoin(char const *s1, char const *s2);
 void	print_prompt(t_data *data);
+void	ft_putstrs_fd(char *str1, char *str2, char *str3, int fd);
+char	*ft_strjoin2(char *s1, char const *s2);
 
 #endif

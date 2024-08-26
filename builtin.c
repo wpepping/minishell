@@ -6,55 +6,73 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 20:03:10 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/24 18:55:00 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/26 18:20:05 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_echo(t_data *data, t_exec_node *node)
+static char	*ft_cd_getpath(t_data *data, char	*arg)
 {
-	(void)data;
-	(void)node;
-}
-
-void	ft_cd(t_data *data, t_exec_node *node)
-{
-	char	*arg;
-	char	*base;
 	char	*path;
 
-	arg = node->parse->argv[1];
 	if (arg[0] == '/')
-		base = ft_strdup("");
+		path = ft_strdup("");
 	else
-		base = ft_strjoin(data->cwd, "/");
-	path = ft_strjoin(base, arg);
-	chdir(path);
-	free(base);
-	free(path);
-	getcwd(data->cwd, PATH_MAX);
+		path = ft_strjoin(data->cwd, "/");
+	path = ft_strjoin2(path, arg);
+	return (path);
+}
+
+void	ft_echo(t_data *data, t_exec_node *node)
+{
+	int	i;
+	int	arg_no_newln;
+
+	(void)data;
+	if (node->parse->argv[1] && ft_strncmp(node->parse->argv[1], "-n", 3) == 0)
+		arg_no_newln = 1;
+	else
+		arg_no_newln = 0;
+	i = 1;
+	if (arg_no_newln)
+		i++;
+	while (node->parse->argv[i])
+		ft_putstr_fd(node->parse->argv[i++], STDOUT_FILENO);
+	if (!arg_no_newln)
+		ft_putendl_fd("", STDOUT_FILENO);
+}
+
+int	ft_cd(t_data *data, t_exec_node *node)
+{
+	char	*path;
+	int		return_value;
+
+	return_value = 1;
+	if (node->parse->argv[2])
+		ft_putendl_fd("minishell: cd: too many arguments", STDERR_FILENO);
+	else if (node->parse->argv[1] && node->parse->argv[1][0] == '-')
+		invalid_option("cd", node->parse->argv[1]);
+	else if (node->parse->argv[1])
+	{
+		path = ft_cd_getpath(data, node->parse->argv[1]);
+		chdir(path);
+		if (ENOTDIR)
+			ft_putstrs_fd("minishell: cd: ", node->parse->argv[1],
+				": No such file or directory", STDERR_FILENO);
+		else
+			return_value = 0;
+		getcwd(data->cwd, PATH_MAX);
+		free(path);
+	}
+	return (return_value);
 }
 
 void	ft_pwd(t_data *data, t_exec_node *node)
 {
-	(void)node;
-	ft_putendl_fd(data->cwd, 1);
+	if (node->parse->argv[1] && node->parse->argv[1][0] == '-'
+		&& ft_strlen(node->parse->argv[1]) > 1)
+		invalid_option("pwd", node->parse->argv[1]);
+	else
+		ft_putendl_fd(data->cwd, 1);
 }
-
-void	ft_export(t_data *data, t_exec_node *node)
-{
-	envp_set(&data->envp, node->parse->argv[1]);
-}
-
-void	ft_unset(t_data *data, t_exec_node *node)
-{
-	char	**temp;
-
-	temp = envp_remove(data->envp, node->parse->argv[1]);
-	free(data->envp);
-	data->envp = temp;
-	(void)data;
-	(void)node;
-}
-//amogus plz don't delete me :3
