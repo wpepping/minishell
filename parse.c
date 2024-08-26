@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/24 01:25:53 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/26 19:11:22 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,44 +45,51 @@ int	get_args(t_list *tokens, t_parse_node *node)
 	int	i;
 	int	argc;
 	t_list	*tmp;
+	t_token *token;
 
+	token = (t_token *)tokens->content;
 	tmp = tokens;
 
 	argc = 0;
 	i = 0;
-	while(tokens->next && tokens->content.type == WORD)
+	while(tokens->next && token->type == WORD)
 	{
 		argc++;
 		tokens = tokens->next;
+		token = (t_token *)tokens->content;
 	}
 	tokens = tmp;
 	node->argv = malloc(sizeof(char *) * (argc + 1));
 	while (i < argc)
 	{
-		node->argv[i] = strdup(tokens->content.value);
+		node->argv[i] = strdup(token->value);
 		if (!node->argv[i])
 		{
 			printf("Error: malloc failed\n");
 			exit(1);
 		}
 		i++;
-		tokens->next;
+		tokens = tokens->next;
 	}
 	node->argv[i] = NULL;
 	return (argc);
 }
 
-int	handle_redirects(t_list *tokens, t_parse_node *node)
+void	handle_redirects(t_list *tokens, t_parse_node *node)
 {
-	if (tokens->content.type == APPEND)
+	
+	t_token *token;
+
+	token = (t_token *)tokens->content;
+	if ((token->type == APPEND))
 	{
-		ft_lstadd_back(&node->output_dest, ft_lstnew(ft_strdup(tokens->next->content.value)));
+		ft_lstadd_back(&node->output_dest, ft_lstnew(ft_strdup(((t_token *)tokens->next->content)->value)));
 		node->append = true;
 	}
-	else if (tokens->content.type == REDIRECT_OUT)
-		ft_lstadd_back(&node->output_dest, ft_lstnew(ft_strdup(tokens->next->content.value)));
-	else if (tokens->content.type == REDIRECT_IN)
-		ft_lstadd_back(&node->input_src, ft_lstnew(ft_strdup(tokens->next->content.value)));
+	else if (token->type == REDIRECT_OUT)
+		ft_lstadd_back(&node->output_dest, ft_lstnew(ft_strdup(((t_token *)tokens->next->content)->value)));
+	else if (token->type == REDIRECT_IN)
+		ft_lstadd_back(&node->input_src, ft_lstnew(ft_strdup(((t_token *)tokens->next->content)->value)));
 }
 
 bool in_quotes(char * token)
@@ -90,12 +97,12 @@ bool in_quotes(char * token)
 
 	static bool open_double_quote;
 	static bool open_single_quote;
-    char *first_quote;
-    char *last_quote;
+    //char *first_quote;
+    //char *last_quote;
 
 	if(ft_strncmp(token, "\"", 1) == 0 && !open_single_quote)
 		open_double_quote = !open_double_quote;
-	else if(ft_strncmp(token, "\'", 1) == 0 && !open_double_quote)
+	else if(ft_strncmp(token, "'", 1) == 0 && !open_double_quote)
 		open_single_quote = !open_single_quote;
 
 	// else if(!open_single_quote)
@@ -121,20 +128,23 @@ bool	append_token(t_list **token_list, t_token_type type, char **cmd, int len)
 	t_token	*token;
 
 	
-	new_token = malloc(sizeof(t_token));
-	if (!new_token)
+	token = malloc(sizeof(t_token));
+	if (!token)
 	{
 		printf("Error: malloc failed\n");
 		return(false);
 	}
-	new_token->value = ft_strdup(cmd, 0 , len);
-	if (!new_token->value)
+	token->value = ft_substr(*cmd, 0 , len);
+	
+	if (!token->value)
 	{
 		printf("Error: malloc failed\n");
 		return(false);
 	}
-	new_token->type = type;
-	ft_lstadd_back(token_list, ft_lstnew(new_token));
+	token->type = type;
+	printf("\ntoken value: %s\n", token->value);
+	printf("\ntoken type: %i\n", token->type);
+	ft_lstadd_back(token_list, ft_lstnew(token));
 	while (len > 0)
 	{
 		(*cmd)++;
@@ -149,7 +159,7 @@ t_list	*tokenize(char *cmd)
 {
 	t_list	*token_list;
 	int		i;
-	int		j;
+	//int		j;
 
 	token_list = NULL;
 	i = 0;
@@ -157,28 +167,28 @@ t_list	*tokenize(char *cmd)
 	{
 		if (*cmd == ' ')
 			cmd++;
-		else if (!(ft_strncmp(cmd, "&&", 2)) || !(ft_strncmp(cmd, "<", 1))
-			|| !(ft_strncmp(cmd, ">", 1)) || !(ft_strncmp(cmd, "(", 1))
-			|| !(ft_strncmp(cmd, ")", 1) || !(ft_strncmp(cmd, "|", 1))))
+		else if (!(ft_strncmp(cmd, "&&", 2)) || !(ft_strncmp(cmd, "|", 1))
+        || !(ft_strncmp(cmd, ">", 1)) || !(ft_strncmp(cmd, "(", 1))
+        || !(ft_strncmp(cmd, ")", 1)) || !(ft_strncmp(cmd, "<", 1)))
 		{
 			if(ft_strncmp(cmd, "&&", 2) == 0)
-				append_token(&token_list, AND, cmd, 2);
-			else if(ft_strncmp(cmd, "|", 2) == 0)
-				append_token(&token_list, OR, cmd, 2);
+				append_token(&token_list, AND, &cmd, 2);
+			else if(ft_strncmp(cmd, "||", 2) == 0)
+				append_token(&token_list, OR, &cmd, 2);
 			else if(ft_strncmp(cmd, "<<", 2) == 0)
-				append_token(&token_list, HEREDOC, cmd, 2);
+				append_token(&token_list, HEREDOC, &cmd, 2);
 			else if(ft_strncmp(cmd, ">>", 2) == 0)
-				append_token(&token_list, APPEND, cmd, 2);
+				append_token(&token_list, APPEND, &cmd, 2);
 			else if(ft_strncmp(cmd, ">", 1) == 0)
-				append_token(&token_list, REDIRECT_OUT, cmd, 1);
+				append_token(&token_list, REDIRECT_OUT, &cmd, 1);
 			else if(ft_strncmp(cmd, "<", 1) == 0)
-				append_token(&token_list, REDIRECT_IN, cmd, 1);
+				append_token(&token_list, REDIRECT_IN, &cmd, 1);
 			else if(ft_strncmp(cmd, "(", 1) == 0)
-				append_token(&token_list, OPEN_PAREN, cmd, 1);
+				append_token(&token_list, OPEN_PAREN, &cmd, 1);
 			else if(ft_strncmp(cmd, ")", 1) == 0)
-				append_token(&token_list, CLOSE_PAREN, cmd, 1);
+				append_token(&token_list, CLOSE_PAREN, &cmd, 1);
 			else if(ft_strncmp(cmd, "|", 1) == 0)
-				append_token(&token_list, PIPE, cmd, 1);
+				append_token(&token_list, PIPE, &cmd, 1);
 		}
 		else
 		{
@@ -186,19 +196,23 @@ t_list	*tokenize(char *cmd)
 				&& cmd[i] != '(' && cmd[i] != ')' && cmd[i] != '&' && cmd[i] != '\t')
 			{
 
-				if(in_quotes(cmd[i]))
+				if(in_quotes(&cmd[i++]))
 				{
-					while(cmd[i] && in_quotes(cmd[i]))
+					while(cmd[i] && in_quotes(&cmd[i]))
 						i++;
+					i++;
 				}
 				else
 					i++;
 			}
-			append_token(&token_list, WORD, cmd, i);
+			append_token(&token_list, WORD, &cmd, i);
+			
 			i=0;
 		}
-	return (token_list);
+	
 	}
+	
+	return (token_list);
 }
 
 
@@ -206,9 +220,11 @@ void	parse(t_data *data, char *cmd)
 {
 	t_parse_node	*node;
 	t_list			*tokens;
-	t_list			*head;
-	char			*quote_arg;
-	quote_arg = NULL;
+	t_token			*token;
+	int i;
+	//t_list			*head;
+	//char			*quote_arg;
+	//quote_arg = NULL;
 	i= 0;
 
 	if (cmd == NULL || ft_strncmp(cmd, "exit", 5) == 0)
@@ -217,14 +233,14 @@ void	parse(t_data *data, char *cmd)
 		return ;
 	}
 	tokens = tokenize(cmd);
-	head = tokens;
+	//head = tokens;
 	//tokens = ft_split(cmd, ' ');
 	node = create_parse_node();
 	
 	while (tokens->next)
 	{
-		
-		if(tokens->content.type == PIPE)
+		token = (t_token *)tokens->content;
+		if(token->type == PIPE)
 		{
 			print_argv(node);
 			ft_lstadd_back(&data->node_list, ft_lstnew(node));
@@ -233,27 +249,31 @@ void	parse(t_data *data, char *cmd)
 			continue;
 			
 		}
-		if (access(tokens->content.value, X_OK) == 0)
+		if (access(token->value, X_OK) == 0)
 		{
-			node->exec = ft_strdup(tokens->content.value);
-			i += get_args(i, tokens, node);
-			while(tokens->next && tokens->content.type == WORD && --i < 0)
+			node->exec = ft_strdup(token->value);
+			i += get_args(tokens, node);
+			while(tokens->next && token->type == WORD && --i < 0)
 				tokens = tokens->next;
 		}
-		else if (get_builtin_index(tokens->content.value) != -1)
+		else if (get_builtin_index(token->value) != -1)
 		{
 			node->is_builtin = true;
-			node->exec = ft_strdup(tokens->content.value);
-			while(tokens->next && tokens->content.type == WORD && --i < 0)
+			node->exec = ft_strdup(token->value);
+			i += get_args(tokens, node);
+			while(tokens->next && (token->type == WORD && --i > 0))
+			{
 				tokens = tokens->next;
+				token = (t_token *)tokens->content;
+			}
+				
 		}
 		else
 		{
-			handle_redirects(tokens, i, node);
+			handle_redirects(tokens, node);
 			tokens = tokens->next;
-			tokens = tokens->next;
-		}
 			
+		}
 	}
 	node->is_last = true;
 	print_argv(node);

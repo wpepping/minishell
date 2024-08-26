@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/23 23:26:54 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/26 17:13:10 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,15 @@ typedef struct s_data
 typedef enum e_token_type
 {
 	WORD,
-	REDIRECT,
-	PIPE,
-	SEMICOLON,
-	NEWLINE,
-	END
+	AND,
+	OR,
+	HEREDOC,
+	APPEND,
+	REDIRECT_OUT,
+	REDIRECT_IN,
+	OPEN_PAREN,
+	CLOSE_PAREN,
+	PIPE
 }	t_token_type;
 
 typedef struct s_token
@@ -68,8 +72,8 @@ void	parse(t_data *data, char *cmd);
 void	print_prompt(t_data *data);
 t_parse_node	*create_parse_node(void);
 int	get_builtin_index(char *token);
-int	get_args(int index, char **tokens, t_parse_node *node);
-int	handle_redirects(char **tokens, int index, t_parse_node *node);
+int	get_args(t_list *tokens, t_parse_node *node);
+void	handle_redirects(t_list *tokens, t_parse_node *node);
 bool in_quotes(char * token);
 void print_argv(t_parse_node *node);
 

@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/23 15:38:41 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/26 18:55:56 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	main(void)
 		print_prompt(&data);
 		cmd = readline(NULL);
 
-		parse(&data, cmd);
+ 		parse(&data, cmd);
 		free(cmd);
 	}
 	return (0);
