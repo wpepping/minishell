@@ -94,5 +94,12 @@ t_list	*tokenize(char *cmd)
 			i = 0;
 		}
 	}
+	 t_token *null_token = malloc(sizeof(t_token));
+    if (null_token)
+    {
+        null_token->value = NULL;
+        null_token->type = END;
+        ft_lstadd_back(&token_list, ft_lstnew(null_token));
+    }
 	return (token_list);
 }

@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 18:37:10 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/27 19:37:17 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void	parse_command(t_list *tokens, t_data *data)
 		token = (t_token *)tokens->content;
 	node = create_parse_node();
 	if (token->type == WORD && tokens)
-	{
+	{	
 		if (get_builtin_index(token->value) != -1)
 			node->is_builtin = true;
 		else if (access(token->value, X_OK) == 0)
@@ -160,9 +160,46 @@ void	parse_pipe(t_list **tokens, t_parse_node *node, t_data *data)
 void	parse(t_data *data, char *cmd)
 {
 	t_list	*tokens;
+	
+	
 
 	tokens = tokenize(cmd);
+	expand_envs(tokens);
 	parse_command(tokens, data);
+}
+
+void expand_envs(t_list *tokens)
+{
+	t_token *token;
+	char *env_var;
+	char *expanded;
+	int i;
+
+	token = (t_token *)tokens->content;
+	
+	while(token->type != END)
+	{
+		if(ft_strchr(token->value, '\'') != NULL)
+		{
+			tokens = tokens->next;
+			continue;
+		}	
+		if (token->type == WORD)
+		{
+			i = 0;
+			env_var = ft_strchr(token->value, '$');
+			while(env_var[i] && env_var[i] != ' ' && env_var[i] != '\t')
+				i++;
+			env_var = ft_substr(env_var, 1, i);
+			expanded = ft_strdup(getenv(env_var));
+			free(token->value);
+			token->value = expanded;
+			free(env_var);
+		}
+		tokens = tokens->next;
+		if(tokens)
+			token = (t_token *)tokens->content;
+	}
 }
 
 void	print_argv(t_parse_node *node)

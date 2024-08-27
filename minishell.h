@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 17:56:32 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/27 19:23:24 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ typedef enum e_token_type
 	REDIRECT_IN,
 	OPEN_PAREN,
 	CLOSE_PAREN,
-	PIPE
+	PIPE,
+	END
 }					t_token_type;
 
 typedef struct s_parse_node
@@ -100,13 +101,15 @@ void				parse_args_and_redirects(t_list **tokens,
 					t_parse_node *node);
 void				parse_command(t_list *tokens, t_data *data);
 t_parse_node		*create_parse_node(void);
-void				print_prompt(t_data *data);
+
 int					get_builtin_index(char *token);
 int					get_args(t_list **tokens, t_parse_node *node);
 void				handle_redirects(t_list **tokens, t_parse_node *node);
 bool				in_quotes(char *token);
-void				print_argv(t_parse_node *node);
+void expand_envs(t_list *tokens);
 
+void				print_prompt(t_data *data);
+void				print_argv(t_parse_node *node);
 void				print_argv_from_nodes(t_data *data);
 void				clear_node_list(t_data *data);
 
