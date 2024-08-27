@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 16:33:55 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:34:28 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,10 @@
 
 int	get_builtin_index(char *token)
 {
-	int	i;
+	int			i;
+	const char	*builtin_str[] = {"echo", "cd", "unset", "export", "pwd", "env",
+			"exit"};
 
-	const char *builtin_str[] = {"echo",
-									"cd",
-									"unset",
-									"export",
-									"pwd",
-									"env",
-									"exit"};
 	i = 0;
 	while (i < 7)
 	{
@@ -35,16 +30,16 @@ int	get_builtin_index(char *token)
 	return (-1);
 }
 
-
 void	handle_redirects(t_list **tokens, t_parse_node *node)
 {
 	t_token	*token;
+	t_list	*current;
+
 	token = (t_token *)(*tokens)->content;
-	t_list *current = *tokens;
-	while(token->type != PIPE && (t_token*)current->next != NULL)
+	current = *tokens;
+	while (token->type != PIPE && (t_token *)current->next != NULL)
 	{
 		token = (t_token *)current->content;
-		
 		if ((token->type == APPEND))
 		{
 			ft_lstadd_back(&node->output_dest,
@@ -59,17 +54,15 @@ void	handle_redirects(t_list **tokens, t_parse_node *node)
 				ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
 		// else if (token->type == HEREDOC)
 		// node->heredoc = true;
-		if(token-> type == PIPE)
+		if (token->type == PIPE)
 		{
 			*tokens = current;
-			return;
+			return ;
 		}
-		if(current->next != NULL && current->next->next != NULL)
+		if (current->next != NULL && current->next->next != NULL)
 			current = current->next->next;
 		else
 			current = current->next;
-		
-			
 	}
 	*tokens = current;
 }
@@ -115,10 +108,11 @@ void	parse_args_and_redirects(t_list **tokens, t_parse_node *node)
 	token = (t_token *)(*tokens)->content;
 	if (token->type == WORD)
 		get_args(tokens, node);
-	if(!*tokens)
-		return;
+	if (!*tokens)
+		return ;
 	token = (t_token *)(*tokens)->content;
-	if(token->type == REDIRECT_OUT || token->type == REDIRECT_IN || token->type == APPEND)
+	if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN
+		|| token->type == APPEND)
 		handle_redirects(tokens, node);
 }
 
@@ -136,19 +130,17 @@ void	parse_command(t_list *tokens, t_data *data)
 			node->is_builtin = true;
 		else if (access(token->value, X_OK) == 0)
 			node->exec = ft_strdup(token->value);
-		if(tokens)
+		if (tokens)
 			parse_args_and_redirects(&tokens, node);
 	}
 	if (!tokens)
 		node->is_last = true;
-	
 	ft_lstadd_back(&data->node_list, ft_lstnew(node));
 	if (tokens)
 	{
 		token = (t_token *)tokens->content;
 		parse_pipe(&tokens, node, data);
 	}
-		
 }
 
 void	parse_pipe(t_list **tokens, t_parse_node *node, t_data *data)
@@ -175,7 +167,6 @@ void	parse(t_data *data, char *cmd)
 	}
 	tokens = tokenize(cmd);
 	parse_command(tokens, data);
-
 }
 
 void	print_argv(t_parse_node *node)

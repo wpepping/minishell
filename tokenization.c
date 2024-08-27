@@ -5,26 +5,10 @@ bool	in_quotes(char *token)
 	static bool	open_double_quote;
 	static bool	open_single_quote;
 
-	// char *first_quote;
-	// char *last_quote;
 	if (ft_strncmp(token, "\"", 1) == 0 && !open_single_quote)
 		open_double_quote = !open_double_quote;
 	else if (ft_strncmp(token, "'", 1) == 0 && !open_double_quote)
 		open_single_quote = !open_single_quote;
-	// else if(!open_single_quote)
-	// {
-	// 	first_quote = ft_strchr(token, '\"');
-	// 	last_quote = ft_strrchr(token, '\"');
-	// 	if(first_quote && first_quote == last_quote)
-	// 		open_double_quote = !open_double_quote;
-	// }
-	// else if(!open_double_quote)
-	// {
-	// 	first_quote = ft_strchr(token, '\'');
-	// 	last_quote = ft_strrchr(token, '\'');
-	// 	if(first_quote && first_quote == last_quote)
-	// 		open_single_quote = !open_single_quote;
-	// }
 	return (open_double_quote || open_single_quote);
 }
 
@@ -46,8 +30,6 @@ bool	append_token(t_list **token_list, t_token_type type, char **cmd,
 		return (false);
 	}
 	token->type = type;
-	printf("\ntoken value: %s\n", token->value);
-	printf("\ntoken type: %i\n", token->type);
 	ft_lstadd_back(token_list, ft_lstnew(token));
 	while (len > 0)
 	{
