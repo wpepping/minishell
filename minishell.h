@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/26 18:18:49 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/27 13:42:35 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 # define ERR_COMMAND_NOT_FOUND "minishell: command not found: "
 # define ERR_OUT_OF_MEMORY "minishell: out of memory error"
 
-# define PROMPT_END "$"
+# define PROMPT_END "$ "
 
 typedef struct s_parse_node
 {
@@ -88,7 +88,7 @@ void	invalid_option(char *command, char *option);
 // Envp
 char	**envp_create(char **envp);
 void	envp_add(char ***envp, char *value, int n);
-char	**envp_remove(char **envp, char *name);
+char	**envp_remove(char **envp, char **names);
 void	envp_set(char ***envp, char *value);
 char	*envp_get(char **envp, char *name);
 
@@ -98,8 +98,8 @@ void	cleanup_cmd(t_data *data, t_exec_node *enode, t_parse_node *pnode);
 void	close_fds(int fd_in, int fd_out, int **pipes);
 void	free_array(void **arr);
 char	*ft_pathjoin(char const *s1, char const *s2);
-void	print_prompt(t_data *data);
 void	ft_putstrs_fd(char *str1, char *str2, char *str3, int fd);
 char	*ft_strjoin2(char *s1, char const *s2);
+int		arrncontains(char **haystack, char *needle, int cmplen);
 
 #endif

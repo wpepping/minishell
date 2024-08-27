@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:40:27 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/26 18:28:04 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/27 13:43:56 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_unset(t_data *data, t_exec_node *node)
 {
 	char	**temp;
 
-	temp = envp_remove(data->envp, node->parse->argv[1]);
+	temp = envp_remove(data->envp, node->parse->argv + 1);
 	free(data->envp);
 	data->envp = temp;
 	(void)data;

@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 18:31:50 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/24 19:00:19 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/27 13:42:01 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,19 +48,19 @@ void	envp_add(char ***envp, char *value, int n)
 	*envp = new;
 }
 
-char	**envp_remove(char **envp, char *name)
+char	**envp_remove(char **envp, char **names)
 {
 	char	**new;
 	int		i;
 	int		n;
-	char	*needle;
+	int		cmplen;
 
-	needle = ft_strjoin(name, "=");
 	i = -1;
 	n = 0;
 	while (envp[++i])
 	{
-		if (ft_strncmp(envp[i], needle, ft_strlen(needle)) != 0)
+		cmplen = ft_strchr(envp[i], '=') - envp[i];
+		if (!arrncontains(names, envp[i], cmplen))
 			n++;
 	}
 	new = malloc((n + 1) * sizeof(char *));
@@ -68,10 +68,10 @@ char	**envp_remove(char **envp, char *name)
 	n = 0;
 	while (envp[++i])
 	{
-		if (ft_strncmp(envp[i], needle, ft_strlen(needle)) != 0)
+		cmplen = ft_strchr(envp[i], '=') - envp[i];
+		if (!arrncontains(names, envp[i], cmplen))
 			new[n++] = envp[i];
 	}
-	free(needle);
 	new[i] = NULL;
 	return (new);
 }

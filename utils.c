@@ -6,16 +6,11 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:18:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/26 15:30:33 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/27 13:41:09 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	print_prompt(t_data *data)
-{
-	printf("%s%s ", data->cwd, PROMPT_END);
-}
 
 void	free_array(void **arr)
 {
@@ -71,4 +66,15 @@ char	*ft_pathjoin(char const *s1, char const *s2)
 	}
 	ft_memcpy(result + len1, s2, len2 + 1);
 	return (result);
+}
+
+int	arrncontains(char **haystack, char *needle, int cmplen)
+{
+	while (*haystack)
+	{
+		if (ft_strncmp(*haystack, needle, cmplen) == 0)
+			return (1);
+		haystack++;
+	}
+	return (0);
 }

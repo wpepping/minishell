@@ -6,13 +6,13 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:13:41 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/26 18:30:21 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/27 13:21:17 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	run_execution_test(t_data *data)
+void	run_execution_test_0(t_data *data)
 {
 	t_parse_node	p0;
 	t_list			*lst;
@@ -34,7 +34,7 @@ void	run_execution_test(t_data *data)
 	execution(data, lst);
 }
 
-void	run_execution_test_cat_cat_ls(t_data *data)
+void	run_execution_test(t_data *data)
 {
 	t_parse_node	p0;
 	t_parse_node	p1;

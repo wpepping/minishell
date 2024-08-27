@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/24 13:15:57 by wouter           ###   ########.fr       */
+/*   Updated: 2024/08/27 13:29:05 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,16 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
 	char	*cmd;
+	char	*prompt;
 
 	(void)argc;
 	(void)argv;
 	init(&data, envp);
 	while (!data.exit)
 	{
-		print_prompt(&data);
-		cmd = readline(NULL);
+		prompt = ft_strjoin(data.cwd, PROMPT_END);
+		cmd = readline(prompt);
+		free(prompt);
 		parse(&data, cmd);
 		free(cmd);
 	}
