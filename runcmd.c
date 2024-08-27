@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   runcmd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:20:00 by wouter            #+#    #+#             */
-/*   Updated: 2024/08/27 17:54:53 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/27 20:03:27 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ static void	cmd_err_handl(char *message, char *cmd, t_data *data, t_exec_node *n
 {
 	ft_putstr_fd(message, STDERR_FILENO);
 	ft_putendl_fd(cmd, STDERR_FILENO);
-	cleanup_exit(data, node, node->parse);
-	exit(1);
+	clean_exit(NULL, data, node, node->parse);
 }
 
 static char	**get_path(void)

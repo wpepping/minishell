@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manage_processes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:53:43 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 18:18:59 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/27 19:53:12 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,7 @@ static void	err_handl(char *msg, char *fname, t_data *data, t_exec_node *node)
 		ft_putendl_fd("", STDERR_FILENO);
 	}
 	if (!node->nofork)
-	{
-		cleanup_exit(data, node, node->parse);
-		exit(1);
-	}
+		clean_exit(NULL, data, node, node->parse);
 	cleanup_cmd(data, node, node->parse);
 }
 
@@ -42,9 +39,9 @@ static int	get_file_fd(t_data *d, t_exec_node *node, t_list *files, int oflag)
 		if (fd == -1)
 		{
 			if (oflag == O_RDONLY && access(fname, F_OK) != 0)
-				err_handl("no such file or directory: ", fname, d, node);
+				err_handl("minishell: no such file or directory: ", fname, d, node);
 			else
-				err_handl("permission denied: ", fname, d, node);
+				err_handl("minishell: permission denied: ", fname, d, node);
 		}
 		if (files->next)
 			close(fd);

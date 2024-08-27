@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 17:56:32 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/27 20:04:43 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,13 +140,15 @@ void	ft_exit(t_data *data, t_exec_node *node);
 
 // Envp
 char	**envp_create(char **envp);
-void	envp_add(char ***envp, char *value, int n);
+int		envp_add(char ***envp, char *value, int n);
 char	**envp_remove(char **envp, char **names);
-void	envp_set(char ***envp, char *value);
+int		envp_set(char ***envp, char *value);
 char	*envp_get(char **envp, char *name);
 
 // Utils
-void	cleanup_exit(t_data *data, t_exec_node *enode, t_parse_node *pnode);
+void	clean_exit(char *msg, t_data *data,
+			t_exec_node *enode, t_parse_node *pnode);
+void	cleanup_for_exit(t_data *data, t_exec_node *enode, t_parse_node *pnode);
 void	cleanup_cmd(t_data *data, t_exec_node *enode, t_parse_node *pnode);
 void	close_fds(int fd_in, int fd_out, int **pipes);
 void	free_array(void **arr);
