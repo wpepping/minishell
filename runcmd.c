@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   runcmd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:20:00 by wouter            #+#    #+#             */
-/*   Updated: 2024/08/26 16:05:18 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:54:53 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void	runbuiltin(t_data *data, t_exec_node *node)
 		ft_unset(data, node);
 	if (ft_strncmp(node->parse->argv[0], "env", 5) == 0)
 		ft_env(data, node);
+	if (ft_strncmp(node->parse->argv[0], "exit", 5) == 0)
+		ft_exit(data, node);
 }
 
 void	runcmd(t_data *data, t_exec_node *node)

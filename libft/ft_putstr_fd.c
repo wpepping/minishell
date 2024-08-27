@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 12:29:43 by wpepping          #+#    #+#             */
-/*   Updated: 2024/04/18 12:32:44 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:47:41 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

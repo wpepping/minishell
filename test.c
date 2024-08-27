@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 16:13:41 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 13:21:17 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:49:30 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,7 @@ void	run_execution_test_0(t_data *data)
 	p0.argv[0] = ft_strdup("env");
 	p0.argv[1] = NULL;
 	p0.is_builtin = 1;
-	p0.here_doc = 0;
-	p0.is_first = 1;
+	p0.heredoc = 0;
 	p0.is_last = 1;
 	p0.exec = NULL;
 	p0.input_src = NULL;
@@ -47,8 +46,7 @@ void	run_execution_test(t_data *data)
 	p0.argv[0] = ft_strdup("cat");
 	p0.argv[1] = NULL;
 	p0.is_builtin = 0;
-	p0.here_doc = 0;
-	p0.is_first = 1;
+	p0.heredoc = 0;
 	p0.is_last = 0;
 	p0.exec = NULL;
 	p0.input_src = NULL;
@@ -58,8 +56,7 @@ void	run_execution_test(t_data *data)
 	p1.argv[0] = ft_strdup("cat");
 	p1.argv[1] = NULL;
 	p1.is_builtin = 0;
-	p1.here_doc = 0;
-	p1.is_first = 0;
+	p1.heredoc = 0;
 	p1.is_last = 0;
 	p1.exec = NULL;
 	p1.input_src = NULL;
@@ -69,8 +66,7 @@ void	run_execution_test(t_data *data)
 	p2.argv[0] = ft_strdup("ls");
 	p2.argv[1] = NULL;
 	p2.is_builtin = 0;
-	p2.here_doc = 0;
-	p2.is_first = 0;
+	p2.heredoc = 0;
 	p2.is_last = 1;
 	p2.exec = NULL;
 	p2.input_src = NULL;
@@ -97,8 +93,7 @@ void	run_execution_test2(t_data *data)
 	p0.argv[1] = ft_strdup("a");
 	p0.argv[2] = NULL;
 	p0.is_builtin = 0;
-	p0.here_doc = 0;
-	p0.is_first = 1;
+	p0.heredoc = 0;
 	p0.is_last = 0;
 	p0.exec = NULL;
 	p0.input_src = NULL;
@@ -109,8 +104,7 @@ void	run_execution_test2(t_data *data)
 	p1.argv[1] = ft_strdup("b");
 	p1.argv[2] = NULL;
 	p1.is_builtin = 0;
-	p1.here_doc = 0;
-	p1.is_first = 0;
+	p1.heredoc = 0;
 	p1.is_last = 0;
 	p1.exec = NULL;
 	p1.input_src = NULL;
@@ -121,8 +115,7 @@ void	run_execution_test2(t_data *data)
 	p2.argv[1] = ft_strdup("c");
 	p2.argv[2] = NULL;
 	p2.is_builtin = 0;
-	p2.here_doc = 0;
-	p2.is_first = 0;
+	p2.heredoc = 0;
 	p2.is_last = 1;
 	p2.exec = NULL;
 	p2.input_src = NULL;
@@ -152,8 +145,7 @@ void	run_execution_test3(t_data *data)
 	p0.argv[1] = ft_strdup("-l");
 	p0.argv[2] = NULL;
 	p0.is_builtin = 0;
-	p0.here_doc = 0;
-	p0.is_first = 1;
+	p0.heredoc = 0;
 	p0.is_last = 0;
 	p0.exec = NULL;
 	p0.input_src = NULL;
@@ -163,8 +155,7 @@ void	run_execution_test3(t_data *data)
 	p1.argv[0] = ft_strdup("cat");
 	p1.argv[1] = NULL;
 	p1.is_builtin = 0;
-	p1.here_doc = 0;
-	p1.is_first = 0;
+	p1.heredoc = 0;
 	p1.is_last = 0;
 	p1.exec = NULL;
 	p1.input_src = NULL;
@@ -175,8 +166,7 @@ void	run_execution_test3(t_data *data)
 	p2.argv[1] = ft_strdup("-l");
 	p2.argv[2] = NULL;
 	p2.is_builtin = 0;
-	p2.here_doc = 0;
-	p2.is_first = 0;
+	p2.heredoc = 0;
 	p2.is_last = 1;
 	p2.exec = NULL;
 	p2.input_src = NULL;

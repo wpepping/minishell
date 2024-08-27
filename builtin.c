@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 17:24:03 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:53:59 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,10 @@ void	ft_pwd(t_data *data, t_exec_node *node)
 		invalid_option("pwd", node->parse->argv[1]);
 	else
 		ft_putendl_fd(data->cwd, 1);
+}
+
+void	ft_exit(t_data *data, t_exec_node *node)
+{
+	(void)node;
+	data->exit = 1;
 }
