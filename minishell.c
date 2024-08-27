@@ -6,16 +6,17 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 17:31:40 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:59:19 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	init(t_data *data)
+void	init(t_data *data, char **envp)
 {
 	data->node_list = NULL;
 	data->exit = 0;
+	data->envp = envp_create(envp);
 	getcwd(data->cwd, PATH_MAX);
 }
 
@@ -65,25 +66,34 @@ void	print_argv_from_nodes(t_data *data)
 	}
 }
 
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
 	t_data				data;
 	char				*cmd;
+	char				*prompt;
 	struct sigaction	sa;
 
+	(void)argc;
+	(void)argv;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = signal_handler;
 	sigaddset(&sa.sa_mask, SIGINT);
 	sigaction(SIGINT, &sa, NULL);
-	init(&data);
+	init(&data, envp);
 	while (!data.exit)
 	{
-		print_prompt(&data);
-		cmd = readline(NULL);
-		parse(&data, cmd);
-		free(cmd);
-		print_argv_from_nodes(&data);
-		// clear_node_list(&data);
+		prompt = ft_strjoin(data.cwd, PROMPT_END);
+		cmd = readline(prompt);
+		free(prompt);
+		if (*cmd != '\0')
+		{
+			parse(&data, cmd);
+			execution(&data, data.node_list);
+			free(cmd);
+			data.node_list = NULL;
+		}
+		//clear list
+		//print_argv_from_nodes(&data);
 	}
 	return (0);
 }

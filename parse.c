@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 17:34:28 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/27 18:37:10 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,8 @@ void	parse_command(t_list *tokens, t_data *data)
 		if (tokens)
 			parse_args_and_redirects(&tokens, node);
 	}
-	if (!tokens)
+	//if (!tokens)
+	if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
 		node->is_last = true;
 	ft_lstadd_back(&data->node_list, ft_lstnew(node));
 	if (tokens)
@@ -160,11 +161,6 @@ void	parse(t_data *data, char *cmd)
 {
 	t_list	*tokens;
 
-	if (cmd == NULL || ft_strncmp(cmd, "exit", 5) == 0)
-	{
-		data->exit = 1;
-		return ;
-	}
 	tokens = tokenize(cmd);
 	parse_command(tokens, data);
 }
