@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:40:27 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 13:43:56 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/27 17:28:09 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	ft_env(t_data *data, t_exec_node *node)
 {
 	int	i;
 
+	i = 0;
 	if (node->parse->argv[1] && node->parse->argv[1][0] == '-')
 		invalid_option("env", node->parse->argv[1]);
 	else

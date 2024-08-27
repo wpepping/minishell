@@ -1,0 +1,12 @@
+test
+file
+with
+multiple
+
+lines
+extra
+lines
+Please ask your administrator.
+Please ask your administrator.
+extra
+lines

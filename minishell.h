@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 13:42:35 by wpepping         ###   ########.fr       */
+/*   Created: 2024/08/27 17:27:40 by wpepping          #+#    #+#             */
+/*   Updated: 2024/08/27 17:27:42 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include <readline/readline.h>
 # include <sys/wait.h>
 # include "libft/libft.h"
+# include <signal.h>
+# include <bits/sigaction.h>
 
 # define ERR_COMMAND_NOT_FOUND "minishell: command not found: "
 # define ERR_OUT_OF_MEMORY "minishell: out of memory error"
@@ -63,6 +65,7 @@ typedef struct s_data
 // TEST FUNCTIONS
 void	run_execution_test(t_data *data);
 void	cd(t_data *data, char *cmd);
+void	echo(char *cmd);
 
 // Parsing
 void	parse(t_data *data, char *cmd);

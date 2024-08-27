@@ -1,0 +1,2 @@
+total 92
+-rwxr-xr-x 1 phartman 2024_berlin 22224 Aug 19 18:31 a.out
