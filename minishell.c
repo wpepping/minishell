@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/26 18:55:56 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/27 02:09:19 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,51 @@ void	signal_handler(int signum)
 	printf("\ninterrupted\n");
 }
 
+
+// void clear_node_list(t_data *data) {
+//     t_list *current = data->node_list;
+//     t_list *next;
+
+//     while (current != NULL) {
+//         t_parse_node *node = (t_parse_node *)current->content;
+//         char **argv = node->argv;
+
+//         // Free each string in the argv array
+//         for (int i = 0; argv[i] != NULL; i++) {
+//             free(argv[i]);
+//         }
+//         // Free the argv array itself
+//         free(argv);
+
+//         // Free the node structure
+//         free(node);
+
+//         // Move to the next node
+//         next = current->next;
+//         free(current);
+//         current = next;
+//     }
+
+//     // Set the node_list to NULL
+//     data->node_list = NULL;
+// }
+
+
+void print_argv_from_nodes(t_data *data) {
+    t_list *current = data->node_list;
+	int j = 0;
+    while (current != NULL) {
+        t_parse_node *node = (t_parse_node *)current->content;
+        char **argv = node->argv;
+		printf("Node %d\n", j++);
+        printf("Arguments:\n");
+        for (int i = 0; argv[i] != NULL; i++) {
+            printf("  %s\n", argv[i]);
+        }
+        current = current->next;
+    }
+}
+
 int	main(void)
 {
 	t_data				data;
@@ -41,8 +86,11 @@ int	main(void)
 		print_prompt(&data);
 		cmd = readline(NULL);
 
- 		parse(&data, cmd);
+  		parse(&data, cmd);
 		free(cmd);
+		print_argv_from_nodes(&data);
+		//clear_node_list(&data);
+		
 	}
 	return (0);
 }

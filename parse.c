@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/26 19:11:22 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/27 02:07:25 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,57 +40,8 @@ int	get_builtin_index(char *token)
 	return (-1);
 }
 
-int	get_args(t_list *tokens, t_parse_node *node)
-{
-	int	i;
-	int	argc;
-	t_list	*tmp;
-	t_token *token;
 
-	token = (t_token *)tokens->content;
-	tmp = tokens;
 
-	argc = 0;
-	i = 0;
-	while(tokens->next && token->type == WORD)
-	{
-		argc++;
-		tokens = tokens->next;
-		token = (t_token *)tokens->content;
-	}
-	tokens = tmp;
-	node->argv = malloc(sizeof(char *) * (argc + 1));
-	while (i < argc)
-	{
-		node->argv[i] = strdup(token->value);
-		if (!node->argv[i])
-		{
-			printf("Error: malloc failed\n");
-			exit(1);
-		}
-		i++;
-		tokens = tokens->next;
-	}
-	node->argv[i] = NULL;
-	return (argc);
-}
-
-void	handle_redirects(t_list *tokens, t_parse_node *node)
-{
-	
-	t_token *token;
-
-	token = (t_token *)tokens->content;
-	if ((token->type == APPEND))
-	{
-		ft_lstadd_back(&node->output_dest, ft_lstnew(ft_strdup(((t_token *)tokens->next->content)->value)));
-		node->append = true;
-	}
-	else if (token->type == REDIRECT_OUT)
-		ft_lstadd_back(&node->output_dest, ft_lstnew(ft_strdup(((t_token *)tokens->next->content)->value)));
-	else if (token->type == REDIRECT_IN)
-		ft_lstadd_back(&node->input_src, ft_lstnew(ft_strdup(((t_token *)tokens->next->content)->value)));
-}
 
 bool in_quotes(char * token)
 {
@@ -196,11 +147,13 @@ t_list	*tokenize(char *cmd)
 				&& cmd[i] != '(' && cmd[i] != ')' && cmd[i] != '&' && cmd[i] != '\t')
 			{
 
-				if(in_quotes(&cmd[i++]))
+				if(in_quotes(&cmd[i]))
 				{
+					i++;
 					while(cmd[i] && in_quotes(&cmd[i]))
 						i++;
 					i++;
+					
 				}
 				else
 					i++;
@@ -211,21 +164,129 @@ t_list	*tokenize(char *cmd)
 		}
 	
 	}
-	
 	return (token_list);
+}
+
+void	handle_redirects(t_list **tokens, t_parse_node *node)
+{
+	
+	t_token *token;
+
+	token = (t_token *)(*tokens)->content;
+	if ((token->type == APPEND))
+	{
+		ft_lstadd_back(&node->output_dest, ft_lstnew(ft_strdup(((t_token *)(*tokens)->next->content)->value)));
+		node->append = true;
+	}
+	else if (token->type == REDIRECT_OUT)
+		ft_lstadd_back(&node->output_dest, ft_lstnew(ft_strdup(((t_token *)(*tokens)->next->content)->value)));
+	else if (token->type == REDIRECT_IN)
+		ft_lstadd_back(&node->input_src, ft_lstnew(ft_strdup(((t_token *)(*tokens)->next->content)->value)));
+	//else if (token->type == HEREDOC)
+		//node->heredoc = true;
+	if((t_token *)(*tokens)->next->next != NULL)
+		tokens = &(*tokens)->next->next;
+}
+
+int	get_args(t_list **tokens, t_parse_node *node)
+{
+	int	i;
+	int	argc;
+	t_list	*tmp;
+	t_token *token;
+
+	token = (t_token *)(*tokens)->content;
+	tmp = *tokens;
+
+	argc = 0;
+	i = 0;
+	while(tmp && ((t_token *)tmp->content)->type == WORD)
+	{
+		argc++;
+		tmp = tmp->next;
+	}
+	node->argv = malloc(sizeof(char *) * (argc + 1));
+	while (i < argc)
+	{
+		node->argv[i] = strdup(token->value);
+		if (!node->argv[i])
+		{
+			printf("Error: malloc failed\n");
+			exit(1);
+		}
+		i++;
+		*tokens = (*tokens)->next;
+		if(*tokens)
+			token = (t_token *)(*tokens)->content;
+	}
+	node->argv[i] = NULL;
+	return (argc);
+}
+
+
+void parse_args_and_redirects(t_list **tokens, t_parse_node *node)
+{
+	t_token *token;
+
+	token = (t_token *)(*tokens)->content;
+	if(token->type == WORD)
+		get_args(tokens, node);
+	else
+		handle_redirects(tokens, node);
+}
+
+void parse_command(t_list *tokens, t_data *data)
+{
+	t_parse_node	*node;
+	t_token			*token;
+
+	if(tokens)
+		token = (t_token *)tokens->content;
+
+	node = create_parse_node();
+	if(token->type == WORD && tokens)
+	{
+		
+		if(get_builtin_index(token->value) != -1)
+			node->is_builtin = true;
+		else if(access(token->value, X_OK) == 0)
+			node->exec = ft_strdup(token->value);
+		parse_args_and_redirects(&tokens, node);
+	}
+	if(!tokens)
+		node->is_last = true;
+	ft_lstadd_back(&data->node_list, ft_lstnew(node));
+	if(tokens)
+		parse_pipe(&tokens, node, data);
+	
+	
+}
+
+void parse_pipe(t_list **tokens, t_parse_node *node , t_data *data)
+{
+	t_token *token;
+	(void)node;
+	token = (t_token *)(*tokens)->content;
+	if(token->type == PIPE)
+	{
+		//print_argv(node);
+		//ft_lstadd_back(&data->node_list, ft_lstnew(node));
+		*tokens = (*tokens)->next;
+		parse_command(*tokens, data);
+	}
 }
 
 
 void	parse(t_data *data, char *cmd)
 {
-	t_parse_node	*node;
+	//t_parse_node	*node;
 	t_list			*tokens;
-	t_token			*token;
-	int i;
+	//t_token			*token;
+	//int i;
 	//t_list			*head;
 	//char			*quote_arg;
 	//quote_arg = NULL;
-	i= 0;
+	//i= 0;
 
 	if (cmd == NULL || ft_strncmp(cmd, "exit", 5) == 0)
 	{
@@ -233,51 +294,52 @@ void	parse(t_data *data, char *cmd)
 		return ;
 	}
 	tokens = tokenize(cmd);
+	parse_command(tokens, data);
 	//head = tokens;
 	//tokens = ft_split(cmd, ' ');
-	node = create_parse_node();
+	// node = create_parse_node();
 	
-	while (tokens->next)
-	{
-		token = (t_token *)tokens->content;
-		if(token->type == PIPE)
-		{
-			print_argv(node);
-			ft_lstadd_back(&data->node_list, ft_lstnew(node));
-			node = create_parse_node();
-			tokens = tokens->next;
-			continue;
+	// while (tokens->next)
+	// {
+	// 	token = (t_token *)(*tokens)->content;
+	// 	if(token->type == PIPE)
+	// 	{
+	// 		print_argv(node);
+	// 		ft_lstadd_back(&data->node_list, ft_lstnew(node));
+	// 		node = create_parse_node();
+	// 		tokens = tokens->next;
+	// 		continue;
 			
-		}
-		if (access(token->value, X_OK) == 0)
-		{
-			node->exec = ft_strdup(token->value);
-			i += get_args(tokens, node);
-			while(tokens->next && token->type == WORD && --i < 0)
-				tokens = tokens->next;
-		}
-		else if (get_builtin_index(token->value) != -1)
-		{
-			node->is_builtin = true;
-			node->exec = ft_strdup(token->value);
-			i += get_args(tokens, node);
-			while(tokens->next && (token->type == WORD && --i > 0))
-			{
-				tokens = tokens->next;
-				token = (t_token *)tokens->content;
-			}
+	// 	}
+	// 	if (access(token->value, X_OK) == 0)
+	// 	{
+	// 		node->exec = ft_strdup(token->value);
+	// 		i += get_args(tokens, node);
+	// 		while(tokens->next && token->type == WORD && --i < 0)
+	// 			tokens = tokens->next;
+	// 	}
+	// 	else if (get_builtin_index(token->value) != -1)
+	// 	{
+	// 		node->is_builtin = true;
+	// 		node->exec = ft_strdup(token->value);
+	// 		i += get_args(tokens, node);
+	// 		while(tokens->next && (token->type == WORD && --i > 0))
+	// 		{
+	// 			tokens = tokens->next;
+	// 			token = (t_token *)(*tokens)->content;
+	// 		}
 				
-		}
-		else
-		{
-			handle_redirects(tokens, node);
-			tokens = tokens->next;
+	// 	}
+	// 	else
+	// 	{
+	// 		handle_redirects(tokens, node);
+	// 		tokens = tokens->next;
 			
-		}
-	}
-	node->is_last = true;
-	print_argv(node);
-	ft_lstadd_back(&data->node_list, ft_lstnew(node));
+	// 	}
+	// }
+	// node->is_last = true;
+	// print_argv(node);
+	// ft_lstadd_back(&data->node_list, ft_lstnew(node));
 }
 
 void print_argv(t_parse_node *node)

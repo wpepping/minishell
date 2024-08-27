@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/26 17:13:10 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/27 01:36:31 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,18 @@ typedef struct s_parse_node
 
 
 void	parse(t_data *data, char *cmd);
+void parse_pipe(t_list **tokens, t_parse_node *node , t_data *data);
+
 void	print_prompt(t_data *data);
 t_parse_node	*create_parse_node(void);
 int	get_builtin_index(char *token);
-int	get_args(t_list *tokens, t_parse_node *node);
-void	handle_redirects(t_list *tokens, t_parse_node *node);
+int	get_args(t_list **tokens, t_parse_node *node);
+void	handle_redirects(t_list **tokens, t_parse_node *node);
 bool in_quotes(char * token);
 void print_argv(t_parse_node *node);
+
+void print_argv_from_nodes(t_data *data);
+void clear_node_list(t_data *data);
 
 // Builtins
 void	cd(t_data *data, char *cmd);
