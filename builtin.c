@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/28 15:30:26 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/28 19:21:44 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static char	*ft_cd_getpath(t_data *data, char	*arg)
 	return (path);
 }
 
-void	ft_echo(t_data *data, t_exec_node *node)
+int	ft_echo(t_data *data, t_exec_node *node)
 {
 	int	i;
 	int	arg_no_newln;
@@ -41,6 +41,7 @@ void	ft_echo(t_data *data, t_exec_node *node)
 		ft_putstr_fd(node->parse->argv[i++], STDOUT_FILENO);
 	if (!arg_no_newln)
 		ft_putendl_fd("", STDOUT_FILENO);
+	return (0);
 }
 
 int	ft_cd(t_data *data, t_exec_node *node)
@@ -67,13 +68,16 @@ int	ft_cd(t_data *data, t_exec_node *node)
 	return (return_value);
 }
 
-void	ft_pwd(t_data *data, t_exec_node *node)
+int	ft_pwd(t_data *data, t_exec_node *node)
 {
 	if (node->parse->argv[1] && node->parse->argv[1][0] == '-'
 		&& ft_strlen(node->parse->argv[1]) > 1)
+	{
 		invalid_option("pwd", node->parse->argv[1]);
-	else
-		ft_putendl_fd(data->cwd, 1);
+		return (1);
+	}
+	ft_putendl_fd(data->cwd, 1);
+	return (0);
 }
 
 void	ft_exit(t_data *data, t_exec_node *node)

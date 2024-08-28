@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 20:31:38 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/28 19:22:46 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,14 +124,14 @@ void	runcmd(t_data *data, t_exec_node *node);
 void	runbuiltin(t_data *data, t_exec_node *node);
 
 // Builtins
-void	ft_echo(t_data *data, t_exec_node *node);
+int		ft_echo(t_data *data, t_exec_node *node);
 int		ft_cd(t_data *data, t_exec_node *node);
-void	ft_pwd(t_data *data, t_exec_node *node);
-void	ft_export(t_data *data, t_exec_node *node);
-void	ft_unset(t_data *data, t_exec_node *node);
-void	ft_env(t_data *data, t_exec_node *node);
-void	invalid_option(char *command, char *option);
+int		ft_pwd(t_data *data, t_exec_node *node);
+int		ft_export(t_data *data, t_exec_node *node);
+int		ft_unset(t_data *data, t_exec_node *node);
+int		ft_env(t_data *data, t_exec_node *node);
 void	ft_exit(t_data *data, t_exec_node *node);
+void	invalid_option(char *command, char *option);
 
 // Envp
 char	**envp_create(char **envp);
