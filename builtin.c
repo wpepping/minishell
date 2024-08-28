@@ -6,7 +6,7 @@
 /*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/28 19:21:44 by wouter           ###   ########.fr       */
+/*   Updated: 2024/08/28 19:45:25 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,9 @@ int	ft_pwd(t_data *data, t_exec_node *node)
 	return (0);
 }
 
-void	ft_exit(t_data *data, t_exec_node *node)
+int	ft_exit(t_data *data, t_exec_node *node)
 {
 	(void)node;
 	data->exit = 1;
+	return (0);
 }

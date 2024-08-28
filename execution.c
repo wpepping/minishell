@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/26 15:20:01 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/28 19:32:02 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	run_one(t_data *data, t_list *parse_nodes)
+static int	run_one(t_data *data, t_list *parse_nodes)
 {
 	t_exec_node	enode;
 
@@ -24,7 +24,7 @@ static void	run_one(t_data *data, t_list *parse_nodes)
 	get_fds(data, &enode, enode.pipes);
 	dup2(enode.fd_in, STDIN_FILENO);
 	dup2(enode.fd_out, STDOUT_FILENO);
-	runbuiltin(data, &enode);
+	return (runbuiltin(data, &enode));
 }
 
 void	execution(t_data *data, t_list *parse_nodes)

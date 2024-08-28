@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manage_processes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:53:43 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 19:53:12 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/28 19:36:15 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ static pid_t	forkproc(t_data *d, t_parse_node *pnode, int **pipes, int i)
 {
 	pid_t		pid;
 	t_exec_node	enode;
+	int			return_value;
 
 	pid = fork();
 	if (pid < 0)
@@ -87,8 +88,8 @@ static pid_t	forkproc(t_data *d, t_parse_node *pnode, int **pipes, int i)
 		dup2(enode.fd_out, STDOUT_FILENO);
 		if (pnode->is_builtin)
 		{
-			runbuiltin(d, &enode);
-			exit(0);
+			return_value = runbuiltin(d, &enode);
+			exit(return_value);
 		}
 		else
 			runcmd(d, &enode);

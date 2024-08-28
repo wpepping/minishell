@@ -6,7 +6,7 @@
 /*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/28 19:22:46 by wouter           ###   ########.fr       */
+/*   Updated: 2024/08/28 19:44:26 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void	get_fds(t_data *data, t_exec_node *node, int **pipes);
 pid_t	*fork_processes(t_data *data, t_list *lst, int lsize);
 int		waitpids(pid_t *pids, int n);
 void	runcmd(t_data *data, t_exec_node *node);
-void	runbuiltin(t_data *data, t_exec_node *node);
+int		runbuiltin(t_data *data, t_exec_node *node);
 
 // Builtins
 int		ft_echo(t_data *data, t_exec_node *node);
@@ -130,7 +130,7 @@ int		ft_pwd(t_data *data, t_exec_node *node);
 int		ft_export(t_data *data, t_exec_node *node);
 int		ft_unset(t_data *data, t_exec_node *node);
 int		ft_env(t_data *data, t_exec_node *node);
-void	ft_exit(t_data *data, t_exec_node *node);
+int		ft_exit(t_data *data, t_exec_node *node);
 void	invalid_option(char *command, char *option);
 
 // Envp
