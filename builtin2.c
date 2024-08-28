@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:40:27 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 20:01:54 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/28 15:57:58 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,26 @@
 
 void	ft_export(t_data *data, t_exec_node *node)
 {
-	if (envp_set(&data->envp, node->parse->argv[1]))
-		ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
+	char	*var;
+	int		i;
+
+	i = 1;
+	while (node->parse->argv[i])
+	{
+		var = ft_strdup(node->parse->argv[i]);
+		if (var == NULL)
+		{
+			ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
+			break ;
+		}
+		else if (envp_set(&data->envp, var))
+		{
+			ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
+			free(var);
+			break ;
+		}
+		i++;
+	}
 }
 
 void	ft_unset(t_data *data, t_exec_node *node)
@@ -23,10 +41,13 @@ void	ft_unset(t_data *data, t_exec_node *node)
 	char	**temp;
 
 	temp = envp_remove(data->envp, node->parse->argv + 1);
-	free(data->envp);
-	data->envp = temp;
-	(void)data;
-	(void)node;
+	if (temp != NULL)
+	{
+		free(data->envp);
+		data->envp = temp;
+	}
+	else
+		ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
 }
 
 void	ft_env(t_data *data, t_exec_node *node)

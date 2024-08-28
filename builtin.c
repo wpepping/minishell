@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 17:53:59 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/28 15:30:26 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,7 @@ int	ft_cd(t_data *data, t_exec_node *node)
 	else if (node->parse->argv[1])
 	{
 		path = ft_cd_getpath(data, node->parse->argv[1]);
-		chdir(path);
-		if (ENOTDIR)
+		if (chdir(path) == ENOTDIR)
 			ft_putstrs_fd("minishell: cd: ", node->parse->argv[1],
 				": No such file or directory", STDERR_FILENO);
 		else

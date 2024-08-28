@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 20:04:43 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/27 20:31:38 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,6 @@ typedef struct s_token
 	char			*value;
 	t_token_type	type;
 }					t_token;
-
-// TEST FUNCTIONS
-void	run_execution_test(t_data *data);
-void	cd(t_data *data, char *cmd);
-void	echo(char *cmd);
 
 // parse
 void				parse(t_data *data, char *cmd);
