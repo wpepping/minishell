@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 18:31:50 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 20:01:05 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/28 18:54:08 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	envp_set(char ***envp, char *value)
 	else
 	{
 		temp = *envp;
-		if (envp_add(envp, value, i - 1))
+		if (envp_add(envp, value, i))
 			return (-1);
 		free(temp);
 	}
