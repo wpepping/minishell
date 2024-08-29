@@ -6,7 +6,7 @@
 /*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/28 19:32:02 by wouter           ###   ########.fr       */
+/*   Updated: 2024/08/29 11:20:12 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ void	execution(t_data *data, t_list *parse_nodes)
 
 	lsize = ft_lstsize(parse_nodes);
 	if (((t_parse_node *)parse_nodes->content)->is_builtin && lsize == 1)
-		run_one(data, parse_nodes);
+		data->last_exit_code = run_one(data, parse_nodes);
 	else
 	{
 		pids = fork_processes(data, parse_nodes, lsize);
-		waitpids(pids, lsize);
+		data->last_exit_code = waitpids(pids, lsize);
 	}
 }

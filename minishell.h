@@ -6,7 +6,7 @@
 /*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/28 19:44:26 by wouter           ###   ########.fr       */
+/*   Updated: 2024/08/29 11:19:41 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ typedef struct s_data
 	t_list			*node_list;
 	int				exit;
 	char			**envp;
+	int				last_exit_code;
 }					t_data;
 
 typedef struct s_token
