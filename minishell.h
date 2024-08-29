@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 19:23:24 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/29 12:35:45 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_parse_node
 	bool	is_last;
 	char	*exec;
 	char	**argv;
+	int last_exit_code;
 	t_list	*output_dest;
 	t_list	*input_src;
 }	t_parse_node;
@@ -101,6 +102,10 @@ void				parse_args_and_redirects(t_list **tokens,
 					t_parse_node *node);
 void				parse_command(t_list *tokens, t_data *data);
 t_parse_node		*create_parse_node(void);
+
+char *env_expand(t_token *token);
+void expand_envs(t_list *tokens);
+bool remove_parens(t_token *token);
 
 int					get_builtin_index(char *token);
 int					get_args(t_list **tokens, t_parse_node *node);
