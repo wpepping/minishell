@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 12:35:45 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/29 15:40:59 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct s_data
 	t_list			*node_list;
 	int				exit;
 	char			**envp;
+	int				last_exit_code;
 }					t_data;
 
 typedef struct s_token
@@ -88,11 +89,6 @@ typedef struct s_token
 	char			*value;
 	t_token_type	type;
 }					t_token;
-
-// TEST FUNCTIONS
-void	run_execution_test(t_data *data);
-void	cd(t_data *data, char *cmd);
-void	echo(char *cmd);
 
 // parse
 void				parse(t_data *data, char *cmd);
@@ -134,27 +130,29 @@ void	get_fds(t_data *data, t_exec_node *node, int **pipes);
 pid_t	*fork_processes(t_data *data, t_list *lst, int lsize);
 int		waitpids(pid_t *pids, int n);
 void	runcmd(t_data *data, t_exec_node *node);
-void	runbuiltin(t_data *data, t_exec_node *node);
+int		runbuiltin(t_data *data, t_exec_node *node);
 
 // Builtins
-void	ft_echo(t_data *data, t_exec_node *node);
+int		ft_echo(t_data *data, t_exec_node *node);
 int		ft_cd(t_data *data, t_exec_node *node);
-void	ft_pwd(t_data *data, t_exec_node *node);
-void	ft_export(t_data *data, t_exec_node *node);
-void	ft_unset(t_data *data, t_exec_node *node);
-void	ft_env(t_data *data, t_exec_node *node);
+int		ft_pwd(t_data *data, t_exec_node *node);
+int		ft_export(t_data *data, t_exec_node *node);
+int		ft_unset(t_data *data, t_exec_node *node);
+int		ft_env(t_data *data, t_exec_node *node);
+int		ft_exit(t_data *data, t_exec_node *node);
 void	invalid_option(char *command, char *option);
-void	ft_exit(t_data *data, t_exec_node *node);
 
 // Envp
 char	**envp_create(char **envp);
-void	envp_add(char ***envp, char *value, int n);
+int		envp_add(char ***envp, char *value, int n);
 char	**envp_remove(char **envp, char **names);
-void	envp_set(char ***envp, char *value);
+int		envp_set(char ***envp, char *value);
 char	*envp_get(char **envp, char *name);
 
 // Utils
-void	cleanup_exit(t_data *data, t_exec_node *enode, t_parse_node *pnode);
+void	clean_exit(char *msg, t_data *data,
+			t_exec_node *enode, t_parse_node *pnode);
+void	cleanup_for_exit(t_data *data, t_exec_node *enode, t_parse_node *pnode);
 void	cleanup_cmd(t_data *data, t_exec_node *enode, t_parse_node *pnode);
 void	close_fds(int fd_in, int fd_out, int **pipes);
 void	free_array(void **arr);

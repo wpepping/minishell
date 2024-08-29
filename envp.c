@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 18:31:50 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 13:42:01 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/28 18:54:08 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ char	**envp_create(char **envp)
 	while (envp[i++])
 		;
 	result = malloc((i + 2) * sizeof(char *));
+	if (!result)
+		return (NULL);
 	i = 0;
 	while (envp[i])
 	{
@@ -31,14 +33,16 @@ char	**envp_create(char **envp)
 	return (result);
 }
 
-void	envp_add(char ***envp, char *value, int n)
+int	envp_add(char ***envp, char *value, int n)
 {
 	char	**new;
 	int		i;
 
 	new = malloc((n + 2) * sizeof(char *));
+	if (!new)
+		return (-1);
 	i = 0;
-	while (i <= n)
+	while (i < n)
 	{
 		new[i] = (*envp)[i];
 		i++;
@@ -46,6 +50,7 @@ void	envp_add(char ***envp, char *value, int n)
 	new[i] = value;
 	new[i + 1] = NULL;
 	*envp = new;
+	return (0);
 }
 
 char	**envp_remove(char **envp, char **names)
@@ -53,30 +58,29 @@ char	**envp_remove(char **envp, char **names)
 	char	**new;
 	int		i;
 	int		n;
-	int		cmplen;
 
 	i = -1;
 	n = 0;
 	while (envp[++i])
 	{
-		cmplen = ft_strchr(envp[i], '=') - envp[i];
-		if (!arrncontains(names, envp[i], cmplen))
+		if (!arrncontains(names, envp[i], ft_strchr(envp[i], '=') - envp[i]))
 			n++;
 	}
 	new = malloc((n + 1) * sizeof(char *));
+	if (!new)
+		return (NULL);
 	i = -1;
 	n = 0;
 	while (envp[++i])
 	{
-		cmplen = ft_strchr(envp[i], '=') - envp[i];
-		if (!arrncontains(names, envp[i], cmplen))
+		if (!arrncontains(names, envp[i], ft_strchr(envp[i], '=') - envp[i]))
 			new[n++] = envp[i];
 	}
-	new[i] = NULL;
+	new[n] = NULL;
 	return (new);
 }
 
-void	envp_set(char ***envp, char *value)
+int	envp_set(char ***envp, char *value)
 {
 	int		cmplen;
 	int		i;
@@ -98,9 +102,11 @@ void	envp_set(char ***envp, char *value)
 	else
 	{
 		temp = *envp;
-		envp_add(envp, value, i - 1);
+		if (envp_add(envp, value, i))
+			return (-1);
 		free(temp);
 	}
+	return (0);
 }
 
 char	*envp_get(char **envp, char *name)
@@ -110,6 +116,8 @@ char	*envp_get(char **envp, char *name)
 	char	*needle;
 
 	needle = ft_strjoin(name, "=");
+	if (!needle)
+		return (NULL);
 	strlen = ft_strlen(needle);
 	i = 0;
 	while (envp[i])

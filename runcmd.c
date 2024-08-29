@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   runcmd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:20:00 by wouter            #+#    #+#             */
-/*   Updated: 2024/08/27 17:54:53 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/28 19:49:07 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ static void	cmd_err_handl(char *message, char *cmd, t_data *data, t_exec_node *n
 {
 	ft_putstr_fd(message, STDERR_FILENO);
 	ft_putendl_fd(cmd, STDERR_FILENO);
-	cleanup_exit(data, node, node->parse);
-	exit(1);
+	clean_exit(NULL, data, node, node->parse);
 }
 
 static char	**get_path(void)
@@ -46,22 +45,23 @@ static char	*find_full_path(char *cmd, char *path[])
 	return (NULL);
 }
 
-void	runbuiltin(t_data *data, t_exec_node *node)
+int	runbuiltin(t_data *data, t_exec_node *node)
 {
 	if (ft_strncmp(node->parse->argv[0], "echo", 5) == 0)
-		ft_echo(data, node);
+		return (ft_echo(data, node));
 	if (ft_strncmp(node->parse->argv[0], "cd", 5) == 0)
-		ft_cd(data, node);
+		return (ft_cd(data, node));
 	if (ft_strncmp(node->parse->argv[0], "pwd", 5) == 0)
-		ft_pwd(data, node);
+		return (ft_pwd(data, node));
 	if (ft_strncmp(node->parse->argv[0], "export", 5) == 0)
-		ft_export(data, node);
+		return (ft_export(data, node));
 	if (ft_strncmp(node->parse->argv[0], "unset", 5) == 0)
-		ft_unset(data, node);
+		return (ft_unset(data, node));
 	if (ft_strncmp(node->parse->argv[0], "env", 5) == 0)
-		ft_env(data, node);
+		return (ft_env(data, node));
 	if (ft_strncmp(node->parse->argv[0], "exit", 5) == 0)
-		ft_exit(data, node);
+		return (ft_exit(data, node));
+	return (0);
 }
 
 void	runcmd(t_data *data, t_exec_node *node)

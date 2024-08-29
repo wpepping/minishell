@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 17:53:59 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/28 19:45:25 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static char	*ft_cd_getpath(t_data *data, char	*arg)
 	return (path);
 }
 
-void	ft_echo(t_data *data, t_exec_node *node)
+int	ft_echo(t_data *data, t_exec_node *node)
 {
 	int	i;
 	int	arg_no_newln;
@@ -41,6 +41,7 @@ void	ft_echo(t_data *data, t_exec_node *node)
 		ft_putstr_fd(node->parse->argv[i++], STDOUT_FILENO);
 	if (!arg_no_newln)
 		ft_putendl_fd("", STDOUT_FILENO);
+	return (0);
 }
 
 int	ft_cd(t_data *data, t_exec_node *node)
@@ -56,8 +57,7 @@ int	ft_cd(t_data *data, t_exec_node *node)
 	else if (node->parse->argv[1])
 	{
 		path = ft_cd_getpath(data, node->parse->argv[1]);
-		chdir(path);
-		if (ENOTDIR)
+		if (chdir(path) == ENOTDIR)
 			ft_putstrs_fd("minishell: cd: ", node->parse->argv[1],
 				": No such file or directory", STDERR_FILENO);
 		else
@@ -68,17 +68,21 @@ int	ft_cd(t_data *data, t_exec_node *node)
 	return (return_value);
 }
 
-void	ft_pwd(t_data *data, t_exec_node *node)
+int	ft_pwd(t_data *data, t_exec_node *node)
 {
 	if (node->parse->argv[1] && node->parse->argv[1][0] == '-'
 		&& ft_strlen(node->parse->argv[1]) > 1)
+	{
 		invalid_option("pwd", node->parse->argv[1]);
-	else
-		ft_putendl_fd(data->cwd, 1);
+		return (1);
+	}
+	ft_putendl_fd(data->cwd, 1);
+	return (0);
 }
 
-void	ft_exit(t_data *data, t_exec_node *node)
+int	ft_exit(t_data *data, t_exec_node *node)
 {
 	(void)node;
 	data->exit = 1;
+	return (0);
 }

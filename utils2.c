@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:14:03 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/26 17:50:47 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/27 20:04:36 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,28 @@ char	*ft_strjoin2(char *s1, char const *s2)
 	return (result);
 }
 
-void	cleanup_exit(t_data *data, t_exec_node *enode, t_parse_node *pnode)
+void	ft_putstrs_fd(char *str1, char *str2, char *str3, int fd)
+{
+	if (str1 != NULL)
+		ft_putstr_fd(str1, fd);
+	if (str2 != NULL)
+		ft_putstr_fd(str2, fd);
+	if (str3 != NULL)
+		ft_putstr_fd(str3, fd);
+	ft_putendl_fd("", fd);
+}
+
+void	clean_exit(char *msg, t_data *data,
+			t_exec_node *enode, t_parse_node *pnode)
+{
+	(void)data;
+	(void)enode;
+	(void)pnode;
+	ft_putendl_fd(msg, STDERR_FILENO);
+	exit(1);
+}
+
+void	cleanup(t_data *data, t_exec_node *enode, t_parse_node *pnode)
 {
 	(void)data;
 	(void)enode;
@@ -41,15 +62,4 @@ void	cleanup_cmd(t_data *data, t_exec_node *enode, t_parse_node *pnode)
 	(void)data;
 	(void)enode;
 	(void)pnode;
-}
-
-void	ft_putstrs_fd(char *str1, char *str2, char *str3, int fd)
-{
-	if (str1 != NULL)
-		ft_putstr_fd(str1, fd);
-	if (str2 != NULL)
-		ft_putstr_fd(str2, fd);
-	if (str3 != NULL)
-		ft_putstr_fd(str3, fd);
-	ft_putendl_fd("", fd);
 }

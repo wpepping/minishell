@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/26 15:20:01 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/29 11:20:12 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	run_one(t_data *data, t_list *parse_nodes)
+static int	run_one(t_data *data, t_list *parse_nodes)
 {
 	t_exec_node	enode;
 
@@ -24,7 +24,7 @@ static void	run_one(t_data *data, t_list *parse_nodes)
 	get_fds(data, &enode, enode.pipes);
 	dup2(enode.fd_in, STDIN_FILENO);
 	dup2(enode.fd_out, STDOUT_FILENO);
-	runbuiltin(data, &enode);
+	return (runbuiltin(data, &enode));
 }
 
 void	execution(t_data *data, t_list *parse_nodes)
@@ -34,10 +34,10 @@ void	execution(t_data *data, t_list *parse_nodes)
 
 	lsize = ft_lstsize(parse_nodes);
 	if (((t_parse_node *)parse_nodes->content)->is_builtin && lsize == 1)
-		run_one(data, parse_nodes);
+		data->last_exit_code = run_one(data, parse_nodes);
 	else
 	{
 		pids = fork_processes(data, parse_nodes, lsize);
-		waitpids(pids, lsize);
+		data->last_exit_code = waitpids(pids, lsize);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 18:43:25 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/23 19:01:24 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/29 11:13:22 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,9 @@ int	waitpids(pid_t *pids, int n)
 	{
 		if (pids[i] != -1)
 		{
-			waitpid(pids[i], &temp, 0);
+			status = waitpid(pids[i], &temp, 0);
 		}
 		i++;
 	}
-	// need to update status with correct exit status
 	return (status);
 }
