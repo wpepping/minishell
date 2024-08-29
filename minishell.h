@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 15:40:59 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/29 20:00:52 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "libft/libft.h"
 # include <linux/limits.h>
 # include <readline/readline.h>
+# include <readline/history.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>
@@ -23,7 +24,6 @@
 # include <stdbool.h>
 # include <errno.h>
 # include <linux/limits.h>
-# include <readline/readline.h>
 # include <sys/wait.h>
 # include "libft/libft.h"
 # include <signal.h>
@@ -59,7 +59,6 @@ typedef struct s_parse_node
 	bool	is_last;
 	char	*exec;
 	char	**argv;
-	int last_exit_code;
 	t_list	*output_dest;
 	t_list	*input_src;
 }	t_parse_node;
@@ -99,15 +98,16 @@ void				parse_args_and_redirects(t_list **tokens,
 void				parse_command(t_list *tokens, t_data *data);
 t_parse_node		*create_parse_node(void);
 
-char *env_expand(t_token *token);
-void expand_envs(t_list *tokens);
-bool remove_parens(t_token *token);
+
+void expand_envs(t_list *tokens, t_data *data);
+void remove_quotes(t_list *tokens);
 
 int					get_builtin_index(char *token);
 int					get_args(t_list **tokens, t_parse_node *node);
 void				handle_redirects(t_list **tokens, t_parse_node *node);
 bool				in_quotes(char *token);
-void expand_envs(t_list *tokens);
+size_t count_env_len(char *env_var);
+size_t count_to_next_env(char *start);
 
 void				print_prompt(t_data *data);
 void				print_argv(t_parse_node *node);
@@ -121,7 +121,7 @@ bool				append_token(t_list **token_list, t_token_type type,
 bool				in_quotes(char *token);
 
 // Parsing
-void	parse(t_data *data, char *cmd);
+//void	parse(t_data *data, char *cmd);
 
 // Execution
 int		**create_pipes(int n);

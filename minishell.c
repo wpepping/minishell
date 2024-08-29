@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 15:40:36 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:26:47 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ int	main(int argc, char **argv, char **envp)
 		free(prompt);
 		if (*cmd != '\0')
 		{
+			add_history(cmd);
 			parse(&data, cmd);
 			print_argv_from_nodes(&data);
 			execution(&data, data.node_list);

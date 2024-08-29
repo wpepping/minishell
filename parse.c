@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 15:39:18 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/29 20:19:25 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,47 +164,135 @@ void	parse(t_data *data, char *cmd)
 	
 
 	tokens = tokenize(cmd);
-	expand_envs(tokens);
+	expand_envs(tokens, data);
+	remove_quotes(tokens);
 	parse_command(tokens, data);
 }
 
-void expand_envs(t_list *tokens)
+void expand_envs(t_list *tokens, t_data *data)
 {
 	t_token *token;
 	//char **subtokens;
-	//char *expanded;
+	char *expanded;
+	char *temp;
+	char *temp2;
 	char *envpointer;
+	size_t len;
+	
+	token = (t_token *)tokens->content;
+	
 	while(tokens)
 	{
+		envpointer = ft_strchr(token->value, '$');
 	 	token = (t_token *)tokens->content;
+		
  		if(token->type == END)
  			break;
-		if(token->type == WORD && token->value[0] != '\'')
+		if(token->type == WORD && token->value[0] != '\'' && envpointer)
 		{
-			envpointer = ft_strchr(token->value, '$');
-			if(envpointer && ft_strrchr(token->value, '$') != envpointer && token->value[0] == '$'))
+			
+			len = count_to_next_env(token->value);
+			
+			expanded = ft_strdup("");
+			if(len)
 			{
-				get
-				printf("got to the point to split\n");
+				temp = ft_substr(token->value, 0, len);
+				expanded = ft_strjoin(expanded, temp);
+				free(temp);
 			}
-			if(
+			while(envpointer)
 			{
-				get_env()
+				len = count_env_len(envpointer + 1);
+				if(len == 0)
+				{
+					temp = ft_strdup("$");
+					
+				}
+				else if(len == 1)
+				{
+					if(envpointer[1] == '?')
+						temp = ft_itoa(data->last_exit_code);
+					else if(envpointer[1] == '$')
+						temp = ft_itoa(getpid());
+					
+				}
+				else
+				{
+					temp = ft_substr(envpointer, 1, len);
+					temp2 = envp_get(data->envp, temp);
+					if(temp2)
+						expanded = ft_strjoin(expanded, temp2);
+				}
+				if(temp)
+				{
+					expanded = ft_strjoin(expanded, temp);
+					free(temp);
+				}
+				if(token->value[0] == '\"' && envpointer)
+				{
+					envpointer += len + 1;
+					len = count_to_next_env(envpointer);
+					if(len)
+					{
+						temp = ft_substr(envpointer, 0, len);
+						expanded = ft_strjoin(expanded, temp);
+						free(temp);
+					}
+				}
+				envpointer = ft_strchr(envpointer + 1, '$');
 			}
-			//ft_split(token->value, '$');
+			token->value = ft_strdup(expanded);
+			free(expanded);
 		}
 		tokens = tokens->next;
 	}
 }
 
-int count_env_len(char *env_var)
+size_t count_env_len(char *env_var)
 {
-	int i;
+	size_t i;
 	i = 0;
-	while(env_var[i] && (ft_isalnum(env_var[i]) || env_var[i] == '_'))
+	while(env_var[i] && (ft_isalnum(env_var[i]) || env_var[i] == '_' || env_var[1] == '?' || env_var[1] == '$' ) && !ft_isdigit(env_var[0]))
 		i++;
 	return i;
 }
+
+size_t count_to_next_env(char *start)
+{
+	size_t i;
+	i = 0;
+	while(start[i] && start[i] != '$')
+		i++;
+	return i;
+}
+
+void remove_quotes(t_list *tokens)
+{
+	t_token *token;
+	char *expanded;
+	//char *temp;
+	//size_t len;
+	while(tokens)
+	{
+		token = (t_token *)tokens->content;
+		if(token->type == END)
+			break;
+		if(token->type == WORD && (token->value[0] == '\"' || token->value[0] == '\''))
+		{
+			expanded = token->value;
+			token->value = ft_substr(expanded, 1, ft_strlen(expanded) - 2);
+			free(expanded);
+			if(!token->value)
+			{
+				printf("Error: malloc failed\n");
+				exit(1);
+			}
+		}
+		tokens = tokens->next;
+	}
+}
+
+
 
 // bool remove_parens(t_token *token)
 // {
