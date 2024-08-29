@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 13:12:11 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/29 15:39:18 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,76 +168,32 @@ void	parse(t_data *data, char *cmd)
 	parse_command(tokens, data);
 }
 
-bool remove_parens(t_token *token)
-{
-	char *expanded;
-	char *env_pointer;
-	char *temp;
-	int i;
-	i=0;
-	temp = ft_strdup("");
-	if(token->value[0] == '\"')
-	{
-
-		if(ft_strchr(token->value, '$') != NULL)
-		{
-			while(token[i] && token[i] != '$')
-			{
-				temp = ft_strjoin(temp, token[i]);
-				i++;
-			}
-			temp = ft_strchr(token->value, '$');
-			temp = ft_strjoin(temp, token->value);
-			env_pointer = ft_strchr(token->value, '$')
-			env_expand(token);
-			temp = ft_strjoin() 
-		}
-		return true;
-	}
-	else if(token->value[0] == '\'')
-	{
-		expanded = token->value;
-		token->value = ft_substr(expanded, 1, ft_strlen(expanded) - 2);
-		free(expanded);
-		if(!token->value)
-		{
-			printf("Error: malloc failed\n");
-			exit(1);
-		}
-		return true;
-	}
-	return false;
-}
-
 void expand_envs(t_list *tokens)
 {
 	t_token *token;
-
-
+	//char **subtokens;
+	//char *expanded;
+	char *envpointer;
 	while(tokens)
 	{
-		token = (t_token *)tokens->content;
-		if(token->type == END)
-			break;
-		else if (token->type == WORD)
+	 	token = (t_token *)tokens->content;
+ 		if(token->type == END)
+ 			break;
+		if(token->type == WORD && token->value[0] != '\'')
 		{
-			
-			if(remove_parens(token))
+			envpointer = ft_strchr(token->value, '$');
+			if(envpointer && ft_strrchr(token->value, '$') != envpointer && token->value[0] == '$'))
 			{
-				tokens = tokens->next;
-				continue;
+				get
+				printf("got to the point to split\n");
 			}
-			else if(ft_strchr(token->value, '$') != NULL)
+			if(
 			{
-				env_expand(ft_strchr(token->value, '$'));
-				token->value = env_expand(token);
+				get_env()
 			}
-				
-			
-			
+			//ft_split(token->value, '$');
 		}
 		tokens = tokens->next;
-		
 	}
 }
 
@@ -250,43 +206,118 @@ int count_env_len(char *env_var)
 	return i;
 }
 
-char *env_expand(char *env_var)
-{
-	char *expanded;
-	//char *env_var;
+// bool remove_parens(t_token *token)
+// {
+// 	char *expanded;
+// 	char *env_pointer;
+// 	char *temp;
+// 	int i;
+// 	i=0;
+// 	temp = ft_strdup("");
+// 	if(token->value[0] == '\"')
+// 	{
 
-	expanded = NULL;
-	int i;
-	i = 0;
-	//env_var = ft_strchr(token->value, '$');
-	if(env_var)
-	{
-		i = count_env_len(env_var);
-		if(i == 1)
-		{
-			return("$");
-		}
-		env_var = ft_substr(env_var, 1, i);
-		if(getenv(env_var))
-		{
-			expanded = ft_strdup(getenv(env_var));
-			if(!expanded)
-			{
-				printf("Error: malloc failed\n");
-				exit(1);
-			}
-		}
-		else
-			printf("env_vnot there\n");
-		free(token->value);
+// 		if(ft_strchr(token->value, '$') != NULL)
+// 		{
+// 			while(token[i] && token[i] != '$')
+// 			{
+// 				temp = ft_strjoin(temp, token[i]);
+// 				i++;
+// 			}
+// 			temp = ft_strchr(token->value, '$');
+// 			temp = ft_strjoin(temp, token->value);
+// 			env_pointer = ft_strchr(token->value, '$')
+// 			env_expand(token);
+// 			temp = ft_strjoin() 
+// 		}
+// 		return true;
+// 	}
+// 	else if(token->value[0] == '\'')
+// 	{
+// 		expanded = token->value;
+// 		token->value = ft_substr(expanded, 1, ft_strlen(expanded) - 2);
+// 		free(expanded);
+// 		if(!token->value)
+// 		{
+// 			printf("Error: malloc failed\n");
+// 			exit(1);
+// 		}
+// 		return true;
+// 	}
+// 	return false;
+// }
+
+// void expand_envs(t_list *tokens)
+// {
+// 	t_token *token;
+
+
+// 	while(tokens)
+// 	{
+// 		token = (t_token *)tokens->content;
+// 		if(token->type == END)
+// 			break;
+// 		else if (token->type == WORD)
+// 		{
+			
+// 			if(remove_parens(token))
+// 			{
+// 				tokens = tokens->next;
+// 				continue;
+// 			}
+// 			else if(ft_strchr(token->value, '$') != NULL)
+// 			{
+// 				env_expand(ft_strchr(token->value, '$'));
+// 				token->value = env_expand(token);
+// 			}
+				
+			
+			
+// 		}
+// 		tokens = tokens->next;
 		
-		free(env_var);
+// 	}
+// }
+
+
+
+// char *env_expand(char *env_var)
+// {
+// 	char *expanded;
+// 	//char *env_var;
+
+// 	expanded = NULL;
+// 	int i;
+// 	i = 0;
+// 	//env_var = ft_strchr(token->value, '$');
+// 	if(env_var)
+// 	{
+// 		i = count_env_len(env_var);
+// 		if(i == 1)
+// 		{
+// 			return("$");
+// 		}
+// 		env_var = ft_substr(env_var, 1, i);
+// 		if(getenv(env_var))
+// 		{
+// 			expanded = ft_strdup(getenv(env_var));
+// 			if(!expanded)
+// 			{
+// 				printf("Error: malloc failed\n");
+// 				exit(1);
+// 			}
+// 		}
+// 		else
+// 			printf("env_vnot there\n");
+// 		free(token->value);
 		
-		return(expanded);
+// 		free(env_var);
+		
+// 		return(expanded);
 	
-	}
-	return NULL;
-}
+// 	}
+// 	return NULL;
+// }
 
 void	print_argv(t_parse_node *node)
 {
