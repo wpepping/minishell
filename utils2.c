@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:14:03 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 20:04:36 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/29 18:40:22 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,4 @@ void	clean_exit(char *msg, t_data *data,
 	(void)pnode;
 	ft_putendl_fd(msg, STDERR_FILENO);
 	exit(1);
-}
-
-void	cleanup(t_data *data, t_exec_node *enode, t_parse_node *pnode)
-{
-	(void)data;
-	(void)enode;
-	(void)pnode;
-}
-
-void	cleanup_cmd(t_data *data, t_exec_node *enode, t_parse_node *pnode)
-{
-	(void)data;
-	(void)enode;
-	(void)pnode;
 }

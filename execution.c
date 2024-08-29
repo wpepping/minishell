@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 11:20:12 by wouter           ###   ########.fr       */
+/*   Updated: 2024/08/29 20:36:58 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ static int	run_one(t_data *data, t_list *parse_nodes)
 	enode.pipes[0] = NULL;
 	enode.pindex = 0;
 	enode.nofork = 1;
+	enode.parse_nodes = parse_nodes;
 	get_fds(data, &enode, enode.pipes);
+	if (enode.fd_in == -1 || enode.fd_out == -1)
+		return (1);
 	dup2(enode.fd_in, STDIN_FILENO);
 	dup2(enode.fd_out, STDOUT_FILENO);
 	return (runbuiltin(data, &enode));

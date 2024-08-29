@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 18:31:50 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/28 18:54:08 by wouter           ###   ########.fr       */
+/*   Updated: 2024/08/29 19:02:27 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ char	*envp_get(char **envp, char *name)
 	i = 0;
 	while (envp[i])
 	{
-		if (ft_strncmp(envp[i], needle, strlen))
+		if (ft_strncmp(envp[i], needle, strlen) == 0)
 		{
 			free(needle);
 			return (ft_strchr(envp[i], '=') + 1);

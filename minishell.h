@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 11:19:41 by wouter           ###   ########.fr       */
+/*   Updated: 2024/08/29 20:29:25 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "libft/libft.h"
 # include <linux/limits.h>
 # include <readline/readline.h>
+# include <readline/history.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>
@@ -23,7 +24,6 @@
 # include <stdbool.h>
 # include <errno.h>
 # include <linux/limits.h>
-# include <readline/readline.h>
 # include <sys/wait.h>
 # include "libft/libft.h"
 # include <signal.h>
@@ -34,6 +34,8 @@
 
 # define ERR_COMMAND_NOT_FOUND "minishell: command not found: "
 # define ERR_OUT_OF_MEMORY "minishell: out of memory error"
+# define ERR_NO_SUCH_FILE "minishell: no such file or directory: "
+# define ERR_PERMISSION_DENIED "minishell: permission denied: "
 # define PROMPT_END "$ "
 
 typedef enum e_token_type
@@ -48,7 +50,7 @@ typedef enum e_token_type
 	OPEN_PAREN,
 	CLOSE_PAREN,
 	PIPE
-}					t_token_type;
+}	t_token_type;
 
 typedef struct s_parse_node
 {
@@ -65,10 +67,12 @@ typedef struct s_parse_node
 typedef struct s_exec_node
 {
 	t_parse_node	*parse;
+	t_list			*parse_nodes;
 	int				fd_in;
 	int				fd_out;
 	int				**pipes;
 	int				pindex;
+	int				list_size;
 	int				nofork;
 	bool			run_cmd;
 }	t_exec_node;
@@ -144,13 +148,15 @@ char	*envp_get(char **envp, char *name);
 // Utils
 void	clean_exit(char *msg, t_data *data,
 			t_exec_node *enode, t_parse_node *pnode);
-void	cleanup_for_exit(t_data *data, t_exec_node *enode, t_parse_node *pnode);
-void	cleanup_cmd(t_data *data, t_exec_node *enode, t_parse_node *pnode);
 void	close_fds(int fd_in, int fd_out, int **pipes);
-void	free_array(void **arr);
 char	*ft_pathjoin(char const *s1, char const *s2);
 void	ft_putstrs_fd(char *str1, char *str2, char *str3, int fd);
 char	*ft_strjoin2(char *s1, char const *s2);
 int		arrncontains(char **haystack, char *needle, int cmplen);
+
+// Clean up
+void	cleanup(t_data *data, t_exec_node *enode, t_parse_node *pnode);
+void	cleanup_cmd(t_list *pnode);
+void	free_array(void **arr);
 
 #endif

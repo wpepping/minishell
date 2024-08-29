@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 20:05:14 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/29 20:19:48 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,13 +89,15 @@ int	main(int argc, char **argv, char **envp)
 		free(prompt);
 		if (*cmd != '\0')
 		{
+			add_history(cmd);
 			parse(&data, cmd);
 			execution(&data, data.node_list);
 			free(cmd);
+			cleanup_cmd(data.node_list);
 			data.node_list = NULL;
 		}
-		//clear list
 		//print_argv_from_nodes(&data);
 	}
+	cleanup(&data, NULL, NULL);
 	return (0);
 }
