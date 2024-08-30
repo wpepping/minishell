@@ -35,13 +35,13 @@ int	add_quote(char *cmd, char quote, t_list **token_list)
 	while (cmd[i] && cmd[i] != quote)
 		i++;
 	if (quote == '"')
-		append_token(token_list, DOUBLE_QUOTE, cmd, i +1);
+		append_token(token_list, DOUBLE_QUOTE, cmd, i + 1);
 	else if (quote == '\'')
 		append_token(token_list, SINGLE_QUOTE, cmd, i + 1);
 	return (i + 1);
 }
 
-int	add_word(char *cmd, t_list *token_list)
+int	add_word(char *cmd, t_list **token_list)
 {
 	int	i;
 
@@ -52,7 +52,7 @@ int	add_word(char *cmd, t_list *token_list)
 	{
 		i++;
 	}
-	append_token(&token_list, WORD, cmd, i + 1);
+	append_token(token_list, WORD, cmd, i);
 	return (i);
 }
 
@@ -97,7 +97,7 @@ t_list	*tokenize(char *cmd)
 		else if (ft_strncmp(cmd, "|", 1) == 0)
 			cmd += append_token(&token_list, PIPE, cmd, 1);
 		else
-			cmd += add_word(cmd, token_list);
+			cmd += add_word(cmd, &token_list);
 	}
 	return (token_list);
 }

@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/30 02:33:41 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/30 16:52:03 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,18 +94,19 @@ typedef struct s_token
 void				parse(t_data *data, char *cmd);
 void				parse_pipe(t_list **tokens, t_parse_node *node,
 					t_data *data);
-void				parse_args_and_redirects(t_list **tokens,
-					t_parse_node *node);
+void	parse_args_and_redirects(t_list **tokens, t_parse_node *node, t_data data);
 void				parse_command(t_list *tokens, t_data *data);
 t_parse_node		*create_parse_node(void);
+
+void expand_env(t_token *token, char *envpointer, t_data data);
 
 void	malloc_protection(void *ptr);
 
 void expand_envs(t_list *tokens, t_data *data);
-void remove_quotes(t_list *tokens);
+void remove_quotes(t_token *token);
 
 int					get_builtin_index(char *token);
-int					get_args(t_list **tokens, t_parse_node *node);
+int	get_args(t_list **tokens, t_parse_node *node, t_data data);
 void				handle_redirects(t_list **tokens, t_parse_node *node);
 bool				in_quotes(char *token);
 size_t count_env_len(char *env_var);
@@ -122,7 +123,7 @@ int	append_token(t_list **token_list, t_token_type type, char *cmd,
 		int len);
 int	handle_other_tokens(char *cmd, t_list *token_list);
 bool				in_quotes(char *token);
-int	add_word(char *cmd, t_list *token_list);
+int	add_word(char *cmd, t_list **token_list);
 
 // Parsing
 //void	parse(t_data *data, char *cmd);
