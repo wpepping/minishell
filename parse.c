@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/30 17:29:08 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/30 19:07:26 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,16 @@ int	get_builtin_index(char *token)
 	return (-1);
 }
 
+bool is_valid_filename(t_token *token)
+{
+	int i;
+	i=0;
+	if (token->content == NULL || ft_strlen(token->content) == 0 || token->type != WORD) || token->type != DOUBLE_QUOTE || token->type != SINGLE_QUOTE)
+		return (false);
+	
+	return (true);
+}
+
 void	handle_redirects(t_list **tokens, t_parse_node *node)
 {
 	t_token	*token;
@@ -39,6 +49,7 @@ void	handle_redirects(t_list **tokens, t_parse_node *node)
 	current = *tokens;
 	while (token->type != PIPE && (t_token *)current->next != NULL)
 	{
+		
 		token = (t_token *)current->content;
 		if ((token->type == APPEND))
 		{
@@ -107,7 +118,7 @@ int	get_args(t_list **tokens, t_parse_node *node, t_data data)
 	return (argc);
 }
 
-void	parse_args_and_redirects(t_list **tokens, t_parse_node *node, t_data data)
+void	parse_args(t_list **tokens, t_parse_node *node, t_data data)
 {
 	t_token	*token;
 
@@ -117,10 +128,27 @@ void	parse_args_and_redirects(t_list **tokens, t_parse_node *node, t_data data)
 		get_args(tokens, node, data);
 	if (!*tokens)
 		return ;
+	parse_redirects(tokens, node, data);
+	token = (t_token *)(*tokens)->content;
+	
+}
+
+void parse_redirects(t_list **tokens, t_parse_node *node, t_data data)
+{
+	t_token	*token;
+
 	token = (t_token *)(*tokens)->content;
 	if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN
 		|| token->type == APPEND)
+	{
+		if(is_valid_filename(*tokens->next))
+		{
+			printf("Error: no filename specified for redirection\n");
+			exit(1);
+		}
 		handle_redirects(tokens, node);
+	}
+		
 }
 
 void	parse_command(t_list *tokens, t_data *data)
@@ -133,12 +161,13 @@ void	parse_command(t_list *tokens, t_data *data)
 	node = create_parse_node();
 	if (tokens)
 	{
+		parse_redirects(&tokens, node, *data);
 		if (get_builtin_index(token->value) != -1)
 			node->is_builtin = true;
 		else if (access(token->value, X_OK) == 0)
 			node->exec = ft_strdup(token->value);
 		if (tokens)
-			parse_args_and_redirects(&tokens, node, *data);
+			parse_args(&tokens, node, *data);
 	}
 	if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
 		node->is_last = true;
