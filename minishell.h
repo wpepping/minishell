@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 20:00:52 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/30 02:33:41 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,9 @@ typedef enum e_token_type
 	REDIRECT_IN,
 	OPEN_PAREN,
 	CLOSE_PAREN,
-	PIPE,
-	END
+	DOUBLE_QUOTE,
+	SINGLE_QUOTE,
+	PIPE
 }					t_token_type;
 
 typedef struct s_parse_node
@@ -98,6 +99,7 @@ void				parse_args_and_redirects(t_list **tokens,
 void				parse_command(t_list *tokens, t_data *data);
 t_parse_node		*create_parse_node(void);
 
+void	malloc_protection(void *ptr);
 
 void expand_envs(t_list *tokens, t_data *data);
 void remove_quotes(t_list *tokens);
@@ -116,9 +118,11 @@ void				clear_node_list(t_data *data);
 
 // Tokenization
 t_list				*tokenize(char *cmd);
-bool				append_token(t_list **token_list, t_token_type type,
-						char **cmd, int len);
+int	append_token(t_list **token_list, t_token_type type, char *cmd,
+		int len);
+int	handle_other_tokens(char *cmd, t_list *token_list);
 bool				in_quotes(char *token);
+int	add_word(char *cmd, t_list *token_list);
 
 // Parsing
 //void	parse(t_data *data, char *cmd);

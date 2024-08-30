@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 20:19:25 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/30 04:04:04 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,9 @@ int	get_args(t_list **tokens, t_parse_node *node)
 	node->argv = malloc(sizeof(char *) * (argc + 1));
 	while (i < argc)
 	{
+		if((token->type == DOUBLE_QUOTE || token->type == WORD) && ft_strchr(token->value, '$'))
+			expand_env(token, data);
+			token->value = ft_substr(token->value, 1, ft_strlen(token->value) - 2);
 		node->argv[i] = strdup(token->value);
 		if (!node->argv[i])
 		{
@@ -106,7 +109,7 @@ void	parse_args_and_redirects(t_list **tokens, t_parse_node *node)
 	t_token	*token;
 
 	token = (t_token *)(*tokens)->content;
-	if (token->type == WORD)
+	if (token->type == WORD ||token->type DOUBLE_QUOTE ||token->type SINGLE_QUOTE)
 		get_args(tokens, node);
 	if (!*tokens)
 		return ;
@@ -153,7 +156,7 @@ void	parse_pipe(t_list **tokens, t_parse_node *node, t_data *data)
 	if (token->type == PIPE)
 	{
 		*tokens = (*tokens)->next;
-		parse_command(*tokens, data);
+		parse_coand(*tokens, data);
 	}
 }
 
@@ -161,13 +164,32 @@ void	parse(t_data *data, char *cmd)
 {
 	t_list	*tokens;
 	
-	
-
 	tokens = tokenize(cmd);
 	expand_envs(tokens, data);
 	remove_quotes(tokens);
 	parse_command(tokens, data);
 }
+
+char *expand_env(t_token *token, char *envpointer, t_data *data)
+{
+	char *expanded;
+	char *envpointer;
+	char *temp;
+
+	len = count_to_next_env(token->value);
+
+	
+	expanded = ft_strdup("");
+	if(len)
+	{
+		temp = ft_substr(token->value, 0, len);
+		expanded = ft_strjoin(expanded, temp);
+		free(temp);
+	}
+
+
+}
+
 
 void expand_envs(t_list *tokens, t_data *data)
 {
@@ -186,8 +208,8 @@ void expand_envs(t_list *tokens, t_data *data)
 		envpointer = ft_strchr(token->value, '$');
 	 	token = (t_token *)tokens->content;
 		
- 		if(token->type == END)
- 			break;
+ 		//if(token->type == END)
+ 			//break;
 		if(token->type == WORD && token->value[0] != '\'' && envpointer)
 		{
 			
@@ -205,6 +227,7 @@ void expand_envs(t_list *tokens, t_data *data)
 				len = count_env_len(envpointer + 1);
 				if(len == 0)
 				{
+					
 					temp = ft_strdup("$");
 					
 				}
@@ -275,8 +298,8 @@ void remove_quotes(t_list *tokens)
 	while(tokens)
 	{
 		token = (t_token *)tokens->content;
-		if(token->type == END)
-			break;
+		//if(token->type == END)
+			//break;
 		if(token->type == WORD && (token->value[0] == '\"' || token->value[0] == '\''))
 		{
 			expanded = token->value;
