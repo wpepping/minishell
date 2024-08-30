@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/30 04:04:04 by phartman         ###   ########.fr       */
+/*   Updated: 2024/08/30 14:02:53 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,16 @@ void	parse(t_data *data, char *cmd)
 	parse_command(tokens, data);
 }
 
+char *substr_and_join(const char *str, size_t start, size_t len, char *to_join)
+{
+    char *substr = ft_substr(str, start, len);
+    if (!substr)
+        return NULL;
+
+    char *result = ft_strjoin(to_join, substr);
+    free(substr);
+    return result;
+}
 char *expand_env(t_token *token, char *envpointer, t_data *data)
 {
 	char *expanded;
