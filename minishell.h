@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 20:29:25 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/01 18:56:31 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ typedef struct s_token
 	t_token_type	type;
 }					t_token;
 
+typedef struct sigaction	t_sigaction;
+
 // parse
 void				parse(t_data *data, char *cmd);
 void				parse_pipe(t_list **tokens, t_parse_node *node,
@@ -145,9 +147,15 @@ char	**envp_remove(char **envp, char **names);
 int		envp_set(char ***envp, char *value);
 char	*envp_get(char **envp, char *name);
 
+// Signal handlers
+void	default_sigint_handler(int signum);
+void	process_running_sigint_handler(int signum);
+void	sigquit_handler(int signum);
+void	init_signal_handlers(t_sigaction *sa_int, t_sigaction *sa_quit);
+
 // Utils
 void	clean_exit(char *msg, t_data *data,
-			t_exec_node *enode, t_parse_node *pnode);
+			t_exec_node *enode, t_list *parse_nodes);
 void	close_fds(int fd_in, int fd_out, int **pipes);
 char	*ft_pathjoin(char const *s1, char const *s2);
 void	ft_putstrs_fd(char *str1, char *str2, char *str3, int fd);

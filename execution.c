@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 20:36:58 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/30 12:26:22 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,12 @@ void	execution(t_data *data, t_list *parse_nodes)
 	else
 	{
 		pids = fork_processes(data, parse_nodes, lsize);
-		data->last_exit_code = waitpids(pids, lsize);
+		if (pids)
+		{
+			data->last_exit_code = waitpids(pids, lsize);
+			free(pids);
+		}
+		else
+			data->last_exit_code = 1;
 	}
 }

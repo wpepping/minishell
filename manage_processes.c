@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:53:43 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 20:38:45 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/30 12:16:17 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	err_handl(char *msg, char *fname, t_data *data, t_exec_node *node)
 		ft_putendl_fd("", STDERR_FILENO);
 	}
 	if (!node->nofork)
-		clean_exit(NULL, data, node, node->parse);
+		clean_exit(NULL, data, node, node->parse_nodes);
 	return (-1);
 }
 

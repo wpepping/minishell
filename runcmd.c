@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:20:00 by wouter            #+#    #+#             */
-/*   Updated: 2024/08/29 20:18:35 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/08/30 12:07:04 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	cmd_err_handl(char *message, char *cmd,
 {
 	ft_putstr_fd(message, STDERR_FILENO);
 	ft_putendl_fd(cmd, STDERR_FILENO);
-	clean_exit(NULL, data, node, node->parse);
+	clean_exit(NULL, data, node, node->parse_nodes);
 }
 
 static char	**get_path(void)
