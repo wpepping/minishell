@@ -30,7 +30,7 @@ int	add_quote(char *cmd, char quote, t_list **token_list)
 	if (strchr(cmd + 1, quote) == NULL)
 	{
 		printf("Error: no matching quote\n");
-		return (0);
+		exit (0);
 	}
 	while (cmd[i] && cmd[i] != quote)
 		i++;

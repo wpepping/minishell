@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/02 16:06:38 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/02 20:37:04 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,6 @@ typedef enum e_token_type
 typedef struct s_parse_node
 {
 	bool	is_builtin;
-	bool	heredoc;
-	bool	append;
 	bool	is_last;
 	char	*exec;
 	char	**argv;

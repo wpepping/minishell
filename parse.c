@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/02 18:42:22 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/02 20:55:51 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,25 +40,76 @@ bool is_valid_filename(t_token *token)
 
 void parse_redirects(t_list **tokens, t_parse_node *node)
 {
-    t_token	*token;
+	t_token	*token;
 
-    while (*tokens != NULL)
-    {
-        token = (t_token *)(*tokens)->content;
-        if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN || token->type == APPEND)
-        {
-            if (!is_valid_filename((*tokens)->next->content))
-            {
-                printf("Error: no filename specified for redirection\n");
-                exit(1);
-            }
-            *tokens = handle_redirects(*tokens, node);
-        }
-        else
-        {
-            break;
-        }
-    }
+	while (*tokens != NULL)
+	{
+		token = (t_token *)(*tokens)->content;
+		if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN || token->type == APPEND || token->type == HEREDOC)
+		{
+			if (!is_valid_filename((*tokens)->next->content))
+			{
+				printf("Error: no filename specified for redirection\n");
+				exit(1);
+			}
+			*tokens = handle_redirects(*tokens, node);
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+
+char *generate_heredoc_filename(void)
+{
+	static int	i;
+	char		*filename;
+	char *temp;
+
+	temp = ft_itoa(i);
+	malloc_protection(temp);
+	filename = ft_strjoin("heredoc", temp);
+	malloc_protection(filename);
+	free(temp);
+	i++;
+	return (filename);
+}
+
+t_token *handle_heredoc(char *delimiter)
+{
+	char *line;
+	int fd;
+	char *filename;
+	t_token *token;
+
+	token = malloc(sizeof(t_token));
+	malloc_protection(token);
+	filename = generate_heredoc_filename();
+	token->value = filename;
+	token->type = HEREDOC;
+	fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
+	if (fd == -1)
+	{
+		printf("Error: could not create heredoc file\n");
+		free(filename);
+		exit(1);
+	}
+	while (1)
+	{
+		line = readline("> ");
+		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+		{
+			free(line);
+			break;
+		}
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
+		free(line);
+	}
+	close(fd);
+	free(delimiter);
+	return (token);
 }
 
 
@@ -66,27 +117,27 @@ t_list *handle_redirects(t_list *tokens, t_parse_node *node)
 {
 	t_token *token;
 	t_list *current;
+	t_token *content_copy;
 
 	current = tokens;
 	token = (t_token *)current->content;
-
-	if (token->type == APPEND)
+	content_copy = malloc(sizeof(t_token));
+	malloc_protection(content_copy);
+	content_copy->type = token->type;
+	content_copy->value = ft_strdup(((t_token *)(current->next->content))->value);
+	malloc_protection(content_copy->value);
+	if (token->type == REDIRECT_IN || token->type == HEREDOC) 
 	{
-		ft_lstadd_back(&node->output_dest,
-			ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
-		node->append = true;
-	}
-	else if (token->type == REDIRECT_OUT)
-	{
-		ft_lstadd_back(&node->output_dest,
-			ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
-	}
-	else if (token->type == REDIRECT_IN)
-	{
+		if(token->type == HEREDOC)
+			content_copy = handle_heredoc(content_copy->value);
 		ft_lstadd_back(&node->input_src,
-			ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
+			ft_lstnew(content_copy));
 	}
-
+	else if (token->type == REDIRECT_OUT || token->type == APPEND)
+	{
+		ft_lstadd_back(&node->output_dest,
+			ft_lstnew(content_copy));
+	}
 	if (current->next != NULL)
 		return current->next->next;
 	else
@@ -194,7 +245,7 @@ void	parse(t_data *data, char *cmd)
 	{
 		token = (t_token *)tokens->content;
 		if(token->type == DOUBLE_QUOTE || token->type == SINGLE_QUOTE)
-			remove_quotes(token);
+			token->value = ft_substr(token->value, 1, ft_strlen(token->value) - 2);
 		if ((token->type == DOUBLE_QUOTE || token->type == WORD) && ft_strchr(token->value, '$'))
 			expand_env(token, ft_strchr(token->value, '$'), *data);	
 		tokens = tokens->next;
@@ -278,78 +329,6 @@ void expand_env(t_token *token, char *envpointer, t_data data)
 	token->value = ft_strdup(expanded_str);
 }
 
-// void	expand_envs(t_list *tokens, t_data *data)
-// {
-// 	t_token	*token;
-// 	char	*expanded;
-// 	char	*temp;
-// 	char	*temp2;
-// 	char	*envpointer;
-// 	size_t	len;
-
-// 	// char **subtokens;
-// 	token = (t_token *)tokens->content;
-// 	while (tokens)
-// 	{
-// 		envpointer = ft_strchr(token->value, '$');
-// 		token = (t_token *)tokens->content;
-// 		// if(token->type == END)
-// 		// break ;
-// 		if (token->type == WORD && token->value[0] != '\'' && envpointer)
-// 		{
-// 			len = count_to_next_env(token->value);
-// 			expanded = ft_strdup("");
-// 			if (len)
-// 			{
-// 				temp = ft_substr(token->value, 0, len);
-// 				expanded = ft_strjoin(expanded, temp);
-// 				free(temp);
-// 			}
-// 			while (envpointer)
-// 			{
-// 				len = count_env_len(envpointer + 1);
-// 				if (len == 0)
-// 				{
-// 					temp = ft_strdup("$");
-// 				}
-// 				else if (len == 1)
-// 				{
-// 					
-// 					else if (envpointer[1] == '$')
-// 						temp = ft_itoa(getpid());
-// 				}
-// 				else
-// 				{
-// 					temp = ft_substr(envpointer, 1, len);
-// 					temp2 = envp_get(data->envp, temp);
-// 					if (temp2)
-// 						expanded = ft_strjoin(expanded, temp2);
-// 				}
-// 				if (temp)
-// 				{
-// 					expanded = ft_strjoin(expanded, temp);
-// 					free(temp);
-// 				}
-// 				if (token->value[0] == '\"' && envpointer)
-// 				{
-// 					envpointer += len + 1;
-// 					len = count_to_next_env(envpointer);
-// 					if (len)
-// 					{
-// 						temp = ft_substr(envpointer, 0, len);
-// 						expanded = ft_strjoin(expanded, temp);
-// 						free(temp);
-// 					}
-// 				}
-// 				envpointer = ft_strchr(envpointer + 1, '$');
-// 			}
-// 			token->value = ft_strdup(expanded);
-// 			free(expanded);
-// 		}
-// 		tokens = tokens->next;
-// 	}
-// }
-
 size_t	count_env_len(char *env_var)
 {
 	size_t	i;
@@ -372,15 +351,6 @@ size_t	count_to_next_env(char *start)
 	return (i);
 }
 
-void remove_quotes(t_token *token)
-{
-	char	*temp;
-	
-	temp = token->value;
-	token->value = ft_substr(temp, 1, ft_strlen(temp) - 2);
-	free(temp);
-	malloc_protection(token->value);
-}
 
 void	print_argv(t_parse_node *node)
 {
@@ -408,8 +378,6 @@ t_parse_node	*create_parse_node(void)
 	}
 	node->is_last = false;
 	node->is_builtin = false;
-	node->append = false;
-	node->heredoc = false;
 	node->exec = NULL;
 	node->argv = NULL;
 	node->output_dest = NULL;
