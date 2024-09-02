@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/02 17:24:46 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/02 18:42:22 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,34 +64,35 @@ void parse_redirects(t_list **tokens, t_parse_node *node)
 
 t_list *handle_redirects(t_list *tokens, t_parse_node *node)
 {
-    t_token *token;
-    t_list *current;
+	t_token *token;
+	t_list *current;
 
-    current = tokens;
-    token = (t_token *)current->content;
+	current = tokens;
+	token = (t_token *)current->content;
 
-    if (token->type == APPEND)
-    {
-        ft_lstadd_back(&node->output_dest,
-            ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
-        node->append = true;
-    }
-    else if (token->type == REDIRECT_OUT)
-    {
-        ft_lstadd_back(&node->output_dest,
-            ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
-    }
-    else if (token->type == REDIRECT_IN)
-    {
-        ft_lstadd_back(&node->input_src,
-            ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
-    }
-    
-    if (current->next != NULL)
-        return current->next->next; // Return the list location after the filename
-    else
-        return current->next;
+	if (token->type == APPEND)
+	{
+		ft_lstadd_back(&node->output_dest,
+			ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
+		node->append = true;
+	}
+	else if (token->type == REDIRECT_OUT)
+	{
+		ft_lstadd_back(&node->output_dest,
+			ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
+	}
+	else if (token->type == REDIRECT_IN)
+	{
+		ft_lstadd_back(&node->input_src,
+			ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
+	}
+
+	if (current->next != NULL)
+		return current->next->next;
+	else
+		return current->next;
 }
+
 int	get_args(t_list **tokens, t_parse_node *node)
 {
 	int		i;
@@ -140,8 +141,6 @@ void	parse_args(t_list **tokens, t_parse_node *node)
 		return ;
 	parse_redirects(tokens, node);
 }
-
-
 
 void	parse_command(t_list *tokens, t_data *data)
 {
@@ -194,10 +193,10 @@ void	parse(t_data *data, char *cmd)
 	while(tokens)
 	{
 		token = (t_token *)tokens->content;
-		if ((token->type == DOUBLE_QUOTE || token->type == WORD) && ft_strchr(token->value, '$'))
-			expand_env(token, ft_strchr(token->value, '$'), *data);	
 		if(token->type == DOUBLE_QUOTE || token->type == SINGLE_QUOTE)
 			remove_quotes(token);
+		if ((token->type == DOUBLE_QUOTE || token->type == WORD) && ft_strchr(token->value, '$'))
+			expand_env(token, ft_strchr(token->value, '$'), *data);	
 		tokens = tokens->next;
 	}
 	tokens = head;
@@ -220,10 +219,43 @@ char *add_until_env(char *start, char *expanded_str)
 	return (expanded_str);
 }
 
+char  *handle_env(char *envpointer, t_data data, size_t len)
+{
+	char *temp;
+	char	*env_var;
+	char *env_val;
+	
+	if(len == 0)
+		env_var = strdup("$");
+	else
+	{
+		temp = ft_substr(envpointer, 0, len);
+		malloc_protection(temp);
+		if(temp[0] == '?')
+		{
+			env_var = ft_itoa(data.last_exit_code);
+			malloc_protection(env_var);
+		}
+		else
+		{
+			env_val = envp_get(data.envp, temp);
+			if(env_val)
+			{
+				env_var = ft_strdup(env_val);
+				malloc_protection(env_var);
+			}
+			else
+				env_var = NULL;
+		}
+		free(temp);
+	}
+	return(env_var);
+}
+
 void expand_env(t_token *token, char *envpointer, t_data data)
 {
 	char	*expanded_str;
-	char	*temp;
+	//char	*temp;
 	char	*env_var;
 	size_t	len;
 	
@@ -232,25 +264,18 @@ void expand_env(t_token *token, char *envpointer, t_data data)
 	while (envpointer)
 	{
 		len = count_env_len(envpointer + 1);
-		temp = ft_substr(envpointer, 1, len);
-		malloc_protection(temp);
-		if(temp[0] == '?')
-			env_var = ft_itoa(data.last_exit_code);
-		else
-			env_var = envp_get(data.envp, temp);
-		free(temp);
+		env_var = handle_env(envpointer + 1, data, len);
 		if (env_var)
 		{
 			expanded_str = ft_strjoin2(expanded_str, env_var);
 			malloc_protection(expanded_str);
+			free(env_var);
 		}
 		if(token->type == DOUBLE_QUOTE)
-			expanded_str = add_until_env(envpointer + len, expanded_str);
+			expanded_str = add_until_env(envpointer + len + 1, expanded_str);
 		envpointer = ft_strchr(envpointer + 1, '$');
 	}
 	token->value = ft_strdup(expanded_str);
-	if(token->type == DOUBLE_QUOTE)
-		remove_quotes(token);
 }
 
 // void	expand_envs(t_list *tokens, t_data *data)
