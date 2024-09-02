@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/30 19:07:26 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/02 16:36:11 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,53 +32,67 @@ int	get_builtin_index(char *token)
 
 bool is_valid_filename(t_token *token)
 {
-	int i;
-	i=0;
-	if (token->content == NULL || ft_strlen(token->content) == 0 || token->type != WORD) || token->type != DOUBLE_QUOTE || token->type != SINGLE_QUOTE)
+	if (token->value == NULL || ft_strlen(token->value) == 0 ||  (token->type != WORD && token->type != DOUBLE_QUOTE && token->type != SINGLE_QUOTE))
 		return (false);
 	
 	return (true);
 }
 
-void	handle_redirects(t_list **tokens, t_parse_node *node)
+void parse_redirects(t_list **tokens, t_parse_node *node)
 {
-	t_token	*token;
-	t_list	*current;
+    t_token	*token;
 
-	token = (t_token *)(*tokens)->content;
-	current = *tokens;
-	while (token->type != PIPE && (t_token *)current->next != NULL)
-	{
-		
-		token = (t_token *)current->content;
-		if ((token->type == APPEND))
-		{
-			ft_lstadd_back(&node->output_dest,
-				ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
-			node->append = true;
-		}
-		else if (token->type == REDIRECT_OUT)
-			ft_lstadd_back(&node->output_dest,
-				ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
-		else if (token->type == REDIRECT_IN)
-			ft_lstadd_back(&node->input_src,
-				ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
-		// else if (token->type == HEREDOC)
-		// node->heredoc = true;
-		if (token->type == PIPE)
-		{
-			*tokens = current;
-			return ;
-		}
-		if (current->next != NULL && current->next->next != NULL)
-			current = current->next->next;
-		else
-			current = current->next;
-	}
-	*tokens = current;
+    while (*tokens != NULL)
+    {
+        token = (t_token *)(*tokens)->content;
+        if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN || token->type == APPEND)
+        {
+            if (!is_valid_filename((*tokens)->next->content))
+            {
+                printf("Error: no filename specified for redirection\n");
+                exit(1);
+            }
+            *tokens = handle_redirects(*tokens, node);
+        }
+        else
+        {
+            break;
+        }
+    }
 }
 
-int	get_args(t_list **tokens, t_parse_node *node, t_data data)
+
+t_list *handle_redirects(t_list *tokens, t_parse_node *node)
+{
+    t_token *token;
+    t_list *current;
+
+    current = tokens;
+    token = (t_token *)current->content;
+
+    if (token->type == APPEND)
+    {
+        ft_lstadd_back(&node->output_dest,
+            ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
+        node->append = true;
+    }
+    else if (token->type == REDIRECT_OUT)
+    {
+        ft_lstadd_back(&node->output_dest,
+            ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
+    }
+    else if (token->type == REDIRECT_IN)
+    {
+        ft_lstadd_back(&node->input_src,
+            ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
+    }
+    
+    if (current->next != NULL)
+        return current->next->next; // Return the list location after the filename
+    else
+        return current->next;
+}
+int	get_args(t_list **tokens, t_parse_node *node)
 {
 	int		i;
 	int		argc;
@@ -102,11 +116,7 @@ int	get_args(t_list **tokens, t_parse_node *node, t_data data)
 	node->argv = malloc(sizeof(char *) * (argc + 1));
 	while (i < argc)
 	{
-		if ((token->type == DOUBLE_QUOTE || token->type == WORD)
-			&& ft_strchr(token->value, '$'))
-			expand_env(token, ft_strchr(token->value, '$'), data);
-		if(token->type == DOUBLE_QUOTE || token->type == SINGLE_QUOTE)
-			remove_quotes(token);
+		
 		node->argv[i] = strdup(token->value);
 		malloc_protection(node->argv[i]);
 		i++;
@@ -118,38 +128,20 @@ int	get_args(t_list **tokens, t_parse_node *node, t_data data)
 	return (argc);
 }
 
-void	parse_args(t_list **tokens, t_parse_node *node, t_data data)
+void	parse_args(t_list **tokens, t_parse_node *node)
 {
 	t_token	*token;
 
 	token = (t_token *)(*tokens)->content;
 	if (token->type == WORD || token->type == DOUBLE_QUOTE 
 		|| token->type == SINGLE_QUOTE)
-		get_args(tokens, node, data);
+		get_args(tokens, node);
 	if (!*tokens)
 		return ;
-	parse_redirects(tokens, node, data);
-	token = (t_token *)(*tokens)->content;
-	
+	parse_redirects(tokens, node);
 }
 
-void parse_redirects(t_list **tokens, t_parse_node *node, t_data data)
-{
-	t_token	*token;
 
-	token = (t_token *)(*tokens)->content;
-	if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN
-		|| token->type == APPEND)
-	{
-		if(is_valid_filename(*tokens->next))
-		{
-			printf("Error: no filename specified for redirection\n");
-			exit(1);
-		}
-		handle_redirects(tokens, node);
-	}
-		
-}
 
 void	parse_command(t_list *tokens, t_data *data)
 {
@@ -161,13 +153,13 @@ void	parse_command(t_list *tokens, t_data *data)
 	node = create_parse_node();
 	if (tokens)
 	{
-		parse_redirects(&tokens, node, *data);
+		parse_redirects(&tokens, node);
 		if (get_builtin_index(token->value) != -1)
 			node->is_builtin = true;
 		else if (access(token->value, X_OK) == 0)
 			node->exec = ft_strdup(token->value);
 		if (tokens)
-			parse_args(&tokens, node, *data);
+			parse_args(&tokens, node);
 	}
 	if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
 		node->is_last = true;
@@ -195,8 +187,20 @@ void	parse_pipe(t_list **tokens, t_parse_node *node, t_data *data)
 void	parse(t_data *data, char *cmd)
 {
 	t_list	*tokens;
-
+	t_list	*head;
+	t_token	*token;
 	tokens = tokenize(cmd);
+	head = tokens;
+	while(tokens)
+	{
+		token = (t_token *)tokens->content;
+		if ((token->type == DOUBLE_QUOTE || token->type == WORD) && ft_strchr(token->value, '$'))
+			expand_env(token, ft_strchr(token->value, '$'), *data);	
+		if(token->type == DOUBLE_QUOTE || token->type == SINGLE_QUOTE)
+			remove_quotes(token);
+		tokens = tokens->next;
+	}
+	tokens = head;
 	parse_command(tokens, data);
 }
 
@@ -246,78 +250,78 @@ void expand_env(t_token *token, char *envpointer, t_data data)
 		remove_quotes(token);
 }
 
-void	expand_envs(t_list *tokens, t_data *data)
-{
-	t_token	*token;
-	char	*expanded;
-	char	*temp;
-	char	*temp2;
-	char	*envpointer;
-	size_t	len;
+// void	expand_envs(t_list *tokens, t_data *data)
+// {
+// 	t_token	*token;
+// 	char	*expanded;
+// 	char	*temp;
+// 	char	*temp2;
+// 	char	*envpointer;
+// 	size_t	len;
 
-	// char **subtokens;
-	token = (t_token *)tokens->content;
-	while (tokens)
-	{
-		envpointer = ft_strchr(token->value, '$');
-		token = (t_token *)tokens->content;
-		// if(token->type == END)
-		// break ;
-		if (token->type == WORD && token->value[0] != '\'' && envpointer)
-		{
-			len = count_to_next_env(token->value);
-			expanded = ft_strdup("");
-			if (len)
-			{
-				temp = ft_substr(token->value, 0, len);
-				expanded = ft_strjoin(expanded, temp);
-				free(temp);
-			}
-			while (envpointer)
-			{
-				len = count_env_len(envpointer + 1);
-				if (len == 0)
-				{
-					temp = ft_strdup("$");
-				}
-				else if (len == 1)
-				{
-					if (envpointer[1] == '?')
-						temp = ft_itoa(data->last_exit_code);
-					else if (envpointer[1] == '$')
-						temp = ft_itoa(getpid());
-				}
-				else
-				{
-					temp = ft_substr(envpointer, 1, len);
-					temp2 = envp_get(data->envp, temp);
-					if (temp2)
-						expanded = ft_strjoin(expanded, temp2);
-				}
-				if (temp)
-				{
-					expanded = ft_strjoin(expanded, temp);
-					free(temp);
-				}
-				if (token->value[0] == '\"' && envpointer)
-				{
-					envpointer += len + 1;
-					len = count_to_next_env(envpointer);
-					if (len)
-					{
-						temp = ft_substr(envpointer, 0, len);
-						expanded = ft_strjoin(expanded, temp);
-						free(temp);
-					}
-				}
-				envpointer = ft_strchr(envpointer + 1, '$');
-			}
-			token->value = ft_strdup(expanded);
-			free(expanded);
-		}
-		tokens = tokens->next;
-	}
-}
+// 	// char **subtokens;
+// 	token = (t_token *)tokens->content;
+// 	while (tokens)
+// 	{
+// 		envpointer = ft_strchr(token->value, '$');
+// 		token = (t_token *)tokens->content;
+// 		// if(token->type == END)
+// 		// break ;
+// 		if (token->type == WORD && token->value[0] != '\'' && envpointer)
+// 		{
+// 			len = count_to_next_env(token->value);
+// 			expanded = ft_strdup("");
+// 			if (len)
+// 			{
+// 				temp = ft_substr(token->value, 0, len);
+// 				expanded = ft_strjoin(expanded, temp);
+// 				free(temp);
+// 			}
+// 			while (envpointer)
+// 			{
+// 				len = count_env_len(envpointer + 1);
+// 				if (len == 0)
+// 				{
+// 					temp = ft_strdup("$");
+// 				}
+// 				else if (len == 1)
+// 				{
+// 					if (envpointer[1] == '?')
+// 						temp = ft_itoa(data->last_exit_code);
+// 					else if (envpointer[1] == '$')
+// 						temp = ft_itoa(getpid());
+// 				}
+// 				else
+// 				{
+// 					temp = ft_substr(envpointer, 1, len);
+// 					temp2 = envp_get(data->envp, temp);
+// 					if (temp2)
+// 						expanded = ft_strjoin(expanded, temp2);
+// 				}
+// 				if (temp)
+// 				{
+// 					expanded = ft_strjoin(expanded, temp);
+// 					free(temp);
+// 				}
+// 				if (token->value[0] == '\"' && envpointer)
+// 				{
+// 					envpointer += len + 1;
+// 					len = count_to_next_env(envpointer);
+// 					if (len)
+// 					{
+// 						temp = ft_substr(envpointer, 0, len);
+// 						expanded = ft_strjoin(expanded, temp);
+// 						free(temp);
+// 					}
+// 				}
+// 				envpointer = ft_strchr(envpointer + 1, '$');
+// 			}
+// 			token->value = ft_strdup(expanded);
+// 			free(expanded);
+// 		}
+// 		tokens = tokens->next;
+// 	}
+// }
 
 size_t	count_env_len(char *env_var)
 {

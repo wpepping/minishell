@@ -56,20 +56,20 @@ int	add_word(char *cmd, t_list **token_list)
 	return (i);
 }
 
-int	handle_other_tokens(char *cmd, t_list *token_list)
+int	handle_other_tokens(char *cmd, t_list **token_list)
 {
 	if (ft_strncmp(cmd, "&&", 2) == 0)
-		return (append_token(&token_list, AND, cmd, 2));
+		return (append_token(token_list, AND, cmd, 2));
 	else if (ft_strncmp(cmd, "||", 2) == 0)
-		return (append_token(&token_list, OR, cmd, 2));
+		return (append_token(token_list, OR, cmd, 2));
 	else if (ft_strncmp(cmd, "(", 1) == 0)
-		return (append_token(&token_list, OPEN_PAREN, cmd, 1));
+		return (append_token(token_list, OPEN_PAREN, cmd, 1));
 	else if (ft_strncmp(cmd, ")", 1) == 0)
-		return (append_token(&token_list, CLOSE_PAREN, cmd, 1));
+		return (append_token(token_list, CLOSE_PAREN, cmd, 1));
 	else if (ft_strncmp(cmd, "<", 1) == 0)
-		return (append_token(&token_list, REDIRECT_IN, cmd, 1));
+		return (append_token(token_list, REDIRECT_IN, cmd, 1));
 	else if (ft_strncmp(cmd, ">", 1) == 0)
-		return (append_token(&token_list, REDIRECT_OUT, cmd, 1));
+		return (append_token(token_list, REDIRECT_OUT, cmd, 1));
 	return (0);
 }
 
@@ -93,7 +93,7 @@ t_list	*tokenize(char *cmd)
 		else if (ft_strncmp(cmd, "&&", 2) == 0 || ft_strncmp(cmd, "||", 2) == 0
 			|| ft_strncmp(cmd, "(", 1) == 0 || ft_strncmp(cmd, ")", 1) == 0
 			|| ft_strncmp(cmd, "<", 1) == 0 || ft_strncmp(cmd, ">", 1) == 0)
-			cmd += handle_other_tokens(cmd, token_list);
+			cmd += handle_other_tokens(cmd, &token_list);
 		else if (ft_strncmp(cmd, "|", 1) == 0)
 			cmd += append_token(&token_list, PIPE, cmd, 1);
 		else
