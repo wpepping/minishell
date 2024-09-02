@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/02 16:36:11 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/02 17:24:46 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,10 @@ void expand_env(t_token *token, char *envpointer, t_data data)
 		len = count_env_len(envpointer + 1);
 		temp = ft_substr(envpointer, 1, len);
 		malloc_protection(temp);
-		env_var = envp_get(data.envp, temp);
+		if(temp[0] == '?')
+			env_var = ft_itoa(data.last_exit_code);
+		else
+			env_var = envp_get(data.envp, temp);
 		free(temp);
 		if (env_var)
 		{
@@ -286,8 +289,7 @@ void expand_env(t_token *token, char *envpointer, t_data data)
 // 				}
 // 				else if (len == 1)
 // 				{
-// 					if (envpointer[1] == '?')
-// 						temp = ft_itoa(data->last_exit_code);
+// 					
 // 					else if (envpointer[1] == '$')
 // 						temp = ft_itoa(getpid());
 // 				}
@@ -329,7 +331,7 @@ size_t	count_env_len(char *env_var)
 
 	i = 0;
 	while (env_var[i] && (ft_isalnum(env_var[i]) || env_var[i] == '_'
-			|| env_var[1] == '?' || env_var[1] == '$')
+			|| env_var[0] == '?' || env_var[1] == '$')
 		&& !ft_isdigit(env_var[0]))
 		i++;
 	return (i);
