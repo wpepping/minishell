@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/02 20:37:04 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/02 21:16:26 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ t_parse_node		*create_parse_node(void);
 void parse_redirects(t_list **tokens, t_parse_node *node);
 t_list				*handle_redirects(t_list *tokens, t_parse_node *node);
 
+//expand_env
 void expand_env(t_token *token, char *envpointer, t_data data);
 
 void	malloc_protection(void *ptr);
