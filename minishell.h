@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 18:35:04 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/03 20:01:51 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 # define ERR_NO_SUCH_FILE "minishell: no such file or directory: "
 # define ERR_PERMISSION_DENIED "minishell: permission denied: "
 # define ERR_IS_DIR "minishell: Is a directory: "
-# define ERR_CANNOT_EXEC "cannot execute binary file: Exec format error"
+# define ERR_CANNOT_EXEC " cannot execute binary file: Exec format error"
 # define PROMPT_END "$ "
 
 typedef enum e_token_type
@@ -168,8 +168,7 @@ void			sigquit_handler(int signum);
 void			init_signal_handlers(t_sigaction *sa_int, t_sigaction *sa_quit);
 
 // Utils
-void			clean_exit(char *msg, t_data *data,
-					t_exec_node *enode, t_list *parse_nodes);
+void			clean_exit(t_data *data, t_exec_node *enode, t_list *parse_nodes);
 void			close_fds(int fd_in, int fd_out, int **pipes);
 char			*ft_pathjoin(char const *s1, char const *s2);
 void			ft_putstrs_fd(char *str1, char *str2, char *str3, int fd);
@@ -177,6 +176,7 @@ char			*ft_strjoin2(char *s1, char const *s2);
 int				arrncontains(char **haystack, char *needle, int cmplen);
 t_parse_node	*create_parse_node(void);
 bool			isdir(char *dname);
+int				ft_isint(char *str);
 
 // Clean up
 void			cleanup(t_data *data, t_exec_node *enode, t_parse_node *pnode);

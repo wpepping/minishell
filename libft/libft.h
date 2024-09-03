@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:58:59 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 15:01:56 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/03 20:07:35 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef struct s_list
 	struct s_list	*next;
 }					t_list;
 
+long				ft_atol(const char *nptr);
 int					ft_isalnum(int c);
 t_list				*ft_lstnew(void *content);
 void				ft_lstadd_front(t_list **lst, t_list *new);

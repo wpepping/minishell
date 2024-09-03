@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 18:53:45 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/03 19:46:14 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ void	init(t_data *data, char **envp)
 	data->exit = 0;
 	data->envp = envp_create(envp);
 	if (!data->envp)
-		clean_exit(ERR_OUT_OF_MEMORY, data, NULL, NULL);
+	{
+		ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
+		clean_exit(data, NULL, NULL);
+	}
 	getcwd(data->cwd, PATH_MAX);
 }
 

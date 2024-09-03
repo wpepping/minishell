@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:14:03 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 18:23:10 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/03 19:59:59 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,11 @@ void	ft_putstrs_fd(char *str1, char *str2, char *str3, int fd)
 	ft_putendl_fd("", fd);
 }
 
-void	clean_exit(char *msg, t_data *data,
-			t_exec_node *enode, t_list *parse_nodes)
+void	clean_exit(t_data *data, t_exec_node *enode, t_list *parse_nodes)
 {
 	(void)data;
 	(void)enode;
 	(void)parse_nodes;
-	ft_putendl_fd(msg, STDERR_FILENO);
 	exit(1);
 }
 
@@ -59,4 +57,26 @@ bool	isdir(char *dname)
 		return (false);
 	closedir(dir);
 	return (true);
+}
+
+int	ft_isint(char *str)
+{
+	long	l;
+	char	*p;
+
+	p = str;
+	if (*str == '-')
+		str++;
+	if (*str == '\0' || ft_strlen(str) > 10)
+		return (0);
+	while (*str)
+	{
+		if (!ft_isdigit(*str))
+			return (0);
+		str++;
+	}
+	l = ft_atol(p);
+	if (l > 2147483647 || l < -2147483648)
+		return (0);
+	return (1);
 }

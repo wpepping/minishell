@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:20:00 by wouter            #+#    #+#             */
-/*   Updated: 2024/09/03 18:31:40 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/03 19:48:03 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	cmd_err_handl(char *message, char *cmd,
 {
 	ft_putstr_fd(message, STDERR_FILENO);
 	ft_putendl_fd(cmd, STDERR_FILENO);
-	clean_exit(NULL, data, node, node->parse_nodes);
+	clean_exit(data, node, node->parse_nodes);
 }
 
 static char	**get_path(void)
@@ -82,7 +82,7 @@ void	runcmd(t_data *data, t_exec_node *node)
 	if (fullcmd == NULL)
 		cmd_err_handl(ERR_COMMAND_NOT_FOUND, argv[0], data, node);
 	if (isdir(fullcmd))
-		cmd_err_handl(ERR_COMMAND_NOT_FOUND, argv[0], data, node);
+		cmd_err_handl(ERR_IS_DIR, argv[0], data, node);
 	if (access(fullcmd, X_OK) != 0)
 		cmd_err_handl(ERR_PERMISSION_DENIED, argv[0], data, node);
 	close_fds(node->fd_in, node->fd_out, node->pipes);
