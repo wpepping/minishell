@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 16:55:47 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/03 17:37:51 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ static int	run_one(t_data *data, t_list *parse_nodes)
 	enode.pipes[0] = NULL;
 	enode.pindex = 0;
 	enode.nofork = 1;
+	enode.parse_nodes = parse_nodes;
 	get_fds(data, &enode, enode.pipes);
+	if (enode.fd_in == -1 || enode.fd_out == -1)
+		return (1);
 	dup2(enode.fd_in, STDIN_FILENO);
 	dup2(enode.fd_out, STDOUT_FILENO);
 	return (runbuiltin(data, &enode));
@@ -38,6 +41,12 @@ void	execution(t_data *data, t_list *parse_nodes)
 	else
 	{
 		pids = fork_processes(data, parse_nodes, lsize);
-		data->last_exit_code = waitpids(pids, lsize);
+		if (pids)
+		{
+			data->last_exit_code = waitpids(pids, lsize);
+			free(pids);
+		}
+		else
+			data->last_exit_code = 1;
 	}
 }
