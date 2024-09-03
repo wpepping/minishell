@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 15:57:25 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:51:46 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,20 +91,31 @@ int	ft_pwd(t_data *data, t_exec_node *node)
 
 int	ft_exit(t_data *data, t_exec_node *node)
 {
-	int		status;
-	char	*arg;
+	int exit_code;
+	int val;
 
-	(void)node;
-	arg = node->parse->argv[1];
-	data->exit = 1;
-	status = 0;
-	if (arg)
+	exit_code = 0;
+	
+	if(node->parse->argv[1])
 	{
-		status = 1;
-		if (!node->parse->argv[2] && ft_isint(arg))
-			status = ft_atol(arg) % 256;
-		if (status < 0)
-			status = 256 + status;
+		val = ft_atoi(node->parse->argv[1]);
+		if(val == 0 && node->parse->argv[1][0] != 0)
+		{
+			printf("numeric argument required\n");
+			exit_code = 2;
+		}
+		if(node->parse->argv[2])
+		{
+			printf(" too many arguments\n");
+			exit_code = 1;
+		}
+		else
+		{
+			exit_code = val % 256;
+			if(exit_code < 0)
+				exit_code += 256;
+		}
 	}
-	return (status);
+	data->exit = exit_code;
+	return (exit_code);
 }
