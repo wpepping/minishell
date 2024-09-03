@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 15:02:14 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 15:03:13 by wpepping         ###   ########.fr       */
+/*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
+/*   Updated: 2024/09/03 17:11:48 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ void	print_argv_from_nodes(t_data *data)
 		output_dest = node->output_dest;
 		while (output_dest)
 		{
-			printf("Output: %s\n", ((t_token *)output_dest->content)->value);
+			printf("Output: %s type: %i\n", ((t_token *)output_dest->content)->value, ((t_token *)output_dest->content)->type);
+
 			output_dest = output_dest->next;
 		}
 		input_src = node->input_src;

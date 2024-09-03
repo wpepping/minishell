@@ -23,6 +23,11 @@ t_token	*handle_heredoc(char *delimiter)
 	while (1)
 	{
 		line = readline("> ");
+		if(!line)
+		{
+			free(line);
+			break ;
+		}
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
 		{
 			free(line);
