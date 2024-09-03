@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 15:13:47 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/03 17:52:33 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	parse_command(t_list *tokens, t_data *data)
 		parse_redirects(&tokens, node);
 		if (get_builtin_index(token->value) != -1)
 			node->is_builtin = true;
-		else if (access(token->value, X_OK) == 0)
+		else
 			node->exec = ft_strdup(token->value);
 		if (tokens)
 			parse_args(&tokens, node);

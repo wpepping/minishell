@@ -5,8 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
+<<<<<<< HEAD
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
 /*   Updated: 2024/09/03 17:37:55 by phartman         ###   ########.fr       */
+=======
+/*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
+/*   Updated: 2024/09/03 18:42:15 by phartman         ###   ########.fr       */
+>>>>>>> PH-testing
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +91,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(cmd);
 			parse(&data, cmd);
-			sa_int.sa_handler = process_running_sigint_handler;
-			sigaction(SIGINT, &sa_int, NULL);
+			//print_argv_from_nodes(&data);
 			execution(&data, data.node_list);
 			sa_int.sa_handler = default_sigint_handler;
 			sigaction(SIGINT, &sa_int, NULL);
