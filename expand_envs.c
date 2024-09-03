@@ -24,10 +24,12 @@ size_t	count_env_len(char *env_var)
 	size_t	i;
 
 	i = 0;
+	if (env_var[0] == '?')
+		return (1);
 	while (env_var[i] && (ft_isalnum(env_var[i]) || env_var[i] == '_'
-			|| env_var[0] == '?' || env_var[1] == '$')
+			|| env_var[0] == '?' || env_var[0] == '$')
 		&& !ft_isdigit(env_var[0]))
-		i++;
+			i++;
 	return (i);
 }
 
