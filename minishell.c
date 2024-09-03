@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 15:42:51 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/03 16:21:39 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int	main(int argc, char **argv, char **envp)
 			add_history(cmd);
 			parse(&data, cmd);
 			print_argv_from_nodes(&data);
+			printf("currecnt value of redircets output: %s\n", ((t_token *)(((t_parse_node *)data.node_list->content)->output_dest->content))->value);
 			execution(&data, data.node_list);
 			free(cmd);
 			data.node_list = NULL;

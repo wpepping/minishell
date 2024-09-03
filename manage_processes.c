@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manage_processes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:53:43 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/28 19:36:15 by wouter           ###   ########.fr       */
+/*   Updated: 2024/09/03 16:59:29 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	get_file_fd(t_data *d, t_exec_node *node, t_list *files, int oflag)
 	while (files)
 	{
 		//printf("get file fd for: %s\n", (char *)(files->content));
-		fname = files->content;
+		fname = ((t_token *)files->content)->value;
 		fd = open(fname, oflag, 0644);
 		if (fd == -1)
 		{
