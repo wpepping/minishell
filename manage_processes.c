@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manage_processes.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:53:43 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 17:25:46 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/03 18:54:26 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
