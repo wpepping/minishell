@@ -13,15 +13,6 @@ int	append_token(t_list **token_list, t_token_type type, char *cmd, int len)
 	return (len);
 }
 
-void	malloc_protection(void *ptr)
-{
-	if (!ptr)
-	{
-		printf("Error: malloc failed\n");
-		exit(1);
-	}
-}
-
 int	add_quote(char *cmd, char quote, t_list **token_list)
 {
 	int	i;
@@ -30,7 +21,7 @@ int	add_quote(char *cmd, char quote, t_list **token_list)
 	if (strchr(cmd + 1, quote) == NULL)
 	{
 		printf("Error: no matching quote\n");
-		exit (0);
+		exit(0);
 	}
 	while (cmd[i] && cmd[i] != quote)
 		i++;

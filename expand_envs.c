@@ -67,3 +67,12 @@ size_t	count_to_next_env(char *start)
 	return (i);
 }
 
+void	malloc_protection(void *ptr)
+{
+	if (!ptr)
+	{
+		printf("Error: malloc failed\n");
+		exit(1);
+	}
+}
+

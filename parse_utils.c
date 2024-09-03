@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 int	get_builtin_index(char *token)
 {
 	int			i;

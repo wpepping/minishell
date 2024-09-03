@@ -6,14 +6,11 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/02 21:32:11 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/03 13:43:30 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
-
 
 void	parse_redirects(t_list **tokens, t_parse_node *node)
 {
@@ -38,8 +35,6 @@ void	parse_redirects(t_list **tokens, t_parse_node *node)
 		}
 	}
 }
-
-
 
 void	parse_args(t_list **tokens, t_parse_node *node)
 {
@@ -118,5 +113,3 @@ void	parse(t_data *data, char *cmd)
 	parse_command(tokens, data);
 	clear_tokens_list(&head);
 }
-
-
