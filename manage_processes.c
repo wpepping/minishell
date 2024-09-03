@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:53:43 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/30 12:16:17 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/03 15:25:44 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,17 @@ static int	get_file_fd(t_data *d, t_exec_node *node, t_list *files, int oflag)
 {
 	char	*fname;
 	int		fd;
+	int		type;
 
 	while (files)
 	{
-		fname = files->content;
+		type = ((t_token *)files->content)->type;
+		fname = ((t_token *)files->content)->value;
 		fd = open(fname, oflag, 0644);
 		if (fd == -1)
 		{
-			if (oflag == O_RDONLY && access(fname, F_OK) != 0)
+			if ((type == REDIRECT_IN || type == HEREDOC)
+				&& access(fname, F_OK) != 0)
 				return (err_handl(ERR_NO_SUCH_FILE, fname, d, node));
 			else
 				return (err_handl(ERR_PERMISSION_DENIED, fname, d, node));
@@ -51,6 +54,8 @@ static int	get_file_fd(t_data *d, t_exec_node *node, t_list *files, int oflag)
 
 void	get_fds(t_data *data, t_exec_node *node, int **pipes)
 {
+	int	oflag;
+
 	if (node->parse->input_src)
 		node->fd_in = get_file_fd(data, node, node->parse->input_src, O_RDONLY);
 	else if (node->pindex == 0)
@@ -58,8 +63,13 @@ void	get_fds(t_data *data, t_exec_node *node, int **pipes)
 	else
 		node->fd_in = pipes[node->pindex - 1][0];
 	if (node->parse->output_dest)
-		node->fd_out = get_file_fd(data, node,
-				node->parse->output_dest, O_CREAT | O_WRONLY | O_TRUNC);
+	{
+		if (((t_token *)node->parse->output_dest)->type == APPEND)
+			oflag = O_CREAT | O_WRONLY | APPEND;
+		else
+			oflag = O_CREAT | O_WRONLY | O_TRUNC;
+		node->fd_out = get_file_fd(data, node, node->parse->output_dest, oflag);
+	}
 	else if (node->parse->is_last)
 		node->fd_out = STDOUT_FILENO;
 	else
@@ -68,14 +78,14 @@ void	get_fds(t_data *data, t_exec_node *node, int **pipes)
 
 static pid_t	forkproc(t_data *d, t_exec_node *enode, t_parse_node *pnode)
 {
-	pid_t		pid;
+	// pid_t		pid;
 	int			return_value;
 
-	pid = fork();
-	if (pid < 0)
-		err_handl("failed to create process: ", pnode->argv[0], d, enode);
-	else if (pid == 0)
-	{
+	// pid = fork();
+	// if (pid < 0)
+	// 	err_handl("failed to create process: ", pnode->argv[0], d, enode);
+	// else if (pid == 0)
+	// {
 		get_fds(d, enode, enode->pipes);
 		dup2(enode->fd_in, STDIN_FILENO);
 		dup2(enode->fd_out, STDOUT_FILENO);
@@ -86,9 +96,9 @@ static pid_t	forkproc(t_data *d, t_exec_node *enode, t_parse_node *pnode)
 		}
 		else
 			runcmd(d, enode);
-	}
-	else
-		return (pid);
+	// }
+	// else
+	// 	return (pid);
 	return (0);
 }
 

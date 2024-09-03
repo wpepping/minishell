@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/01 18:56:08 by wpepping         ###   ########.fr       */
+/*   Created: 2024/09/03 15:02:14 by wpepping          #+#    #+#             */
+/*   Updated: 2024/09/03 15:03:13 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,13 @@ void	print_argv_from_nodes(t_data *data)
 		output_dest = node->output_dest;
 		while (output_dest)
 		{
-			printf("Output: %s\n", (char *)output_dest->content);
+			printf("Output: %s\n", ((t_token *)output_dest->content)->value);
 			output_dest = output_dest->next;
 		}
 		input_src = node->input_src;
 		while (input_src)
 		{
-			printf("Input: %s\n", (char *)input_src->content);
+			printf("Input: %s\n", ((t_token *)input_src->content)->value);
 			input_src = input_src->next;
 		}
 		if (node->is_last)
@@ -94,7 +94,6 @@ int	main(int argc, char **argv, char **envp)
 			cleanup_cmd(data.node_list);
 			data.node_list = NULL;
 		}
-		//print_argv_from_nodes(&data);
 	}
 	cleanup(&data, NULL, NULL);
 	return (0);

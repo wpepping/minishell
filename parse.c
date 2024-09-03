@@ -6,114 +6,47 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 18:37:10 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/03 13:43:30 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	get_builtin_index(char *token)
-{
-	int			i;
-	const char	*builtin_str[] = {"echo", "cd", "unset", "export", "pwd", "env",
-			"exit"};
-
-	i = 0;
-	while (i < 7)
-	{
-		if (ft_strncmp(token, builtin_str[i], ft_strlen(builtin_str[i])) == 0)
-		{
-			return (i);
-		}
-		i++;
-	}
-	return (-1);
-}
-
-void	handle_redirects(t_list **tokens, t_parse_node *node)
+void	parse_redirects(t_list **tokens, t_parse_node *node)
 {
 	t_token	*token;
-	t_list	*current;
 
-	token = (t_token *)(*tokens)->content;
-	current = *tokens;
-	while (token->type != PIPE && (t_token *)current->next != NULL)
+	while (*tokens != NULL)
 	{
-		token = (t_token *)current->content;
-		if ((token->type == APPEND))
+		token = (t_token *)(*tokens)->content;
+		if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN
+			|| token->type == APPEND || token->type == HEREDOC)
 		{
-			ft_lstadd_back(&node->output_dest,
-				ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
-			node->append = true;
+			if (!is_valid_filename((*tokens)->next->content))
+			{
+				printf("Error: no filename specified for redirection\n");
+				exit(1);
+			}
+			*tokens = handle_redirects(*tokens, node);
 		}
-		else if (token->type == REDIRECT_OUT)
-			ft_lstadd_back(&node->output_dest,
-				ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
-		else if (token->type == REDIRECT_IN)
-			ft_lstadd_back(&node->input_src,
-				ft_lstnew(ft_strdup(((t_token *)current->next->content)->value)));
-		// else if (token->type == HEREDOC)
-		// node->heredoc = true;
-		if (token->type == PIPE)
-		{
-			*tokens = current;
-			return ;
-		}
-		if (current->next != NULL && current->next->next != NULL)
-			current = current->next->next;
 		else
-			current = current->next;
-	}
-	*tokens = current;
-}
-
-int	get_args(t_list **tokens, t_parse_node *node)
-{
-	int		i;
-	int		argc;
-	t_list	*tmp;
-	t_token	*token;
-
-	token = (t_token *)(*tokens)->content;
-	tmp = *tokens;
-	argc = 0;
-	i = 0;
-	while (tmp && ((t_token *)tmp->content)->type == WORD)
-	{
-		argc++;
-		tmp = tmp->next;
-	}
-	node->argv = malloc(sizeof(char *) * (argc + 1));
-	while (i < argc)
-	{
-		node->argv[i] = strdup(token->value);
-		if (!node->argv[i])
 		{
-			printf("Error: malloc failed\n");
-			exit(1);
+			break ;
 		}
-		i++;
-		*tokens = (*tokens)->next;
-		if (*tokens)
-			token = (t_token *)(*tokens)->content;
 	}
-	node->argv[i] = NULL;
-	return (argc);
 }
 
-void	parse_args_and_redirects(t_list **tokens, t_parse_node *node)
+void	parse_args(t_list **tokens, t_parse_node *node)
 {
 	t_token	*token;
 
 	token = (t_token *)(*tokens)->content;
-	if (token->type == WORD)
+	if (token->type == WORD || token->type == DOUBLE_QUOTE
+		|| token->type == SINGLE_QUOTE)
 		get_args(tokens, node);
 	if (!*tokens)
 		return ;
-	token = (t_token *)(*tokens)->content;
-	if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN
-		|| token->type == APPEND)
-		handle_redirects(tokens, node);
+	parse_redirects(tokens, node);
 }
 
 void	parse_command(t_list *tokens, t_data *data)
@@ -124,16 +57,16 @@ void	parse_command(t_list *tokens, t_data *data)
 	if (tokens)
 		token = (t_token *)tokens->content;
 	node = create_parse_node();
-	if (token->type == WORD && tokens)
+	if (tokens)
 	{
+		parse_redirects(&tokens, node);
 		if (get_builtin_index(token->value) != -1)
 			node->is_builtin = true;
 		else if (access(token->value, X_OK) == 0)
 			node->exec = ft_strdup(token->value);
 		if (tokens)
-			parse_args_and_redirects(&tokens, node);
+			parse_args(&tokens, node);
 	}
-	//if (!tokens)
 	if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
 		node->is_last = true;
 	ft_lstadd_back(&data->node_list, ft_lstnew(node));
@@ -160,42 +93,23 @@ void	parse_pipe(t_list **tokens, t_parse_node *node, t_data *data)
 void	parse(t_data *data, char *cmd)
 {
 	t_list	*tokens;
+	t_list	*head;
+	t_token	*token;
 
 	tokens = tokenize(cmd);
+	head = tokens;
+	while (tokens)
+	{
+		token = (t_token *)tokens->content;
+		if (token->type == DOUBLE_QUOTE || token->type == SINGLE_QUOTE)
+			token->value = ft_substr(token->value, 1, ft_strlen(token->value)
+					- 2);
+		if ((token->type == DOUBLE_QUOTE || token->type == WORD)
+			&& ft_strchr(token->value, '$'))
+			expand_env(token, ft_strchr(token->value, '$'), *data);
+		tokens = tokens->next;
+	}
+	tokens = head;
 	parse_command(tokens, data);
-}
-
-void	print_argv(t_parse_node *node)
-{
-	if (node->argv == NULL)
-	{
-		printf("argv is NULL\n");
-		return ;
-	}
-	printf("argv contents:\n");
-	for (int i = 0; node->argv[i] != NULL; i++)
-	{
-		printf("argv[%d]: %s\n", i, node->argv[i]);
-	}
-}
-
-t_parse_node	*create_parse_node(void)
-{
-	t_parse_node	*node;
-
-	node = malloc(sizeof(t_parse_node));
-	if (!node)
-	{
-		printf("Error: malloc failed\n");
-		exit(1);
-	}
-	node->is_last = false;
-	node->is_builtin = false;
-	node->append = false;
-	node->heredoc = false;
-	node->exec = NULL;
-	node->argv = NULL;
-	node->output_dest = NULL;
-	node->input_src = NULL;
-	return (node);
+	clear_tokens_list(&head);
 }

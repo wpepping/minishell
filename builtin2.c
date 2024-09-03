@@ -3,14 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   builtin2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:40:27 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/28 19:19:09 by wouter           ###   ########.fr       */
+/*   Updated: 2024/08/29 16:03:41 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static bool	is_valid_varname(char *name)
+{
+	int	i;
+
+	if (name[0] >= '0' && name[0] <= '9')
+		return (0);
+	i = 0;
+	while (name[i] && name[i] != '=')
+	{
+		if (!isalnum(name[i]) && name[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 int	ft_export(t_data *data, t_exec_node *node)
 {
@@ -22,21 +38,24 @@ int	ft_export(t_data *data, t_exec_node *node)
 	i = 1;
 	while (node->parse->argv[i])
 	{
-		var = ft_strdup(node->parse->argv[i]);
-		if (var == NULL)
+		var = node->parse->argv[i++];
+		if (!is_valid_varname(var))
 		{
-			ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
+			ft_putstrs_fd("minishell: export: '", var,
+				"': not a valid identifier", STDERR_FILENO);
 			return_value = 1;
-			break ;
+			continue ;
 		}
-		else if (envp_set(&data->envp, var))
+		if (!ft_strchr(var, '='))
+			continue ;
+		var = ft_strdup(var);
+		if (var == NULL || envp_set(&data->envp, var))
 		{
 			ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
 			return_value = 1;
 			free(var);
 			break ;
 		}
-		i++;
 	}
 	return (return_value);
 }
