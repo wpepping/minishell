@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/28 19:45:25 by wouter           ###   ########.fr       */
+/*   Updated: 2024/09/03 19:19:47 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,31 @@ int	ft_pwd(t_data *data, t_exec_node *node)
 
 int	ft_exit(t_data *data, t_exec_node *node)
 {
-	(void)node;
-	data->exit = 1;
-	return (0);
+	int exit_code;
+	int val;
+
+	exit_code = 0;
+	
+	if(node->parse->argv[1])
+	{
+		val = ft_atoi(node->parse->argv[1]);
+		if(val == 0 && node->parse->argv[1][0] != 0)
+		{
+			printf("numeric argument required\n");
+			exit_code = 2;
+		}
+		if(node->parse->argv[2])
+		{
+			printf(" too many arguments\n");
+			exit_code = 1;
+		}
+		else
+		{
+			exit_code = val % 256;
+			if(exit_code < 0)
+				exit_code += 256;
+		}
+	}
+	data->exit = exit_code;
+	return (exit_code);
 }

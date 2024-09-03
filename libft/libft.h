@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 17:05:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 14:16:25 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/03 19:07:24 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,6 @@ int					ft_isalpha(int c);
 char				*ft_itoa(int n);
 void				*ft_calloc(size_t nmemb, size_t size);
 void				*ft_memset(void *s, int c, size_t n);
+int					ft_atoi(const char *nptr);
 
 #endif
