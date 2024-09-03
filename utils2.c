@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:14:03 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 19:59:59 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/03 20:32:20 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	ft_isint(char *str)
 	char	*p;
 
 	p = str;
-	if (*str == '-')
+	if (*str == '-' || *str == '+')
 		str++;
 	if (*str == '\0' || ft_strlen(str) > 10)
 		return (0);

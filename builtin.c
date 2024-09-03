@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 20:00:55 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/03 20:42:32 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,17 +82,20 @@ int	ft_pwd(t_data *data, t_exec_node *node)
 
 int	ft_exit(t_data *data, t_exec_node *node)
 {
-	int		exit_code;
+	int		status;
 	char	*arg;
 
 	(void)node;
 	arg = node->parse->argv[1];
 	data->exit = 1;
-	if (arg && !node->parse->argv[2] && ft_strlen(arg) < 4 && ft_isint(arg))
+	status = 0;
+	if (arg)
 	{
-		exit_code = ft_atol(arg);
-		if (exit_code < 0 || exit_code > 255)
-			exit_code = 1;
+		status = 1;
+		if (!node->parse->argv[2] && ft_isint(arg))
+			status = ft_atol(arg) % 256;
+		if (status < 0)
+			status = 256 + status;
 	}
-	return (0);
+	return (status);
 }

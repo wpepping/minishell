@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 19:46:14 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/03 20:46:15 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	init(t_data *data, char **envp)
 	data->node_list = NULL;
 	data->exit = 0;
 	data->envp = envp_create(envp);
+	data->last_exit_code = 0;
 	if (!data->envp)
 	{
 		ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
@@ -99,5 +100,5 @@ int	main(int argc, char **argv, char **envp)
 		}
 	}
 	cleanup(&data, NULL, NULL);
-	return (0);
+	return (data.last_exit_code);
 }

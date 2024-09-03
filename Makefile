@@ -16,7 +16,7 @@ $(NAME): $(OBJS)
 all: $(NAME)
 
 clean:
-	$(MAKE) -C fclean libft
+	$(MAKE) -C libft fclean
 	rm -f $(OBJS)
 
 fclean: clean
