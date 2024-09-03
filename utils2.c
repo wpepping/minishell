@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:14:03 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/30 12:07:38 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/03 18:23:10 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,15 @@ void	clean_exit(char *msg, t_data *data,
 	(void)parse_nodes;
 	ft_putendl_fd(msg, STDERR_FILENO);
 	exit(1);
+}
+
+bool	isdir(char *dname)
+{
+	DIR	*dir;
+
+	dir = opendir(dname);
+	if (!dir)
+		return (false);
+	closedir(dir);
+	return (true);
 }

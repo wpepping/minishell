@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:20:00 by wouter            #+#    #+#             */
-/*   Updated: 2024/08/30 12:07:04 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/03 18:31:40 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,17 @@ void	runcmd(t_data *data, t_exec_node *node)
 	if (path == NULL)
 		cmd_err_handl(ERR_OUT_OF_MEMORY, NULL, data, node);
 	fullcmd = find_full_path(argv[0], path);
+	free_array((void **)path);
 	if (fullcmd == NULL)
-	{
-		free_array((void **)path);
 		cmd_err_handl(ERR_COMMAND_NOT_FOUND, argv[0], data, node);
-	}
+	if (isdir(fullcmd))
+		cmd_err_handl(ERR_COMMAND_NOT_FOUND, argv[0], data, node);
+	if (access(fullcmd, X_OK) != 0)
+		cmd_err_handl(ERR_PERMISSION_DENIED, argv[0], data, node);
 	close_fds(node->fd_in, node->fd_out, node->pipes);
 	free_array((void **)node->pipes);
 	cleanup_cmd(node->parse_nodes);
-	if (execve(fullcmd, argv, data->envp) < 0)
-		exit(1);
+	execve(fullcmd, argv, data->envp);
+	ft_putstrs_fd("minishell: ", argv[0], ERR_CANNOT_EXEC, STDERR_FILENO);
+	exit(1); // Change to clean exit?
 }
