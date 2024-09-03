@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:53:43 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 15:25:44 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/03 17:16:13 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,14 @@ void	get_fds(t_data *data, t_exec_node *node, int **pipes)
 
 static pid_t	forkproc(t_data *d, t_exec_node *enode, t_parse_node *pnode)
 {
-	// pid_t		pid;
+	pid_t		pid;
 	int			return_value;
 
-	// pid = fork();
-	// if (pid < 0)
-	// 	err_handl("failed to create process: ", pnode->argv[0], d, enode);
-	// else if (pid == 0)
-	// {
+	pid = fork();
+	if (pid < 0)
+		err_handl("failed to create process: ", pnode->argv[0], d, enode);
+	else if (pid == 0)
+	{
 		get_fds(d, enode, enode->pipes);
 		dup2(enode->fd_in, STDIN_FILENO);
 		dup2(enode->fd_out, STDOUT_FILENO);
@@ -96,9 +96,9 @@ static pid_t	forkproc(t_data *d, t_exec_node *enode, t_parse_node *pnode)
 		}
 		else
 			runcmd(d, enode);
-	// }
-	// else
-	// 	return (pid);
+	}
+	else
+		return (pid);
 	return (0);
 }
 
