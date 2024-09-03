@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 13:51:29 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/03 15:42:51 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ void	print_argv_from_nodes(t_data *data)
 		output_dest = node->output_dest;
 		while (output_dest)
 		{
-			printf("Output: %s\n", ((t_token *)output_dest->content)->value);
+			printf("Output: %s type: %i\n", ((t_token *)output_dest->content)->value, ((t_token *)output_dest->content)->type);
+			
 			output_dest = output_dest->next;
 		}
 		input_src = node->input_src;
