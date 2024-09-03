@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:06:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/02 21:16:26 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/03 13:07:25 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,22 +92,30 @@ typedef struct s_token
 void				parse(t_data *data, char *cmd);
 void				parse_pipe(t_list **tokens, t_parse_node *node, t_data *data);
 void				parse_command(t_list *tokens, t_data *data);
-t_parse_node		*create_parse_node(void);
 void parse_redirects(t_list **tokens, t_parse_node *node);
+void	parse_args(t_list **tokens, t_parse_node *node);
+
+// parse_handlers
 t_list				*handle_redirects(t_list *tokens, t_parse_node *node);
+t_token	*handle_heredoc(char *delimiter);
+int	get_args(t_list **tokens, t_parse_node *node);
+char	*handle_env(char *envpointer, t_data data, size_t len);
 
 //expand_env
-void expand_env(t_token *token, char *envpointer, t_data data);
+void	expand_env(t_token *token, char *envpointer, t_data data);
+char	*add_until_env(char *start, char *expanded_str);
+size_t	count_env_len(char *env_var);
+void	expand_env(t_token *token, char *envpointer, t_data data);
+size_t	count_to_next_env(char *start);
+
+//parse utils
+int					get_builtin_index(char *token);
+bool	is_valid_filename(t_token *token);
+void	free_token(void *content);
+void	clear_tokens_list(t_list **tokens);
+char	*generate_heredoc_filename(void);
 
 void	malloc_protection(void *ptr);
-
-void remove_quotes(t_token *token);
-int					get_builtin_index(char *token);
-int	get_args(t_list **tokens, t_parse_node *node);
-
-bool				in_quotes(char *token);
-size_t count_env_len(char *env_var);
-size_t count_to_next_env(char *start);
 
 void				print_prompt(t_data *data);
 void				print_argv(t_parse_node *node);
@@ -162,5 +170,7 @@ char	*ft_pathjoin(char const *s1, char const *s2);
 void	ft_putstrs_fd(char *str1, char *str2, char *str3, int fd);
 char	*ft_strjoin2(char *s1, char const *s2);
 int		arrncontains(char **haystack, char *needle, int cmplen);
+
+t_parse_node		*create_parse_node(void);
 
 #endif

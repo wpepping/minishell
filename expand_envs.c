@@ -1,37 +1,6 @@
-#include minishell.h
+#include "minishell.h"
 
-char	*handle_env(char *envpointer, t_data data, size_t len)
-{
-	char	*temp;
-	char	*env_var;
-	char	*env_val;
 
-	if (len == 0)
-		env_var = strdup("$");
-	else
-	{
-		temp = ft_substr(envpointer, 0, len);
-		malloc_protection(temp);
-		if (temp[0] == '?')
-		{
-			env_var = ft_itoa(data.last_exit_code);
-			malloc_protection(env_var);
-		}
-		else
-		{
-			env_val = envp_get(data.envp, temp);
-			if (env_val)
-			{
-				env_var = ft_strdup(env_val);
-				malloc_protection(env_var);
-			}
-			else
-				env_var = NULL;
-		}
-		free(temp);
-	}
-	return (env_var);
-}
 
 char	*add_until_env(char *start, char *expanded_str)
 {
