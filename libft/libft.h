@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 17:05:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 14:16:25 by phartman         ###   ########.fr       */
+/*   Created: 2024/09/03 14:58:59 by wpepping          #+#    #+#             */
+/*   Updated: 2024/09/03 15:01:56 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
