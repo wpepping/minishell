@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 20:46:15 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/04 13:32:40 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ int	main(int argc, char **argv, char **envp)
 			add_history(cmd);
 			parse(&data, cmd);
 			//print_argv_from_nodes(&data);
+			sa_int.sa_handler = process_running_sigint_handler;
+			sigaction(SIGINT, &sa_int, NULL);
 			execution(&data, data.node_list);
 			sa_int.sa_handler = default_sigint_handler;
 			sigaction(SIGINT, &sa_int, NULL);

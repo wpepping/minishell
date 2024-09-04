@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 19:36:44 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/04 13:35:18 by wouter           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 static int	run_one(t_data *data, t_list *parse_nodes)
 {
 	t_exec_node	enode;
+	int			fd_stdin;
+	int			fd_stdout;
+	int			exit_status;
 
 	enode.parse = (t_parse_node *)parse_nodes->content;
 	enode.pipes = malloc(sizeof(int *));
@@ -25,9 +28,14 @@ static int	run_one(t_data *data, t_list *parse_nodes)
 	get_fds(data, &enode, enode.pipes);
 	if (enode.fd_in == -1 || enode.fd_out == -1)
 		return (1);
+	fd_stdin = dup(STDIN_FILENO);
+	fd_stdout = dup(STDOUT_FILENO);
 	dup2(enode.fd_in, STDIN_FILENO);
 	dup2(enode.fd_out, STDOUT_FILENO);
-	return (runbuiltin(data, &enode));
+	exit_status = runbuiltin(data, &enode);
+	dup2(fd_stdin, STDIN_FILENO);
+	dup2(fd_stdout, STDOUT_FILENO);
+	return (exit_status);
 }
 
 void	execution(t_data *data, t_list *parse_nodes)
