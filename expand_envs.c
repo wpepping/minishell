@@ -69,12 +69,26 @@ size_t	count_to_next_env(char *start)
 	return (i);
 }
 
-void	malloc_protection(void *ptr)
+void	combine_inword(t_list **tokens)
 {
-	if (!ptr)
+	t_token	*token;
+	t_token	*next_token;
+	t_list	*current;
+	t_list	*next;
+
+	current = *tokens;
+	while (tokens != NULL && current->next != NULL)
 	{
-		printf("Error: malloc failed\n");
-		exit(1);
+		token = (t_token *)current->content;
+		next = current->next;
+		next_token = (t_token *)next->content;
+		if (token->inword && next_token->inword)
+		{
+			token->value = ft_strjoin2(token->value, next_token->value);
+			current->next = next->next;
+			ft_lstdelone(next, free_token);
+		}
+		else
+			current = current->next;
 	}
 }
-
