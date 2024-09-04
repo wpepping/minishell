@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 20:32:41 by wpepping         ###   ########.fr       */
+/*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
+/*   Updated: 2024/09/05 15:52:46 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
