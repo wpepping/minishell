@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:40:27 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 16:03:41 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:08:49 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,11 @@ static bool	is_valid_varname(char *name)
 {
 	int	i;
 
+	if (!isalnum(name[0]) && name[0] != '_')
+		return (0);
 	if (name[0] >= '0' && name[0] <= '9')
 		return (0);
-	i = 0;
+	i = 1;
 	while (name[i] && name[i] != '=')
 	{
 		if (!isalnum(name[i]) && name[i] != '_')

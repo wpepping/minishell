@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 19:28:53 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 19:48:27 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/04 18:07:26 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ static pid_t	forkproc(t_data *d, t_exec_node *enode, t_parse_node *pnode)
 		err_handl("failed to create process: ", pnode->argv[0], d, enode);
 	else if (pid == 0)
 	{
+		sigaction(SIGINT, NULL, NULL);
 		get_fds(d, enode, enode->pipes);
 		dup2(enode->fd_in, STDIN_FILENO);
 		dup2(enode->fd_out, STDOUT_FILENO);
