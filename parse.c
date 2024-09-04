@@ -6,13 +6,13 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 18:12:12 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/04 20:00:00 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	parse_redirects(t_list **tokens, t_parse_node *node)
+int	parse_redirects(t_list **tokens, t_parse_node *node)
 {
 	t_token	*token;
 
@@ -22,10 +22,11 @@ void	parse_redirects(t_list **tokens, t_parse_node *node)
 		if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN
 			|| token->type == APPEND || token->type == HEREDOC)
 		{
-			if (!is_valid_filename((*tokens)->next->content))
+			if (!(*tokens)->next
+				|| !is_valid_filename((*tokens)->next->content))
 			{
 				printf("Error: no filename specified for redirection\n");
-				exit(1);
+				return (1);
 			}
 			*tokens = handle_redirects(*tokens, node);
 		}
@@ -34,6 +35,7 @@ void	parse_redirects(t_list **tokens, t_parse_node *node)
 			break ;
 		}
 	}
+	return (0);
 }
 
 void	parse_args(t_list **tokens, t_parse_node *node)
@@ -46,26 +48,34 @@ void	parse_args(t_list **tokens, t_parse_node *node)
 		get_args(tokens, node);
 	if (!*tokens)
 		return ;
-	parse_redirects(tokens, node);
 }
 
-void	parse_command(t_list *tokens, t_data *data)
+int	parse_command(t_list *tokens, t_data *data)
 {
 	t_parse_node	*node;
 	t_token			*token;
+	int				return_value;
 
+	return_value = 0;
 	if (tokens)
 		token = (t_token *)tokens->content;
 	node = create_parse_node();
 	if (tokens)
 	{
-		parse_redirects(&tokens, node);
+		if (parse_redirects(&tokens, node))
+			return (1);
 		if (get_builtin_index(token->value) != -1)
 			node->is_builtin = true;
 		else
 			node->exec = ft_strdup(token->value);
 		if (tokens)
+		{
+			if (parse_redirects(&tokens, node))
+				return (1);
 			parse_args(&tokens, node);
+			if (parse_redirects(&tokens, node))
+				return (1);
+		}
 	}
 	if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
 		node->is_last = true;
@@ -73,37 +83,38 @@ void	parse_command(t_list *tokens, t_data *data)
 	if (tokens)
 	{
 		token = (t_token *)tokens->content;
-		parse_pipe(&tokens, node, data);
+		parse_pipe(&tokens, data);
 	}
+	return (0);
 }
 
-void	parse_pipe(t_list **tokens, t_parse_node *node, t_data *data)
+int	parse_pipe(t_list **tokens, t_data *data)
 {
 	t_token	*token;
 
-	(void)node;
 	token = (t_token *)(*tokens)->content;
 	if (token->type == PIPE)
 	{
 		*tokens = (*tokens)->next;
-		parse_command(*tokens, data);
+		return (parse_command(*tokens, data));
 	}
+	return (0);
 }
 
-void combine_inword(t_list **tokens)
+void	combine_inword(t_list **tokens)
 {
-	t_token *token;
-	t_token *next_token;
-	t_list *current;
-	t_list *next;
+	t_token	*token;
+	t_token	*next_token;
+	t_list	*current;
+	t_list	*next;
 
 	current = *tokens;
-	while(tokens != NULL && current->next != NULL)
+	while (tokens != NULL && current->next != NULL)
 	{
 		token = (t_token *)current->content;
 		next = current->next;
 		next_token = (t_token *)next->content;
-		if(token->inword && next_token->inword)
+		if (token->inword && next_token->inword)
 		{
 			token->value = ft_strjoin2(token->value, next_token->value);
 			current->next = next->next;
@@ -114,13 +125,14 @@ void combine_inword(t_list **tokens)
 	}
 }
 
-void	parse(t_data *data, char *cmd)
+int	parse(t_data *data, char *cmd)
 {
 	t_list	*tokens;
 	t_list	*head;
 	t_token	*token;
+	int		return_value;
 
-	tokens = tokenize(cmd);
+	return_value = tokenize(cmd, &tokens);
 	head = tokens;
 	while (tokens)
 	{
@@ -135,11 +147,14 @@ void	parse(t_data *data, char *cmd)
 	}
 	tokens = head;
 	combine_inword(&tokens);
-	if(((t_token *)ft_lstlast(tokens)->content)->type == PIPE || ((t_token *)tokens->content)->type == PIPE)
+	return_value = parse_command(tokens, data);
+	if ((return_value == 0)
+		&& (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
+			|| ((t_token *)(tokens)->content)->type == PIPE))
 	{
 		printf("Error: syntax error near unexpected token '|'\n");
-		exit(1);
+		return_value = 1;
 	}
-	parse_command(tokens, data);
 	clear_tokens_list(&head);
+	return (return_value);
 }
