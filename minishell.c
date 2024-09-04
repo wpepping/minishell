@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 13:32:40 by wouter           ###   ########.fr       */
+/*   Updated: 2024/09/04 20:32:41 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	init(t_data *data, char **envp)
 	data->exit = 0;
 	data->envp = envp_create(envp);
 	data->last_exit_code = 0;
+	data->error_list = NULL;
 	if (!data->envp)
 	{
 		ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);

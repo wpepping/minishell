@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:14:03 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 20:32:20 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/04 19:44:17 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ void	ft_putstrs_fd(char *str1, char *str2, char *str3, int fd)
 	ft_putendl_fd("", fd);
 }
 
-void	clean_exit(t_data *data, t_exec_node *enode, t_list *parse_nodes)
+void	clean_exit(t_data *data, t_exec_node *enode, t_list *pnodes)
 {
 	(void)data;
 	(void)enode;
-	(void)parse_nodes;
+	(void)pnodes;
 	exit(1);
 }
 

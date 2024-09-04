@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouter <wouter@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 13:35:18 by wouter           ###   ########.fr       */
+/*   Updated: 2024/09/04 20:57:37 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	output_errors(t_list **error_list)
+{
+	while (*error_list)
+	{
+		ft_putendl_fd((*error_list)->content, STDERR_FILENO);
+		*error_list = (*error_list)->next;
+	}
+	ft_lstclear(error_list, free);
+}
 
 static int	run_one(t_data *data, t_list *parse_nodes)
 {
@@ -57,4 +67,5 @@ void	execution(t_data *data, t_list *parse_nodes)
 		else
 			data->last_exit_code = 1;
 	}
+	output_errors(&data->error_list);
 }

@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 19:28:53 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 18:07:26 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/04 21:12:42 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,23 +32,15 @@ static int	get_file_fd(t_data *d, t_exec_node *node, t_list *files, int oflag)
 	int		fd;
 	int		type;
 
-	while (files)
-	{
-		type = ((t_token *)files->content)->type;
-		fname = ((t_token *)files->content)->value;
-		fd = open(fname, oflag, 0644);
-		if (fd == -1)
-		{
-			if ((type == REDIRECT_IN || type == HEREDOC)
-				&& access(fname, F_OK) != 0)
-				return (err_handl(ERR_NO_SUCH_FILE, fname, d, node));
-			else
-				return (err_handl(ERR_PERMISSION_DENIED, fname, d, node));
-		}
-		if (files->next)
-			close(fd);
+	while (files->next)
 		files = files->next;
-	}
+	type = ((t_token *)files->content)->type;
+	fname = ((t_token *)files->content)->value;
+	if (type == APPEND)
+		oflag = oflag | O_APPEND;
+	fd = open(fname, oflag, 0644);
+	if (fd == -1 && !node->nofork)
+		clean_exit(d, node, node->parse_nodes);
 	return (fd);
 }
 
@@ -90,7 +82,9 @@ static pid_t	forkproc(t_data *d, t_exec_node *enode, t_parse_node *pnode)
 		get_fds(d, enode, enode->pipes);
 		dup2(enode->fd_in, STDIN_FILENO);
 		dup2(enode->fd_out, STDOUT_FILENO);
-		if (pnode->is_builtin)
+		if (!enode->run_cmd)
+			exit(enode->error_code);
+		else if (pnode->is_builtin)
 		{
 			return_value = runbuiltin(d, enode);
 			exit(return_value); // Change to clean exit?
@@ -103,27 +97,29 @@ static pid_t	forkproc(t_data *d, t_exec_node *enode, t_parse_node *pnode)
 	return (0);
 }
 
-pid_t	*fork_processes(t_data *data, t_list *lst, int lsize)
+pid_t	*fork_processes(t_data *data, t_list *pnodes, int lsize)
 {
 	int			i;
 	pid_t		*pids;
-	t_exec_node	enode;
+	t_list		*enodes;
+	t_execution	execution;
 
-	enode.nofork = 0;
-	enode.list_size = lsize;
-	enode.parse_nodes = lst;
-	enode.pipes = create_pipes(lsize - 1); // HANDLE NULL
+	execution.pnodes = pnodes;
+	execution.lsize = lsize;
+	execution.nofork = 0;
+	execution.enodes = NULL;
+	execution.pipes = create_pipes(execution.lsize - 1); // Deal with NULL
+	enodes = create_exec_nodes(data, &execution);
 	pids = malloc(lsize * sizeof(pid_t));
 	i = 0;
-	while (lst != NULL)
+	while (enodes != NULL)
 	{
-		enode.pindex = i;
-		enode.parse = lst->content;
-		pids[i] = forkproc(data, &enode, enode.parse);
-		lst = lst->next;
+		pids[i] = forkproc(data, enodes->content,
+				((t_exec_node *)enodes->content)->parse);
+		enodes = enodes->next;
 		i++;
 	}
-	close_fds(-1, -1, enode.pipes);
-	free_array((void **)enode.pipes);
+	close_fds(-1, -1, execution.pipes);
+	free_array((void **)execution.pipes);
 	return (pids);
 }
