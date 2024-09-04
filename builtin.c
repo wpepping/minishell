@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/03 20:42:32 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:18:22 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	ft_cd(t_data *data, t_exec_node *node)
 {
 	char	*path;
 	int		return_value;
+	int		errnr;
 
 	return_value = 1;
 	if (node->parse->argv[2])
@@ -57,7 +58,11 @@ int	ft_cd(t_data *data, t_exec_node *node)
 	else if (node->parse->argv[1])
 	{
 		path = ft_cd_getpath(data, node->parse->argv[1]);
-		if (chdir(path) == ENOTDIR)
+		errnr = chdir(path);
+		if (errnr == EACCES)
+			ft_putstrs_fd("minishell: cd: ", node->parse->argv[1],
+				": Permission denied", STDERR_FILENO);
+		else if (errnr)
 			ft_putstrs_fd("minishell: cd: ", node->parse->argv[1],
 				": No such file or directory", STDERR_FILENO);
 		else
