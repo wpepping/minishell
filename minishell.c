@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/18 19:06:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 14:02:14 by phartman         ###   ########.fr       */
+/*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
+/*   Updated: 2024/09/04 14:19:20 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,13 @@ void	init(t_data *data, char **envp)
 	data->node_list = NULL;
 	data->exit = 0;
 	data->envp = envp_create(envp);
+	data->last_exit_code = 0;
 	if (!data->envp)
-		clean_exit(ERR_OUT_OF_MEMORY, data, NULL, NULL);
+	{
+		ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
+		clean_exit(data, NULL, NULL);
+	}
 	getcwd(data->cwd, PATH_MAX);
-}
-
-void	signal_handler(int signum)
-{
-	(void)signum;
-	printf("\ninterrupted\n");
 }
 
 void	print_argv_from_nodes(t_data *data)
@@ -54,7 +52,7 @@ void	print_argv_from_nodes(t_data *data)
 		while (output_dest)
 		{
 			printf("Output: %s type: %i\n", ((t_token *)output_dest->content)->value, ((t_token *)output_dest->content)->type);
-			
+
 			output_dest = output_dest->next;
 		}
 		input_src = node->input_src;
@@ -71,34 +69,38 @@ void	print_argv_from_nodes(t_data *data)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_data				data;
-	char				*cmd;
-	char				*prompt;
-	struct sigaction	sa;
+	t_data		data;
+	char		*cmd;
+	char		*prompt;
+	t_sigaction	sa_int;
+	t_sigaction	sa_quit;
 
 	(void)argc;
 	(void)argv;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_handler = signal_handler;
-	sigaddset(&sa.sa_mask, SIGINT);
-	sigaction(SIGINT, &sa, NULL);
+	init_signal_handlers(&sa_int, &sa_quit);
 	init(&data, envp);
 	while (!data.exit)
 	{
 		prompt = ft_strjoin(data.cwd, PROMPT_END);
 		cmd = readline(prompt);
 		free(prompt);
-		if (*cmd != '\0')
+		if (!cmd)
+			data.exit = 1;
+		else if (*cmd != '\0')
 		{
 			add_history(cmd);
 			parse(&data, cmd);
 			//print_argv_from_nodes(&data);
+			sa_int.sa_handler = process_running_sigint_handler;
+			sigaction(SIGINT, &sa_int, NULL);
 			execution(&data, data.node_list);
+			sa_int.sa_handler = default_sigint_handler;
+			sigaction(SIGINT, &sa_int, NULL);
 			free(cmd);
+			cleanup_cmd(data.node_list);
 			data.node_list = NULL;
 		}
-		//clear list
-		
 	}
-	return (0);
+	cleanup(&data, NULL, NULL);
+	return (data.last_exit_code);
 }

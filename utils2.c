@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:14:03 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/27 20:04:36 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/03 20:32:20 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,26 +40,43 @@ void	ft_putstrs_fd(char *str1, char *str2, char *str3, int fd)
 	ft_putendl_fd("", fd);
 }
 
-void	clean_exit(char *msg, t_data *data,
-			t_exec_node *enode, t_parse_node *pnode)
+void	clean_exit(t_data *data, t_exec_node *enode, t_list *parse_nodes)
 {
 	(void)data;
 	(void)enode;
-	(void)pnode;
-	ft_putendl_fd(msg, STDERR_FILENO);
+	(void)parse_nodes;
 	exit(1);
 }
 
-void	cleanup(t_data *data, t_exec_node *enode, t_parse_node *pnode)
+bool	isdir(char *dname)
 {
-	(void)data;
-	(void)enode;
-	(void)pnode;
+	DIR	*dir;
+
+	dir = opendir(dname);
+	if (!dir)
+		return (false);
+	closedir(dir);
+	return (true);
 }
 
-void	cleanup_cmd(t_data *data, t_exec_node *enode, t_parse_node *pnode)
+int	ft_isint(char *str)
 {
-	(void)data;
-	(void)enode;
-	(void)pnode;
+	long	l;
+	char	*p;
+
+	p = str;
+	if (*str == '-' || *str == '+')
+		str++;
+	if (*str == '\0' || ft_strlen(str) > 10)
+		return (0);
+	while (*str)
+	{
+		if (!ft_isdigit(*str))
+			return (0);
+		str++;
+	}
+	l = ft_atol(p);
+	if (l > 2147483647 || l < -2147483648)
+		return (0);
+	return (1);
 }

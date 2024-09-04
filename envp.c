@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/23 18:31:50 by wpepping          #+#    #+#             */
-/*   Updated: 2024/08/29 19:02:36 by phartman         ###   ########.fr       */
+/*   Created: 2024/09/03 14:58:35 by wpepping          #+#    #+#             */
+/*   Updated: 2024/09/03 14:58:43 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

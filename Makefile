@@ -1,36 +1,26 @@
-CC := gcc
-
+CC := cc
 CFLAGS := -Wall -Wextra -Werror -g
-LIBS = -lreadline
-
-
-# SRCS := minishell.c\
-# 		parse.c\
-# 		utils.c\
-# 		buildtin.c
-
-SRCS = $(wildcard *.c) $(wildcard libft/*.c)
-
-
+LIBS = -Llibft -lreadline -lft
+SRCS = $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
 
 %.o: %.c
-	@$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 NAME := minishell
 
 $(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME) 
- 
+	$(MAKE) -C libft
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+
 all: $(NAME)
 
-
- 
 clean:
-	@rm -f $(OBJS)
-	
+	$(MAKE) -C libft fclean
+	rm -f $(OBJS)
+
 fclean: clean
-	@rm -f $(NAME)
+	rm -f $(NAME)
 
 re: fclean all
 
