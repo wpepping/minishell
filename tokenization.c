@@ -43,6 +43,8 @@ int	add_word(char *cmd, t_list **token_list)
 	{
 		i++;
 	}
+	if(cmd[i] == ' ' || cmd[i] == '\t')
+		i++;
 	append_token(token_list, WORD, cmd, i);
 	return (i);
 }

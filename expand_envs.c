@@ -52,8 +52,8 @@ void	expand_env(t_token *token, char *envpointer, t_data data)
 			malloc_protection(expanded_str);
 			free(env_var);
 		}
-		if (token->type == DOUBLE_QUOTE)
-			expanded_str = add_until_env(envpointer + len + 1, expanded_str);
+		//if (token->type == DOUBLE_QUOTE)
+		expanded_str = add_until_env(envpointer + len + 1, expanded_str);
 		envpointer = ft_strchr(envpointer + 1, '$');
 	}
 	token->value = ft_strdup(expanded_str);
