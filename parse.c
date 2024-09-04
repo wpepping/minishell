@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 20:00:00 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/04 20:02:49 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,29 +101,6 @@ int	parse_pipe(t_list **tokens, t_data *data)
 	return (0);
 }
 
-void	combine_inword(t_list **tokens)
-{
-	t_token	*token;
-	t_token	*next_token;
-	t_list	*current;
-	t_list	*next;
-
-	current = *tokens;
-	while (tokens != NULL && current->next != NULL)
-	{
-		token = (t_token *)current->content;
-		next = current->next;
-		next_token = (t_token *)next->content;
-		if (token->inword && next_token->inword)
-		{
-			token->value = ft_strjoin2(token->value, next_token->value);
-			current->next = next->next;
-			ft_lstdelone(next, free_token);
-		}
-		else
-			current = current->next;
-	}
-}
 
 int	parse(t_data *data, char *cmd)
 {

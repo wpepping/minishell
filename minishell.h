@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 15:55:14 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:55:31 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,9 @@ void						expand_env(t_token *token, char *envpointer,
 char						*add_until_env(char *start, char *expanded_str);
 size_t						count_env_len(char *env_var);
 size_t						count_to_next_env(char *start);
-void						malloc_protection(void *ptr);
+void						combine_inword(t_list **tokens);
+
+
 
 // parse utils
 int							get_builtin_index(char *token);
@@ -198,6 +200,7 @@ int							arrncontains(char **haystack, char *needle,
 t_parse_node				*create_parse_node(void);
 bool						isdir(char *dname);
 int							ft_isint(char *str);
+void						malloc_protection(void *ptr);
 
 // Clean up
 void						cleanup(t_data *data, t_exec_node *enode,
