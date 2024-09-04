@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 19:28:53 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 21:12:42 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/04 21:44:55 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,5 +121,6 @@ pid_t	*fork_processes(t_data *data, t_list *pnodes, int lsize)
 	}
 	close_fds(-1, -1, execution.pipes);
 	free_array((void **)execution.pipes);
+	ft_lstclear(&enodes, free);
 	return (pids);
 }
