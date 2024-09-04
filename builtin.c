@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 14:20:22 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/04 18:23:54 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,11 @@ int	ft_echo(t_data *data, t_exec_node *node)
 	if (arg_no_newln)
 		i++;
 	while (node->parse->argv[i])
+	{
 		ft_putstr_fd(node->parse->argv[i++], STDOUT_FILENO);
+		if (node->parse->argv[i])
+			ft_putstr_fd(" ", STDOUT_FILENO);
+	}
 	if (!arg_no_newln)
 		ft_putendl_fd("", STDOUT_FILENO);
 	return (0);
