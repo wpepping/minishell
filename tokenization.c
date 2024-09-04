@@ -37,25 +37,13 @@ int	add_quote(char *cmd, char quote, t_list **token_list)
 int	add_word(char *cmd, t_list **token_list)
 {
 	int	i;
-	//int j;
 
 	i = 1;
-	//j= 0;
-	
 	while (cmd[i] && cmd[i] != ' ' && cmd[i] != '|' && cmd[i] != '<'
 		&& cmd[i] != '>' && cmd[i] != '(' && cmd[i] != ')' && cmd[i] != '&'
 		&& cmd[i] != '\t' && cmd[i] != '"' && cmd[i] != '\'')
 	{
-
-		// if()
-		// {
-		// 	if(i>j)
-		// 		append_token(token_list, WORD, cmd + j, i - j);
-		// 	i+= add_quote(cmd + i, cmd[i], token_list, true);
-		// 	j= i;
-		// }
-		// else
-			i++;
+		i++;
 	}
 	append_token(token_list, WORD, cmd, i);
 	return (i);
@@ -80,9 +68,9 @@ int	handle_other_tokens(char *cmd, t_list **token_list)
 
 int	tokenize(char *cmd, t_list **token_list)
 {
-	t_list	*token_list;
 	bool	inword;
-	token_list = NULL;
+
+	*token_list = NULL;
 	while (*cmd)
 	{
 		if (*cmd == ' ' || *cmd == '\t')
@@ -92,44 +80,46 @@ int	tokenize(char *cmd, t_list **token_list)
 		}
 		else if (ft_strncmp(cmd, "\"", 1) == 0)
 		{
-			cmd += add_quote(cmd, '"', &token_list);
+			cmd += add_quote(cmd, '"', token_list);
 			inword = true;
 		}
 		else if (ft_strncmp(cmd, "'", 1) == 0)
 		{
-			cmd += add_quote(cmd, '\'', &token_list);
+			cmd += add_quote(cmd, '\'', token_list);
 			inword = true;
 		}
 		else if (ft_strncmp(cmd, "<<", 2) == 0)
 		{
-			cmd += append_token(&token_list, HEREDOC, cmd, 2);
+			cmd += append_token(token_list, HEREDOC, cmd, 2);
 			inword = false;
 		}
 		else if (ft_strncmp(cmd, ">>", 2) == 0)
 		{
-			cmd += append_token(&token_list, APPEND, cmd, 2);
+			cmd += append_token(token_list, APPEND, cmd, 2);
 			inword = false;
 		}
 		else if (ft_strncmp(cmd, "&&", 2) == 0 || ft_strncmp(cmd, "||", 2) == 0
 			|| ft_strncmp(cmd, "(", 1) == 0 || ft_strncmp(cmd, ")", 1) == 0
 			|| ft_strncmp(cmd, "<", 1) == 0 || ft_strncmp(cmd, ">", 1) == 0)
 		{
-			cmd += handle_other_tokens(cmd, &token_list);
+			cmd += handle_other_tokens(cmd, token_list);
 			inword = false;
 		}
 		else if (ft_strncmp(cmd, "|", 1) == 0)
 		{
-			cmd += append_token(&token_list, PIPE, cmd, 1);
+			cmd += append_token(token_list, PIPE, cmd, 1);
 			inword = false;
 		}
 		else
 		{
-			cmd += add_word(cmd, &token_list);
+			cmd += add_word(cmd, token_list);
 			inword = true;
 		}
-		// Update the inword flag of the last token in the list
-		if (token_list && (((t_token *)ft_lstlast(token_list)->content)->type == WORD || ((t_token *)ft_lstlast(token_list)->content)->type == DOUBLE_QUOTE || ((t_token *)ft_lstlast(token_list)->content)->type == SINGLE_QUOTE))
-			((t_token *)ft_lstlast(token_list)->content)->inword = inword;
+		if (token_list
+			&& (((t_token *)ft_lstlast(*token_list)->content)->type == WORD
+				|| ((t_token *)ft_lstlast(*token_list)->content)->type == DOUBLE_QUOTE
+				|| ((t_token *)ft_lstlast(*token_list)->content)->type == SINGLE_QUOTE))
+			((t_token *)ft_lstlast(*token_list)->content)->inword = inword;
 	}
 	return (0);
 }
