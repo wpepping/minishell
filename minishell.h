@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 15:18:29 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:53:19 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,10 @@ typedef struct s_data
 
 typedef struct s_token
 {
-	char					*value;
-	bool					inword;
-	t_token_type			type;
-}							t_token;
+	char			*value;
+	bool			inword;
+	t_token_type	type;
+}				t_token;
 
 typedef struct sigaction	t_sigaction;
 

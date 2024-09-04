@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 20:02:49 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/04 18:12:12 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,31 @@ int	parse_pipe(t_list **tokens, t_data *data)
 	return (0);
 }
 
+void combine_inword(t_list **tokens)
+{
+	t_token *token;
+	t_token *next_token;
+	t_list *current;
+	t_list *next;
 
-int	parse(t_data *data, char *cmd)
+	current = *tokens;
+	while(tokens != NULL && current->next != NULL)
+	{
+		token = (t_token *)current->content;
+		next = current->next;
+		next_token = (t_token *)next->content;
+		if(token->inword && next_token->inword)
+		{
+			token->value = ft_strjoin2(token->value, next_token->value);
+			current->next = next->next;
+			ft_lstdelone(next, free_token);
+		}
+		else
+			current = current->next;
+	}
+}
+
+void	parse(t_data *data, char *cmd)
 {
 	t_list	*tokens;
 	t_list	*head;
@@ -124,10 +147,7 @@ int	parse(t_data *data, char *cmd)
 	}
 	tokens = head;
 	combine_inword(&tokens);
-	return_value = parse_command(tokens, data);
-	if ((return_value == 0)
-		&& (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
-			|| ((t_token *)(tokens)->content)->type == PIPE))
+	if(((t_token *)ft_lstlast(tokens)->content)->type == PIPE || ((t_token *)tokens->content)->type == PIPE)
 	{
 		printf("Error: syntax error near unexpected token '|'\n");
 		return_value = 1;
