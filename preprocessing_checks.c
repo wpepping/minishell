@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:42:40 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 15:44:45 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 19:24:07 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ bool	check_cmd(t_data *data, t_exec_node *node)
 	return (true);
 }
 
-bool	check_fds(t_data *data, t_list *files, int oflag)
+bool	check_fds(t_data *data, t_list *files, int oflag, bool *file_ok)
 {
 	char	*fname;
 	int		fd;
@@ -61,11 +61,13 @@ bool	check_fds(t_data *data, t_list *files, int oflag)
 
 	while (files)
 	{
+		*file_ok = true;
 		type = ((t_token *)files->content)->type;
 		fname = ((t_token *)files->content)->value;
 		fd = open(fname, oflag, 0644);
 		if (fd == -1)
 		{
+			*file_ok = false;
 			if ((type == REDIRECT_IN || type == HEREDOC)
 				&& access(fname, F_OK) != 0)
 				return (err_handl(ERR_NO_SUCH_FILE, fname, data));

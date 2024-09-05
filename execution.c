@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 18:38:45 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 19:23:49 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ static int	run_one(t_data *data, t_list *parse_nodes)
 	int			exit_status;
 
 	enode.parse = (t_parse_node *)parse_nodes->content;
-	enode.pipes = malloc(sizeof(int *));
-	enode.pipes[0] = NULL;
+	enode.pipes = create_pipes(0);
 	enode.pindex = 0;
 	enode.nofork = 1;
 	enode.parse_nodes = parse_nodes;
-	if (!check_fds(data, enode.parse->input_src, O_RDONLY)
-		|| !check_fds(data, enode.parse->output_dest, O_CREAT | O_WRONLY))
+	if (!check_fds(data, enode.parse->input_src, O_RDONLY, &enode.infile)
+		|| !check_fds(data, enode.parse->output_dest, O_CREAT | O_WRONLY,
+			&enode.outfile))
 		return (1);
 	get_fds(data, &enode, enode.pipes);
 	if (enode.fd_in == -1 || enode.fd_out == -1)

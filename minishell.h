@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 18:56:11 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 19:20:10 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ typedef struct s_exec_node
 	int				nofork;
 	int				error_code;
 	bool			run_cmd;
-	char			*infile;
-	char			*outfile;
+	bool			infile;
+	bool			outfile;
 	char			*fullcmd;
 }				t_exec_node;
 
@@ -157,12 +157,8 @@ bool						in_quotes(char *token);
 int							add_word(char *cmd, t_list **token_list);
 
 // Pre-processing
-bool			check_fds(t_data *data, t_list *files, int oflag);
-bool			check_cmd(t_data *data, t_exec_node *node);
-t_list			*create_exec_nodes(t_data *data, t_execution *exec);
-
-// Pre-processing
-bool			check_fds(t_data *data, t_list *files, int oflag);
+bool			check_fds(t_data *data, t_list *files,
+					int oflag, bool *file_ok);
 bool			check_cmd(t_data *data, t_exec_node *node);
 t_list			*create_exec_nodes(t_data *data, t_execution *exec);
 
@@ -211,7 +207,7 @@ bool			isdir(char *dname);
 int				ft_isint(char *str);
 char			**get_path(void);
 char			*find_full_path(char *cmd, char *path[]);
-void	malloc_protection(void *ptr);
+void			malloc_protection(void *ptr);
 
 // Clean up
 void						cleanup(t_data *data, t_exec_node *enode,
