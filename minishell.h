@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 21:42:22 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:18:29 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ t_list			*create_exec_nodes(t_data *data, t_execution *exec);
 int				**create_pipes(int n);
 void			execution(t_data *data, t_list *parse_nodes);
 void			get_fds(t_data *data, t_exec_node *node, int **pipes);
-pid_t			*fork_processes(t_data *data, t_list *lst, int lsize);
+pid_t			*fork_processes(t_data *data, t_execution *exec);
 int				waitpids(pid_t *pids, int n);
 void			runcmd(t_data *data, t_exec_node *node);
 int				runbuiltin(t_data *data, t_exec_node *node);

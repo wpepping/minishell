@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 21:44:05 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:19:59 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,24 +51,34 @@ static int	run_one(t_data *data, t_list *parse_nodes)
 	return (exit_status);
 }
 
-void	execution(t_data *data, t_list *parse_nodes)
+static void	init_execution(t_data *data, t_execution *exec, t_list *pnodes)
 {
-	int		lsize;
-	pid_t	*pids;
+	exec->pnodes = pnodes;
+	exec->lsize = ft_lstsize(pnodes);
+	exec->nofork = 0;
+	exec->enodes = NULL;
+	exec->pipes = create_pipes(exec->lsize - 1); // Deal with NULL
+	exec->enodes = create_exec_nodes(data, exec);
+	output_errors(&data->error_list);
+}
 
-	lsize = ft_lstsize(parse_nodes);
-	if (((t_parse_node *)parse_nodes->content)->is_builtin && lsize == 1)
-		data->last_exit_code = run_one(data, parse_nodes);
+void	execution(t_data *data, t_list *pnodes)
+{
+	pid_t		*pids;
+	t_execution	exec;
+
+	if (((t_parse_node *)pnodes->content)->is_builtin && !pnodes->next)
+		data->last_exit_code = run_one(data, pnodes);
 	else
 	{
-		pids = fork_processes(data, parse_nodes, lsize);
+		init_execution(data, &exec, pnodes);
+		pids = fork_processes(data, &exec);
 		if (pids)
 		{
-			data->last_exit_code = waitpids(pids, lsize);
+			data->last_exit_code = waitpids(pids, exec.lsize);
 			free(pids);
 		}
 		else
 			data->last_exit_code = 1;
 	}
-	output_errors(&data->error_list);
 }
