@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 15:18:29 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 18:56:11 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # define ERR_PERMISSION_DENIED "minishell: permission denied: "
 # define ERR_IS_DIR "minishell: Is a directory: "
 # define ERR_CANNOT_EXEC " cannot execute binary file: Exec format error"
+# define ERR_EXIT_TOO_MANY_ARG "minishell: exit: too many arguments"
 # define PROMPT_END "$ "
 
 typedef enum e_token_type
