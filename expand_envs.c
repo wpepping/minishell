@@ -56,7 +56,17 @@ void	expand_env(t_token *token, char *envpointer, t_data data)
 		expanded_str = add_until_env(envpointer + len + 1, expanded_str);
 		envpointer = ft_strchr(envpointer + 1, '$');
 	}
+	// if (ft_strncmp(expanded_str, "", 1) == 0)
+	// {
+	// 	free(expanded_str);
+	// 	expanded_str = NULL;
+	// }
+	if(!expanded_str)
+		expanded_str = ft_strdup("");
 	token->value = ft_strdup(expanded_str);
+	malloc_protection(token->value);
+	if (expanded_str)
+		free(expanded_str);
 }
 
 size_t	count_to_next_env(char *start)

@@ -12,32 +12,6 @@
 
 #include "minishell.h"
 
-int	parse_redirects(t_list **tokens, t_parse_node *node)
-{
-	t_token	*token;
-
-	while (*tokens != NULL)
-	{
-		token = (t_token *)(*tokens)->content;
-		if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN
-			|| token->type == APPEND || token->type == HEREDOC)
-		{
-			if (!(*tokens)->next
-				|| !is_valid_filename((*tokens)->next->content))
-			{
-				printf("Error: no filename specified for redirection\n");
-				return (1);
-			}
-			*tokens = handle_redirects(*tokens, node);
-		}
-		else
-		{
-			break ;
-		}
-	}
-	return (0);
-}
-
 
 int	parse_args_and_redirects(t_list **tokens, t_parse_node *node)
 {
@@ -81,8 +55,6 @@ int	parse_command(t_list *tokens, t_data *data)
 	node = create_parse_node();
 	if (tokens)
 	{
-		if (parse_redirects(&tokens, node))
-			return (1);
 		if (get_builtin_index(token->value) != -1)
 			node->is_builtin = true;
 		else

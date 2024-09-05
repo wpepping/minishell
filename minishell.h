@@ -113,8 +113,7 @@ typedef struct sigaction	t_sigaction;
 int							parse(t_data *data, char *cmd);
 int							parse_pipe(t_list **tokens, t_data *data);
 int							parse_command(t_list *tokens, t_data *data);
-int							parse_redirects(t_list **tokens, t_parse_node *node);
-void						parse_args(t_list **tokens, t_parse_node *node);
+int	parse_args_and_redirects(t_list **tokens, t_parse_node *node);
 
 // parse_handlers
 t_list						*handle_redirects(t_list *tokens,
