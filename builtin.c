@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 19:00:34 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 21:19:13 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,10 @@ int	ft_cd(t_data *data, t_exec_node *node)
 		path = ft_cd_getpath(data, node->parse->argv[1]);
 		errnr = chdir(path);
 		if (errnr == EACCES)
-			ft_putstrs_fd("minishell: cd: ", node->parse->argv[1],
-				": Permission denied", STDERR_FILENO);
+			ft_puterr("cd: ", node->parse->argv[1], ": Permission denied");
 		else if (errnr)
-			ft_putstrs_fd("minishell: cd: ", node->parse->argv[1],
-				": No such file or directory", STDERR_FILENO);
+			ft_puterr("cd: ", node->parse->argv[1],
+				": No such file or directory");
 		else
 			return_value = 0;
 		getcwd(data->cwd, PATH_MAX);
@@ -103,13 +102,13 @@ int	ft_exit(t_data *data, t_exec_node *node)
 			exit_code += 256;
 		if (val == 0)
 		{
-			ft_putstrs_fd("minishell: exit: ", node->parse->argv[1],
-				": numeric argument required", STDERR_FILENO);
+			ft_puterr("exit: ", node->parse->argv[1],
+				": numeric argument required");
 			exit_code = 2;
 		}
 		else if (node->parse->argv[2])
 		{
-			ft_putendl_fd(ERR_EXIT_TOO_MANY_ARG, STDERR_FILENO);
+			ft_puterr(ERR_EXIT_TOO_MANY_ARG, NULL, NULL);
 			exit_code = 1;
 		}
 	}

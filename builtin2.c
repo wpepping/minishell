@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:40:27 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 16:08:49 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 21:18:18 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ int	ft_export(t_data *data, t_exec_node *node)
 		var = node->parse->argv[i++];
 		if (!is_valid_varname(var))
 		{
-			ft_putstrs_fd("minishell: export: '", var,
-				"': not a valid identifier", STDERR_FILENO);
+			ft_puterr("export: '", var, "': not a valid identifier");
 			return_value = 1;
 			continue ;
 		}

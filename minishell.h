@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 20:56:21 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 21:18:02 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,7 @@ void						init_signal_handlers(t_sigaction *sa_int,
 void			clean_exit(t_data *data, t_exec_node *enode, t_list *pnodes);
 void			close_fds(int fd_in, int fd_out, int **pipes);
 char			*ft_pathjoin(char const *s1, char const *s2);
-void			ft_putstrs_fd(char *str1, char *str2, char *str3, int fd);
+void			ft_puterr(char *str1, char *str2, char *str3);
 char			*ft_strjoin2(char *s1, char const *s2);
 int				arrncontains(char **haystack, char *needle, int cmplen);
 t_parse_node	*create_parse_node(void);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:14:03 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 19:44:17 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 21:20:27 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,16 @@ char	*ft_strjoin2(char *s1, char const *s2)
 	return (result);
 }
 
-void	ft_putstrs_fd(char *str1, char *str2, char *str3, int fd)
+void	ft_puterr(char *str1, char *str2, char *str3)
 {
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	if (str1 != NULL)
-		ft_putstr_fd(str1, fd);
+		ft_putstr_fd(str1, STDERR_FILENO);
 	if (str2 != NULL)
-		ft_putstr_fd(str2, fd);
+		ft_putstr_fd(str2, STDERR_FILENO);
 	if (str3 != NULL)
-		ft_putstr_fd(str3, fd);
-	ft_putendl_fd("", fd);
+		ft_putstr_fd(str3, STDERR_FILENO);
+	ft_putendl_fd("", STDERR_FILENO);
 }
 
 void	clean_exit(t_data *data, t_exec_node *enode, t_list *pnodes)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 18:18:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 20:05:37 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/05 21:20:17 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	invalid_option(char *command, char *option)
 	char	*o;
 
 	if (ft_strlen(option) == 1)
-		ft_putstrs_fd("minishell: ", command, ": invalid option", STDERR_FILENO);
+		ft_puterr(command, ": invalid option", NULL);
 	else
 	{
 		o = ft_substr(option, 0, 2);
