@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 19:23:49 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 20:57:51 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ static int	run_one(t_data *data, t_list *parse_nodes)
 	enode.pindex = 0;
 	enode.nofork = 1;
 	enode.parse_nodes = parse_nodes;
-	if (!check_fds(data, enode.parse->input_src, O_RDONLY, &enode.infile)
+	if (!check_fds(data, enode.parse->input_src, O_RDONLY, &enode.infile_ok)
 		|| !check_fds(data, enode.parse->output_dest, O_CREAT | O_WRONLY,
-			&enode.outfile))
+			&enode.outfile_ok))
 		return (1);
 	get_fds(data, &enode, enode.pipes);
 	if (enode.fd_in == -1 || enode.fd_out == -1)

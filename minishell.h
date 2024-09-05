@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 19:20:10 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 20:56:21 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ typedef struct s_exec_node
 	int				nofork;
 	int				error_code;
 	bool			run_cmd;
-	bool			infile;
-	bool			outfile;
+	bool			infile_ok;
+	bool			outfile_ok;
 	char			*fullcmd;
 }				t_exec_node;
 
