@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:42:40 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 21:11:24 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:44:45 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,19 @@ bool	check_cmd(t_data *data, t_exec_node *node)
 		err_handl(ERR_OUT_OF_MEMORY, NULL, data);
 	node->fullcmd = find_full_path(node->parse->argv[0], path);
 	free_array((void **)path);
+	if (node->parse->is_builtin)
+		return (true);
+	node->error_code = 127;
 	if (node->fullcmd == NULL)
 		return (err_handl(ERR_COMMAND_NOT_FOUND, node->parse->argv[0], data));
+	if (access(node->fullcmd, F_OK) != 0)
+		return (err_handl(ERR_NO_SUCH_FILE, node->parse->argv[0], data));
+	node->error_code = 126;
 	if (isdir(node->fullcmd))
 		return (err_handl(ERR_IS_DIR, node->parse->argv[0], data));
 	if (access(node->fullcmd, X_OK) != 0)
 		return (err_handl(ERR_PERMISSION_DENIED, node->parse->argv[0], data));
+	node->error_code = 0;
 	return (true);
 }
 

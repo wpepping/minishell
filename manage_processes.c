@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 19:28:53 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 21:44:55 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:29:29 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ void	get_fds(t_data *data, t_exec_node *node, int **pipes)
 static pid_t	forkproc(t_data *d, t_exec_node *enode, t_parse_node *pnode)
 {
 	pid_t		pid;
-	int			return_value;
 
 	pid = fork();
 	if (pid < 0)
@@ -85,10 +84,7 @@ static pid_t	forkproc(t_data *d, t_exec_node *enode, t_parse_node *pnode)
 		if (!enode->run_cmd)
 			exit(enode->error_code);
 		else if (pnode->is_builtin)
-		{
-			return_value = runbuiltin(d, enode);
-			exit(return_value); // Change to clean exit?
-		}
+			exit(runbuiltin(d, enode)); // Change to clean exit?
 		else
 			runcmd(d, enode);
 	}
@@ -97,20 +93,14 @@ static pid_t	forkproc(t_data *d, t_exec_node *enode, t_parse_node *pnode)
 	return (0);
 }
 
-pid_t	*fork_processes(t_data *data, t_list *pnodes, int lsize)
+pid_t	*fork_processes(t_data *data, t_execution *exec)
 {
 	int			i;
 	pid_t		*pids;
 	t_list		*enodes;
-	t_execution	execution;
 
-	execution.pnodes = pnodes;
-	execution.lsize = lsize;
-	execution.nofork = 0;
-	execution.enodes = NULL;
-	execution.pipes = create_pipes(execution.lsize - 1); // Deal with NULL
-	enodes = create_exec_nodes(data, &execution);
-	pids = malloc(lsize * sizeof(pid_t));
+	pids = malloc(exec->lsize * sizeof(pid_t));
+	enodes = exec->enodes;
 	i = 0;
 	while (enodes != NULL)
 	{
@@ -119,8 +109,8 @@ pid_t	*fork_processes(t_data *data, t_list *pnodes, int lsize)
 		enodes = enodes->next;
 		i++;
 	}
-	close_fds(-1, -1, execution.pipes);
-	free_array((void **)execution.pipes);
+	close_fds(-1, -1, exec->pipes);
+	free_array((void **)exec->pipes);
 	ft_lstclear(&enodes, free);
 	return (pids);
 }
