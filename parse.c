@@ -26,7 +26,8 @@ int	parse_args_and_redirects(t_list **tokens, t_parse_node *node)
 		token = (t_token *)(*tokens)->content;
 		if (token->type == WORD)
 		{
-			argc++;
+			if (ft_strncmp(token->value, "", 1) != 0)
+				argc++;
 			*tokens = (*tokens)->next;
 		}
 		else if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN
@@ -48,26 +49,24 @@ int	parse_args_and_redirects(t_list **tokens, t_parse_node *node)
 int	parse_command(t_list *tokens, t_data *data)
 {
 	t_parse_node	*node;
-	t_token			*token;
 
-	if (tokens)
-		token = (t_token *)tokens->content;
-	node = create_parse_node();
+	
 	if (tokens)
 	{
-		if (get_builtin_index(token->value) != -1)
+		node = create_parse_node();
+		parse_args_and_redirects(&tokens, node);
+		if (node->argv[0] != NULL)
+		{
+			if (get_builtin_index(node->argv[0]) != -1)
 			node->is_builtin = true;
 		else
-			node->exec = ft_strdup(token->value);
-		if (tokens)
-			parse_args_and_redirects(&tokens, node);
-	}
+			node->exec = ft_strdup(node->argv[0]);
+		}
+	
 	if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
 		node->is_last = true;
 	ft_lstadd_back(&data->node_list, ft_lstnew(node));
 	if (tokens)
-	{
-		token = (t_token *)tokens->content;
 		parse_pipe(&tokens, data);
 	}
 	return (0);
@@ -111,14 +110,17 @@ int	parse(t_data *data, char *cmd)
 	}
 	tokens = head;
 	combine_inword(&tokens);
+	//head = tokens;
 	return_value = parse_command(tokens, data);
-	if ((return_value == 0)
+	if ((return_value == 0 && tokens != NULL)
 		&& (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
 			|| ((t_token *)(tokens)->content)->type == PIPE))
 	{
 		printf("Error: syntax error near unexpected token '|'\n");
 		return_value = 1;
 	}
-	clear_tokens_list(&head);
+	if(tokens)
+		clear_tokens_list(&tokens);
+	data->last_exit_code = return_value;
 	return (return_value);
 }

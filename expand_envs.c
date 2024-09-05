@@ -56,17 +56,9 @@ void	expand_env(t_token *token, char *envpointer, t_data data)
 		expanded_str = add_until_env(envpointer + len + 1, expanded_str);
 		envpointer = ft_strchr(envpointer + 1, '$');
 	}
-	// if (ft_strncmp(expanded_str, "", 1) == 0)
-	// {
-	// 	free(expanded_str);
-	// 	expanded_str = NULL;
-	// }
-	if(!expanded_str)
-		expanded_str = ft_strdup("");
 	token->value = ft_strdup(expanded_str);
 	malloc_protection(token->value);
-	if (expanded_str)
-		free(expanded_str);
+	free(expanded_str);
 }
 
 size_t	count_to_next_env(char *start)
@@ -79,26 +71,74 @@ size_t	count_to_next_env(char *start)
 	return (i);
 }
 
-void	combine_inword(t_list **tokens)
+void delete_leading_token(t_list **tokens, t_list **current)
 {
-	t_token	*token;
-	t_token	*next_token;
-	t_list	*current;
-	t_list	*next;
+	t_token *token;
+
+	token = (t_token *)(*current)->content;
+	if (token->value[0] == '\0')
+	{
+		if (*current == *tokens)
+		{
+			*tokens = (*current)->next;
+			ft_lstdelone(*current, free_token);
+			*current = *tokens;
+			if (*tokens == NULL)
+				return;
+		}
+	}
+}
+
+// void	combine_inword(t_list **tokens)
+// {
+// 	t_token	*token;
+// 	t_token	*next_token;
+// 	t_list	*current;
+// 	t_list	*next;
+
+// 	current = *tokens;
+// 	delete_leading_token(tokens, &current);
+// 	while (*tokens != NULL && current->next != NULL)
+// 	{
+// 		token = (t_token *)current->content;
+// 		next = current->next;
+// 		next_token = (t_token *)next->content;
+// 		if ((token->inword && next_token->inword) || next_token->value[0] == '\0')
+// 		{
+// 			token->value = ft_strjoin2(token->value, next_token->value);
+// 			current->next = next->next;
+// 			ft_lstdelone(next, free_token);
+// 		}
+// 		else
+// 			current = current->next;
+// 	}
+// }
+
+void combine_inword(t_list **tokens)
+{
+	t_token *token;
+	t_token *next_token;
+	t_list  *current;
+	t_list *next;
 
 	current = *tokens;
-	while (tokens != NULL && current->next != NULL)
+	delete_leading_token(tokens, &current);
+	while (*tokens != NULL && current->next != NULL)
 	{
 		token = (t_token *)current->content;
-		next = current->next;
-		next_token = (t_token *)next->content;
-		if (token->inword && next_token->inword)
+		next_token = (t_token *)current->next->content;
+
+		if ((token->inword && next_token->inword) || next_token->value[0] == '\0')
 		{
 			token->value = ft_strjoin2(token->value, next_token->value);
-			current->next = next->next;
+			next = current->next;
+			current->next = current->next->next;
 			ft_lstdelone(next, free_token);
 		}
 		else
+		{
 			current = current->next;
+		}
 	}
 }
+
