@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 19:28:53 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 20:56:47 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 22:18:25 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	get_fds(t_data *data, t_exec_node *node, int **pipes)
 	{
 		if (!node->outfile_ok)
 			clean_exit(data, node, node->parse_nodes);
-		if (((t_token *)node->parse->output_dest)->type == APPEND)
+		if (((t_token *)node->parse->output_dest->content)->type == APPEND)
 			oflag = O_CREAT | O_WRONLY | APPEND;
 		else
 			oflag = O_CREAT | O_WRONLY | O_TRUNC;
