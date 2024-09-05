@@ -38,25 +38,44 @@ int	parse_redirects(t_list **tokens, t_parse_node *node)
 	return (0);
 }
 
-void	parse_args(t_list **tokens, t_parse_node *node)
-{
-	t_token	*token;
 
-	token = (t_token *)(*tokens)->content;
-	if (token->type == WORD || token->type == DOUBLE_QUOTE
-		|| token->type == SINGLE_QUOTE)
-		get_args(tokens, node);
-	if (!*tokens)
-		return ;
+int	parse_args_and_redirects(t_list **tokens, t_parse_node *node)
+{
+	t_token *token;
+	t_list	*head;
+	int argc;
+
+	head = *tokens;
+	argc = 0;
+	while (*tokens != NULL && ((t_token *)(*tokens)->content)->type != PIPE)
+	{
+		token = (t_token *)(*tokens)->content;
+		if (token->type == WORD)
+		{
+			argc++;
+			*tokens = (*tokens)->next;
+		}
+		else if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN
+			|| token->type == APPEND || token->type == HEREDOC)
+		{
+			if (!(*tokens)->next || !is_valid_filename((*tokens)->next->content))
+			{
+				printf("Error: no filename specified for redirection\n");
+				return (1);
+			}
+			*tokens = handle_redirects(*tokens, node);
+		}
+	}
+	handle_args(head, node, argc);
+	return (0);
 }
+
 
 int	parse_command(t_list *tokens, t_data *data)
 {
 	t_parse_node	*node;
 	t_token			*token;
-	//int				return_value;
 
-	//return_value = 0;
 	if (tokens)
 		token = (t_token *)tokens->content;
 	node = create_parse_node();
@@ -69,13 +88,7 @@ int	parse_command(t_list *tokens, t_data *data)
 		else
 			node->exec = ft_strdup(token->value);
 		if (tokens)
-		{
-			//if (parse_redirects(&tokens, node))
-				//return (1);
-			parse_args(&tokens, node);
-			if (parse_redirects(&tokens, node))
-				return (1);
-		}
+			parse_args_and_redirects(&tokens, node);
 	}
 	if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
 		node->is_last = true;
@@ -120,6 +133,8 @@ int	parse(t_data *data, char *cmd)
 		if ((token->type == DOUBLE_QUOTE || token->type == WORD)
 			&& ft_strchr(token->value, '$'))
 			expand_env(token, ft_strchr(token->value, '$'), *data);
+		if (token->type == DOUBLE_QUOTE || token->type == SINGLE_QUOTE)
+			token->type = WORD;
 		tokens = tokens->next;
 	}
 	tokens = head;

@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 t_token	*handle_heredoc(char *delimiter)
 {
 	char	*line;
@@ -23,7 +22,7 @@ t_token	*handle_heredoc(char *delimiter)
 	while (1)
 	{
 		line = readline("> ");
-		if(!line)
+		if (!line)
 		{
 			free(line);
 			break ;
@@ -71,40 +70,32 @@ t_list	*handle_redirects(t_list *tokens, t_parse_node *node)
 		return (current->next);
 }
 
-int	get_args(t_list **tokens, t_parse_node *node)
+void	handle_args(t_list *tokens, t_parse_node *node, int argc)
 {
 	int		i;
-	int		argc;
-	t_list	*tmp;
 	t_token	*token;
 
-	token = (t_token *)(*tokens)->content;
-	tmp = *tokens;
-	argc = 0;
+	token = (t_token *)tokens->content;
 	i = 0;
-	token = (t_token *)tmp->content;
-	while (tmp && (token->type == WORD || token->type == DOUBLE_QUOTE
-			|| token->type == SINGLE_QUOTE))
-	{
-		argc++;
-		if (tmp->next == NULL)
-			break ;
-		tmp = tmp->next;
-		token = (t_token *)tmp->content;
-	}
-	token = (t_token *)(*tokens)->content;
 	node->argv = malloc(sizeof(char *) * (argc + 1));
-	while (i < argc)
+	while (i < argc && tokens)
 	{
-		node->argv[i] = strdup(token->value);
-		malloc_protection(node->argv[i]);
-		i++;
-		*tokens = (*tokens)->next;
-		if (*tokens)
-			token = (t_token *)(*tokens)->content;
+		token = (t_token *)tokens->content;
+		if (token->type == REDIRECT_IN || token->type == REDIRECT_OUT
+			|| token->type == APPEND || token->type == HEREDOC)
+		{
+			tokens = tokens->next->next;
+			continue ;
+		}
+		if (token->type == WORD)
+		{
+			node->argv[i] = strdup(token->value);
+			malloc_protection(node->argv[i]);
+			i++;
+		}
+		tokens = tokens->next;
 	}
 	node->argv[i] = NULL;
-	return (argc);
 }
 
 char	*handle_env(char *envpointer, t_data data, size_t len)

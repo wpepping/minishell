@@ -115,7 +115,7 @@ int	tokenize(char *cmd, t_list **token_list)
 			cmd += add_word(cmd, token_list);
 			inword = true;
 		}
-		if (token_list
+		if (*token_list
 			&& (((t_token *)ft_lstlast(*token_list)->content)->type == WORD
 				|| ((t_token *)ft_lstlast(*token_list)->content)->type == DOUBLE_QUOTE
 				|| ((t_token *)ft_lstlast(*token_list)->content)->type == SINGLE_QUOTE))

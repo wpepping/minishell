@@ -120,9 +120,10 @@ void						parse_args(t_list **tokens, t_parse_node *node);
 t_list						*handle_redirects(t_list *tokens,
 								t_parse_node *node);
 t_token						*handle_heredoc(char *delimiter);
-int							get_args(t_list **tokens, t_parse_node *node);
+void	handle_args(t_list *tokens, t_parse_node *node, int argc);
 char						*handle_env(char *envpointer, t_data data,
 								size_t len);
+
 
 // expand_env
 void						expand_env(t_token *token, char *envpointer,
