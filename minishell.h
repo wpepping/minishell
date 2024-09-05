@@ -52,14 +52,7 @@ typedef enum e_token_type
 	PIPE
 }							t_token_type;
 
-typedef struct s_execution
-{
-	t_list	*enodes;
-	t_list	*pnodes;
-	int		**pipes;
-	int		lsize;
-	int		nofork;
-}				t_execution;
+
 
 typedef struct s_execution
 {
@@ -216,6 +209,7 @@ bool			isdir(char *dname);
 int				ft_isint(char *str);
 char			**get_path(void);
 char			*find_full_path(char *cmd, char *path[]);
+void	malloc_protection(void *ptr);
 
 // Clean up
 void						cleanup(t_data *data, t_exec_node *enode,

@@ -54,9 +54,9 @@ int	parse_command(t_list *tokens, t_data *data)
 {
 	t_parse_node	*node;
 	t_token			*token;
-	int				return_value;
+	//int				return_value;
 
-	return_value = 0;
+	//return_value = 0;
 	if (tokens)
 		token = (t_token *)tokens->content;
 	node = create_parse_node();
@@ -70,8 +70,8 @@ int	parse_command(t_list *tokens, t_data *data)
 			node->exec = ft_strdup(token->value);
 		if (tokens)
 		{
-			if (parse_redirects(&tokens, node))
-				return (1);
+			//if (parse_redirects(&tokens, node))
+				//return (1);
 			parse_args(&tokens, node);
 			if (parse_redirects(&tokens, node))
 				return (1);
