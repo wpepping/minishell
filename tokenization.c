@@ -40,7 +40,7 @@ int	add_word(char *cmd, t_list **token_list)
 
 	i = 1;
 	while (cmd[i] && cmd[i] != ' ' && cmd[i] != '|' && cmd[i] != '<'
-		&& cmd[i] != '>' && cmd[i] != '(' && cmd[i] != ')' && cmd[i] != '&'
+		&& cmd[i] != '>' && cmd[i] != '(' && cmd[i] != ')'
 		&& cmd[i] != '\t' && cmd[i] != '"' && cmd[i] != '\'')
 	{
 		i++;
@@ -51,18 +51,16 @@ int	add_word(char *cmd, t_list **token_list)
 
 int	handle_other_tokens(char *cmd, t_list **token_list)
 {
-	if (ft_strncmp(cmd, "&&", 2) == 0)
-		return (append_token(token_list, AND, cmd, 2));
-	else if (ft_strncmp(cmd, "||", 2) == 0)
-		return (append_token(token_list, OR, cmd, 2));
-	else if (ft_strncmp(cmd, "(", 1) == 0)
-		return (append_token(token_list, OPEN_PAREN, cmd, 1));
-	else if (ft_strncmp(cmd, ")", 1) == 0)
-		return (append_token(token_list, CLOSE_PAREN, cmd, 1));
+	if (ft_strncmp(cmd, "<<", 2) == 0)
+		return(append_token(token_list, HEREDOC, cmd, 2));
+	else if (ft_strncmp(cmd, ">>", 2) == 0)
+		return(append_token(token_list, APPEND, cmd, 2));
 	else if (ft_strncmp(cmd, "<", 1) == 0)
 		return (append_token(token_list, REDIRECT_IN, cmd, 1));
 	else if (ft_strncmp(cmd, ">", 1) == 0)
 		return (append_token(token_list, REDIRECT_OUT, cmd, 1));
+	else if (ft_strncmp(cmd, "|", 1) == 0)
+		return (append_token(token_list, PIPE, cmd, 1));
 	return (0);
 }
 
@@ -88,26 +86,10 @@ int	tokenize(char *cmd, t_list **token_list)
 			cmd += add_quote(cmd, '\'', token_list);
 			inword = true;
 		}
-		else if (ft_strncmp(cmd, "<<", 2) == 0)
-		{
-			cmd += append_token(token_list, HEREDOC, cmd, 2);
-			inword = false;
-		}
-		else if (ft_strncmp(cmd, ">>", 2) == 0)
-		{
-			cmd += append_token(token_list, APPEND, cmd, 2);
-			inword = false;
-		}
-		else if (ft_strncmp(cmd, "&&", 2) == 0 || ft_strncmp(cmd, "||", 2) == 0
-			|| ft_strncmp(cmd, "(", 1) == 0 || ft_strncmp(cmd, ")", 1) == 0
-			|| ft_strncmp(cmd, "<", 1) == 0 || ft_strncmp(cmd, ">", 1) == 0)
+		else if (ft_strncmp(cmd, ">", 1) == 0 || ft_strncmp(cmd, "<", 1) == 0 || 
+			ft_strncmp(cmd, "|", 1) == 0)
 		{
 			cmd += handle_other_tokens(cmd, token_list);
-			inword = false;
-		}
-		else if (ft_strncmp(cmd, "|", 1) == 0)
-		{
-			cmd += append_token(token_list, PIPE, cmd, 1);
 			inword = false;
 		}
 		else

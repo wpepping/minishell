@@ -89,31 +89,6 @@ void delete_leading_token(t_list **tokens, t_list **current)
 	}
 }
 
-// void	combine_inword(t_list **tokens)
-// {
-// 	t_token	*token;
-// 	t_token	*next_token;
-// 	t_list	*current;
-// 	t_list	*next;
-
-// 	current = *tokens;
-// 	delete_leading_token(tokens, &current);
-// 	while (*tokens != NULL && current->next != NULL)
-// 	{
-// 		token = (t_token *)current->content;
-// 		next = current->next;
-// 		next_token = (t_token *)next->content;
-// 		if ((token->inword && next_token->inword) || next_token->value[0] == '\0')
-// 		{
-// 			token->value = ft_strjoin2(token->value, next_token->value);
-// 			current->next = next->next;
-// 			ft_lstdelone(next, free_token);
-// 		}
-// 		else
-// 			current = current->next;
-// 	}
-// }
-
 void combine_inword(t_list **tokens)
 {
 	t_token *token;

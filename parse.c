@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 
-int	parse_args_and_redirects(t_list **tokens, t_parse_node *node)
+int	parse_args_and_redirects(t_list **tokens, t_parse_node *node, t_data *data)
 {
 	t_token *token;
 	t_list	*head;
@@ -38,7 +38,7 @@ int	parse_args_and_redirects(t_list **tokens, t_parse_node *node)
 				printf("Error: no filename specified for redirection\n");
 				return (1);
 			}
-			*tokens = handle_redirects(*tokens, node);
+			*tokens = handle_redirects(*tokens, node, *data);
 		}
 	}
 	handle_args(head, node, argc);
@@ -54,7 +54,7 @@ int	parse_command(t_list *tokens, t_data *data)
 	if (tokens)
 	{
 		node = create_parse_node();
-		parse_args_and_redirects(&tokens, node);
+		parse_args_and_redirects(&tokens, node, t_data *data);
 		if (node->argv[0] != NULL)
 		{
 			if (get_builtin_index(node->argv[0]) != -1)

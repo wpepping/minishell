@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_token	*handle_heredoc(char *delimiter)
+t_token	*handle_heredoc(char *delimiter, t_data *g_data)
 {
 	char	*line;
 	int		fd;
@@ -32,6 +32,8 @@ t_token	*handle_heredoc(char *delimiter)
 			free(line);
 			break ;
 		}
+		if(ft_strchr(line, '$'))
+			line = expand_envs(line, data);
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
 		free(line);
@@ -41,7 +43,7 @@ t_token	*handle_heredoc(char *delimiter)
 	return (token);
 }
 
-t_list	*handle_redirects(t_list *tokens, t_parse_node *node)
+t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data *data)
 {
 	t_token	*token;
 	t_list	*current;
@@ -57,7 +59,7 @@ t_list	*handle_redirects(t_list *tokens, t_parse_node *node)
 	if (token->type == REDIRECT_IN || token->type == HEREDOC)
 	{
 		if (token->type == HEREDOC)
-			content_copy = handle_heredoc(content_copy->value);
+			content_copy = handle_heredoc(content_copy->value, data);
 		ft_lstadd_back(&node->input_src, ft_lstnew(content_copy));
 	}
 	else if (token->type == REDIRECT_OUT || token->type == APPEND)
