@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 20:32:41 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/06 16:07:00 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	main(int argc, char **argv, char **envp)
 			//print_argv_from_nodes(&data);
 			sa_int.sa_handler = process_running_sigint_handler;
 			sigaction(SIGINT, &sa_int, NULL);
-			
+
 			sa_int.sa_handler = default_sigint_handler;
 			sigaction(SIGINT, &sa_int, NULL);
 			free(cmd);

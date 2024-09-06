@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 20:57:51 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/06 16:09:32 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,17 @@ static void	output_errors(t_list **error_list)
 	ft_lstclear(error_list, free);
 }
 
+static void	one_enode_init(t_exec_node *enode, t_list *parse_nodes)
+{
+	enode->parse = (t_parse_node *)parse_nodes->content;
+	enode->pipes = create_pipes(0);
+	enode->pindex = 0;
+	enode->nofork = 1;
+	enode->parse_nodes = parse_nodes;
+	enode->infile_err = false;
+	enode->outfile_err = false;
+}
+
 static int	run_one(t_data *data, t_list *parse_nodes)
 {
 	t_exec_node	enode;
@@ -29,15 +40,14 @@ static int	run_one(t_data *data, t_list *parse_nodes)
 	int			fd_stdout;
 	int			exit_status;
 
-	enode.parse = (t_parse_node *)parse_nodes->content;
-	enode.pipes = create_pipes(0);
-	enode.pindex = 0;
-	enode.nofork = 1;
-	enode.parse_nodes = parse_nodes;
-	if (!check_fds(data, enode.parse->input_src, O_RDONLY, &enode.infile_ok)
+	one_enode_init(&enode, parse_nodes);
+	if (!check_fds(data, enode.parse->input_src, O_RDONLY, &enode.infile_err)
 		|| !check_fds(data, enode.parse->output_dest, O_CREAT | O_WRONLY,
-			&enode.outfile_ok))
+			&enode.outfile_err))
+	{
+		output_errors(&data->error_list);
 		return (1);
+	}
 	get_fds(data, &enode, enode.pipes);
 	if (enode.fd_in == -1 || enode.fd_out == -1)
 		return (1);
