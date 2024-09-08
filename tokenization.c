@@ -94,39 +94,32 @@ int	handle_quotes(char **cmd, t_list **token_list)
 
 int	tokenize(char *cmd, t_list **token_list)
 {
-	bool	inword;
-
 	*token_list = NULL;
 	while (*cmd)
 	{
 		if (*cmd == ' ' || *cmd == '\t')
 		{
-			inword = false;
 			cmd++;
+			((t_token *)ft_lstlast(*token_list)->content)->inword = false;
 		}
 		else if (ft_strncmp(cmd, "\"", 1) == 0 || ft_strncmp(cmd, "'", 1) == 0
 				|| ft_strncmp(cmd, "||", 2) == 0)
 		{
 			if (handle_quotes(&cmd, token_list) == -1)
 				return (1);
-			inword = true;
+			((t_token *)ft_lstlast(*token_list)->content)->inword = true;
 		}
 		else if (ft_strncmp(cmd, ">", 1) == 0 || ft_strncmp(cmd, "<", 1) == 0
 			|| ft_strncmp(cmd, "|", 1) == 0)
 		{
 			cmd += handle_other_tokens(cmd, token_list);
-			inword = false;
+			((t_token *)ft_lstlast(*token_list)->content)->inword = false;
 		}
 		else
 		{
 			cmd += add_word(cmd, token_list);
-			inword = true;
+			((t_token *)ft_lstlast(*token_list)->content)->inword = true;
 		}
-		if (*token_list
-			&& (((t_token *)ft_lstlast(*token_list)->content)->type == WORD
-				|| ((t_token *)ft_lstlast(*token_list)->content)->type == DOUBLE_QUOTE
-				|| ((t_token *)ft_lstlast(*token_list)->content)->type == SINGLE_QUOTE))
-			((t_token *)ft_lstlast(*token_list)->content)->inword = inword;
 	}
 	return (0);
 }

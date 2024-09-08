@@ -94,7 +94,7 @@ int	main(int argc, char **argv, char **envp)
 			//print_argv_from_nodes(&data);
 			sa_int.sa_handler = process_running_sigint_handler;
 			sigaction(SIGINT, &sa_int, NULL);
-			if(!parse(&data, cmd))
+			if(!parse(&data, cmd) && data.node_list)
 				execution(&data, data.node_list);
 			sa_int.sa_handler = default_sigint_handler;
 			sigaction(SIGINT, &sa_int, NULL);
