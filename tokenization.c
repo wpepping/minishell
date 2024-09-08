@@ -45,11 +45,13 @@ int	add_word(char *cmd, t_list **token_list)
 		i++;
 	}
 	append_token(token_list, WORD, cmd, i);
+	((t_token *)ft_lstlast(*token_list)->content)->inword = true;
 	return (i);
 }
 
 int	handle_other_tokens(char *cmd, t_list **token_list)
 {
+	((t_token *)ft_lstlast(*token_list)->content)->inword = false;
 	if (ft_strncmp(cmd, "<<", 2) == 0)
 		return (append_token(token_list, HEREDOC, cmd, 2));
 	else if (ft_strncmp(cmd, ">>", 2) == 0)
@@ -67,7 +69,6 @@ int	handle_quotes(char **cmd, t_list **token_list)
 {
 	int	result;
 
-	result = 0;
 	if (ft_strncmp(*cmd, "\"", 1) == 0)
 	{
 		result = add_quote(*cmd, '"', token_list);
@@ -89,6 +90,7 @@ int	handle_quotes(char **cmd, t_list **token_list)
 		printf("Error: syntax error near unexpected token '|'\n");
 		return (-1);
 	}
+	((t_token *)ft_lstlast(*token_list)->content)->inword = true;
 	return (0);
 }
 
@@ -107,14 +109,10 @@ int	tokenize(char *cmd, t_list **token_list)
 		{
 			if (handle_quotes(&cmd, token_list) == -1)
 				return (1);
-			((t_token *)ft_lstlast(*token_list)->content)->inword = true;
 		}
 		else if (ft_strncmp(cmd, ">", 1) == 0 || ft_strncmp(cmd, "<", 1) == 0
 			|| ft_strncmp(cmd, "|", 1) == 0)
-		{
 			cmd += handle_other_tokens(cmd, token_list);
-			((t_token *)ft_lstlast(*token_list)->content)->inword = false;
-		}
 		else
 		{
 			cmd += add_word(cmd, token_list);
