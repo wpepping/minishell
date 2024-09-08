@@ -86,6 +86,11 @@ int	tokenize(char *cmd, t_list **token_list)
 			cmd += add_quote(cmd, '\'', token_list);
 			inword = true;
 		}
+		else if(ft_strncmp(cmd, "||", 2) == 0)
+		{
+			printf("Error: syntax error near unexpected token '|'\n");
+			return (1);
+		}
 		else if (ft_strncmp(cmd, ">", 1) == 0 || ft_strncmp(cmd, "<", 1) == 0 || 
 			ft_strncmp(cmd, "|", 1) == 0)
 		{

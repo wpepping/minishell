@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_token	*handle_heredoc(char *delimiter, t_data *g_data)
+t_token	*handle_heredoc(char *delimiter, t_data data)
 {
 	char	*line;
 	int		fd;
@@ -10,8 +10,6 @@ t_token	*handle_heredoc(char *delimiter, t_data *g_data)
 	token = malloc(sizeof(t_token));
 	malloc_protection(token);
 	filename = generate_heredoc_filename();
-	token->value = filename;
-	token->type = HEREDOC;
 	fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd == -1)
 	{
@@ -22,28 +20,36 @@ t_token	*handle_heredoc(char *delimiter, t_data *g_data)
 	while (1)
 	{
 		line = readline("> ");
+		token->value = line;
 		if (!line)
 		{
 			free(line);
 			break ;
 		}
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+		
+		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0 && line[ft_strlen(delimiter)] == '\0')
 		{
 			free(line);
 			break ;
 		}
 		if(ft_strchr(line, '$'))
-			line = expand_envs(line, data);
-		write(fd, line, ft_strlen(line));
+		{
+			expand_env(token, ft_strchr(line, '$'), data);
+			free(line);
+		}
+		
+		write(fd, token->value, ft_strlen(token->value));
 		write(fd, "\n", 1);
-		free(line);
+		free(token->value);
 	}
 	close(fd);
 	free(delimiter);
+	token->value = filename;
+	token->type = HEREDOC;
 	return (token);
 }
 
-t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data *data)
+t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data data)
 {
 	t_token	*token;
 	t_list	*current;

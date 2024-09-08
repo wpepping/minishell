@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 
-int	parse_args_and_redirects(t_list **tokens, t_parse_node *node, t_data *data)
+int	parse_args_and_redirects(t_list **tokens, t_parse_node *node, t_data data)
 {
 	t_token *token;
 	t_list	*head;
@@ -38,7 +38,7 @@ int	parse_args_and_redirects(t_list **tokens, t_parse_node *node, t_data *data)
 				printf("Error: no filename specified for redirection\n");
 				return (1);
 			}
-			*tokens = handle_redirects(*tokens, node, *data);
+			*tokens = handle_redirects(*tokens, node, data);
 		}
 	}
 	handle_args(head, node, argc);
@@ -54,7 +54,7 @@ int	parse_command(t_list *tokens, t_data *data)
 	if (tokens)
 	{
 		node = create_parse_node();
-		parse_args_and_redirects(&tokens, node, t_data *data);
+		parse_args_and_redirects(&tokens, node, *data);
 		if (node->argv[0] != NULL)
 		{
 			if (get_builtin_index(node->argv[0]) != -1)
@@ -111,7 +111,8 @@ int	parse(t_data *data, char *cmd)
 	tokens = head;
 	combine_inword(&tokens);
 	//head = tokens;
-	return_value = parse_command(tokens, data);
+	if(return_value == 0)
+		return_value = parse_command(tokens, data);
 	if ((return_value == 0 && tokens != NULL)
 		&& (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
 			|| ((t_token *)(tokens)->content)->type == PIPE))
