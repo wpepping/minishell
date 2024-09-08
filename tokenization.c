@@ -22,8 +22,7 @@ int	add_quote(char *cmd, char quote, t_list **token_list)
 	if (strchr(cmd + 1, quote) == NULL)
 	{
 		printf("Error: no matching quote\n");
-		clear_tokens_list(token_list);
-		exit(0);
+		return (-1);
 	}
 	while (cmd[i] && cmd[i] != quote)
 		i++;
@@ -64,6 +63,35 @@ int	handle_other_tokens(char *cmd, t_list **token_list)
 	return (0);
 }
 
+int	handle_quotes(char **cmd, t_list **token_list)
+{
+	int	result;
+
+	result = 0;
+	if (ft_strncmp(*cmd, "\"", 1) == 0)
+	{
+		result = add_quote(*cmd, '"', token_list);
+		if (result == -1)
+			return (-1);
+		else
+			*cmd += result;
+	}
+	else if (ft_strncmp(*cmd, "'", 1) == 0)
+	{
+		result = add_quote(*cmd, '\'', token_list);
+		if (result == -1)
+			return (-1);
+		else
+			*cmd += result;
+	}
+	else if (ft_strncmp(*cmd, "||", 2) == 0)
+	{
+		printf("Error: syntax error near unexpected token '|'\n");
+		return (-1);
+	}
+	return (0);
+}
+
 int	tokenize(char *cmd, t_list **token_list)
 {
 	bool	inword;
@@ -76,20 +104,12 @@ int	tokenize(char *cmd, t_list **token_list)
 			inword = false;
 			cmd++;
 		}
-		else if (ft_strncmp(cmd, "\"", 1) == 0)
+		else if (ft_strncmp(cmd, "\"", 1) == 0 || ft_strncmp(cmd, "'", 1) == 0
+				|| ft_strncmp(cmd, "||", 2) == 0)
 		{
-			cmd += add_quote(cmd, '"', token_list);
+			if (handle_quotes(&cmd, token_list) == -1)
+				return (1);
 			inword = true;
-		}
-		else if (ft_strncmp(cmd, "'", 1) == 0)
-		{
-			cmd += add_quote(cmd, '\'', token_list);
-			inword = true;
-		}
-		else if (ft_strncmp(cmd, "||", 2) == 0)
-		{
-			printf("Error: syntax error near unexpected token '|'\n");
-			return (1);
 		}
 		else if (ft_strncmp(cmd, ">", 1) == 0 || ft_strncmp(cmd, "<", 1) == 0
 			|| ft_strncmp(cmd, "|", 1) == 0)
