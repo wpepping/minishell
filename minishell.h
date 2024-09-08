@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/06 15:58:52 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/08 17:51:05 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,9 @@ typedef struct s_exec_node
 	int				nofork;
 	int				error_code;
 	bool			run_cmd;
-	bool			infile_err;
-	bool			outfile_err;
 	char			*fullcmd;
+	char			*infile;
+	char			*outfile;
 }				t_exec_node;
 
 typedef struct s_data
@@ -157,17 +157,17 @@ bool						in_quotes(char *token);
 int							add_word(char *cmd, t_list **token_list);
 
 // Pre-processing
-bool			check_fds(t_data *data, t_list *files,
-					int oflag, bool *file_ok);
+bool			check_fds(t_data *data, t_list *files, t_exec_node *enode);
 bool			check_cmd(t_data *data, t_exec_node *node);
 t_list			*create_exec_nodes(t_data *data, t_execution *exec);
 
 // Execution
 int				**create_pipes(int n);
+int				waitpids(pid_t *pids, int n);
+int				oflags(t_token_type type);
 void			execution(t_data *data, t_list *parse_nodes);
 void			get_fds(t_data *data, t_exec_node *node, int **pipes);
 pid_t			*fork_processes(t_data *data, t_execution *exec);
-int				waitpids(pid_t *pids, int n);
 void			runcmd(t_data *data, t_exec_node *node);
 int				runbuiltin(t_data *data, t_exec_node *node);
 

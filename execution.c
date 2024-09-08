@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/06 16:09:32 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/08 17:41:14 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,9 @@ static void	one_enode_init(t_exec_node *enode, t_list *parse_nodes)
 	enode->pindex = 0;
 	enode->nofork = 1;
 	enode->parse_nodes = parse_nodes;
-	enode->infile_err = false;
-	enode->outfile_err = false;
+	enode->run_cmd = true;
+	enode->infile = NULL;
+	enode->outfile = NULL;
 }
 
 static int	run_one(t_data *data, t_list *parse_nodes)
@@ -41,9 +42,8 @@ static int	run_one(t_data *data, t_list *parse_nodes)
 	int			exit_status;
 
 	one_enode_init(&enode, parse_nodes);
-	if (!check_fds(data, enode.parse->input_src, O_RDONLY, &enode.infile_err)
-		|| !check_fds(data, enode.parse->output_dest, O_CREAT | O_WRONLY,
-			&enode.outfile_err))
+	if (!check_fds(data, enode.parse->input_src, &enode)
+		|| !check_fds(data, enode.parse->output_dest, &enode))
 	{
 		output_errors(&data->error_list);
 		return (1);
