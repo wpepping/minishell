@@ -135,7 +135,7 @@ void						combine_inword(t_list **tokens);
 
 // parse utils
 int							get_builtin_index(char *token);
-bool						is_valid_filename(t_token *token);
+bool is_valid_filename(t_list *tokens);
 void						free_token(void *content);
 void						clear_tokens_list(t_list **tokens);
 char						*generate_heredoc_filename(void);

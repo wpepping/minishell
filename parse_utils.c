@@ -18,13 +18,23 @@ int	get_builtin_index(char *token)
 	return (-1);
 }
 
-bool	is_valid_filename(t_token *token)
+bool is_valid_filename(t_list *tokens)
 {
+	if (!tokens || !tokens->content)
+	{
+		printf("Error: no filename specified for redirection\n");
+		return false;
+	}
+
+	t_token *token = (t_token *)tokens->content;
 	if (token->value == NULL || ft_strlen(token->value) == 0
 		|| (token->type != WORD && token->type != DOUBLE_QUOTE
 			&& token->type != SINGLE_QUOTE))
-		return (false);
-	return (true);
+	{
+		printf("Error: invalid filename specified for redirection\n");
+		return false;
+	}
+	return true;
 }
 
 void	free_token(void *content)
