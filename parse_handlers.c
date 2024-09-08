@@ -1,15 +1,41 @@
 #include "minishell.h"
 
+
+int process_line(char *line, char *delimiter, t_data data, int fd)
+{
+	t_token	*token;
+	token = malloc(sizeof(t_token));
+	if (!line || (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
+			&& line[ft_strlen(delimiter)] == '\0'))
+	{
+		free(line);
+		return (0);
+	}
+	token->value = line;
+	if (ft_strchr(line, '$'))
+	{
+		expand_env(token, ft_strchr(line, '$'), data);
+		free(line);
+	}
+	write(fd, token->value, ft_strlen(token->value));
+	write(fd, "\n", 1);
+	free(token->value);
+	free(token);
+	return (1);
+}
+
 t_token	*handle_heredoc(char *delimiter, t_data data)
 {
-	char	*line;
 	int		fd;
 	char	*filename;
 	t_token	*token;
+	int		continue_reading;
 
 	token = malloc(sizeof(t_token));
 	malloc_protection(token);
 	filename = generate_heredoc_filename();
+	token->value = filename;
+	token->type = HEREDOC;
 	fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd == -1)
 	{
@@ -17,37 +43,15 @@ t_token	*handle_heredoc(char *delimiter, t_data data)
 		free(filename);
 		exit(1);
 	}
-	while (1)
-	{
-		line = readline("> ");
-		token->value = line;
-		if (!line)
-		{
-			free(line);
-			break ;
-		}
-		
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0 && line[ft_strlen(delimiter)] == '\0')
-		{
-			free(line);
-			break ;
-		}
-		if(ft_strchr(line, '$'))
-		{
-			expand_env(token, ft_strchr(line, '$'), data);
-			free(line);
-		}
-		
-		write(fd, token->value, ft_strlen(token->value));
-		write(fd, "\n", 1);
-		free(token->value);
-	}
+	continue_reading = 1;
+	while (continue_reading)
+		continue_reading = process_line(readline("> "), delimiter, data, fd);
 	close(fd);
 	free(delimiter);
-	token->value = filename;
-	token->type = HEREDOC;
 	return (token);
 }
+
+
 
 t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data data)
 {
@@ -113,28 +117,23 @@ char	*handle_env(char *envpointer, t_data data, size_t len)
 	char	*env_val;
 
 	if (len == 0)
-		env_var = strdup("$");
+		return (ft_strdup("$"));
+	temp = ft_substr(envpointer, 0, len);
+	malloc_protection(temp);
+	if (temp[0] == '?')
+		env_var = ft_itoa(data.last_exit_code);
 	else
 	{
-		temp = ft_substr(envpointer, 0, len);
-		malloc_protection(temp);
-		if (temp[0] == '?')
+		env_val = envp_get(data.envp, temp);
+		if (!env_val)
 		{
-			env_var = ft_itoa(data.last_exit_code);
-			malloc_protection(env_var);
+			free(temp);
+			return (NULL);
 		}
 		else
-		{
-			env_val = envp_get(data.envp, temp);
-			if (env_val)
-			{
-				env_var = ft_strdup(env_val);
-				malloc_protection(env_var);
-			}
-			else
-				env_var = NULL;
-		}
-		free(temp);
+			env_var = ft_strdup(env_val);
 	}
+	malloc_protection(env_var);
+	free(temp);
 	return (env_var);
 }

@@ -114,10 +114,7 @@ int	tokenize(char *cmd, t_list **token_list)
 			|| ft_strncmp(cmd, "|", 1) == 0)
 			cmd += handle_other_tokens(cmd, token_list);
 		else
-		{
 			cmd += add_word(cmd, token_list);
-			((t_token *)ft_lstlast(*token_list)->content)->inword = true;
-		}
 	}
 	return (0);
 }

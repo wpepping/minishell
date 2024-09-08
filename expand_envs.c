@@ -102,7 +102,6 @@ void combine_inword(t_list **tokens)
 	{
 		token = (t_token *)current->content;
 		next_token = (t_token *)current->next->content;
-
 		if ((token->inword && next_token->type == WORD) || next_token->value[0] == '\0')
 		{
 			token->inword = next_token->inword;
