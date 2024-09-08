@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:42:40 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 15:44:45 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/08 17:51:24 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,25 +53,26 @@ bool	check_cmd(t_data *data, t_exec_node *node)
 	return (true);
 }
 
-bool	check_fds(t_data *data, t_list *files, int oflag)
+bool	check_fds(t_data *data, t_list *files, t_exec_node *enode)
 {
-	char	*fname;
 	int		fd;
-	int		type;
+	t_token	*file;
+	int		oflag;
 
 	while (files)
 	{
-		type = ((t_token *)files->content)->type;
-		fname = ((t_token *)files->content)->value;
-		fd = open(fname, oflag, 0644);
+		file = (t_token *)files->content;
+		oflag = oflags(file->type);
+		fd = open(file->value, oflag, 0644);
+		if ((fd == -1) && (file->type == REDIRECT_IN || file->type == HEREDOC)
+			&& access(file->value, F_OK) != 0)
+			return (err_handl(ERR_NO_SUCH_FILE, file->value, data));
 		if (fd == -1)
-		{
-			if ((type == REDIRECT_IN || type == HEREDOC)
-				&& access(fname, F_OK) != 0)
-				return (err_handl(ERR_NO_SUCH_FILE, fname, data));
-			else
-				return (err_handl(ERR_PERMISSION_DENIED, fname, data));
-		}
+			return (err_handl(ERR_PERMISSION_DENIED, file->value, data));
+		if ((file->type == REDIRECT_IN || file->type == HEREDOC))
+			enode->infile = file->value;
+		else
+			enode->outfile = file->value;
 		close(fd);
 		files = files->next;
 	}

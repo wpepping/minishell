@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 19:28:53 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 15:29:29 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/08 17:55:14 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,18 @@ void	get_fds(t_data *data, t_exec_node *node, int **pipes)
 {
 	int	oflag;
 
-	if (node->parse->input_src)
-		node->fd_in = get_file_fd(data, node, node->parse->input_src, O_RDONLY);
+	if (node->infile)
+	{
+		oflag = oflags(((t_token *)node->parse->input_src->content)->type);
+		node->fd_in = get_file_fd(data, node, node->parse->input_src, oflag);
+	}
 	else if (node->pindex == 0)
 		node->fd_in = STDIN_FILENO;
 	else
 		node->fd_in = pipes[node->pindex - 1][0];
-	if (node->parse->output_dest)
+	if (node->outfile)
 	{
-		if (((t_token *)node->parse->output_dest)->type == APPEND)
-			oflag = O_CREAT | O_WRONLY | APPEND;
-		else
-			oflag = O_CREAT | O_WRONLY | O_TRUNC;
+		oflag = oflags(((t_token *)node->parse->output_dest->content)->type);
 		node->fd_out = get_file_fd(data, node, node->parse->output_dest, oflag);
 	}
 	else if (node->parse->is_last)
@@ -77,16 +77,15 @@ static pid_t	forkproc(t_data *d, t_exec_node *enode, t_parse_node *pnode)
 		err_handl("failed to create process: ", pnode->argv[0], d, enode);
 	else if (pid == 0)
 	{
+		if (!enode->run_cmd)
+			clean_exit(d, enode, enode->parse_nodes);
 		sigaction(SIGINT, NULL, NULL);
 		get_fds(d, enode, enode->pipes);
 		dup2(enode->fd_in, STDIN_FILENO);
 		dup2(enode->fd_out, STDOUT_FILENO);
-		if (!enode->run_cmd)
-			exit(enode->error_code);
-		else if (pnode->is_builtin)
+		if (pnode->is_builtin)
 			exit(runbuiltin(d, enode)); // Change to clean exit?
-		else
-			runcmd(d, enode);
+		runcmd(d, enode);
 	}
 	else
 		return (pid);

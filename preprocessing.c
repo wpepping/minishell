@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:59:44 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 21:04:22 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/08 17:38:50 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,10 @@ t_list	*create_exec_nodes(t_data *data, t_execution *exec)
 		if (!enode || !node)
 			return (cleanup_prep(exec->pipes, lst, enode));
 		ft_lstadd_back(&exec->enodes, node);
-		enode->run_cmd = check_fds(data, pnode->input_src, O_RDONLY)
-			&& check_fds(data, pnode->output_dest, O_CREAT | O_WRONLY)
-			&& check_cmd(data, enode);
+		enode->run_cmd = check_fds(data, pnode->input_src, enode);
+		enode->run_cmd = check_fds(data, pnode->output_dest, enode)
+			&& enode->run_cmd;
+		enode->run_cmd = enode->run_cmd && check_cmd(data, enode);
 		enode->pindex = i++;
 		lst = lst->next;
 	}

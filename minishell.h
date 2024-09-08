@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 15:18:29 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/08 17:51:05 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # define ERR_PERMISSION_DENIED "minishell: permission denied: "
 # define ERR_IS_DIR "minishell: Is a directory: "
 # define ERR_CANNOT_EXEC " cannot execute binary file: Exec format error"
+# define ERR_EXIT_TOO_MANY_ARG "minishell: exit: too many arguments"
 # define PROMPT_END "$ "
 
 typedef enum e_token_type
@@ -85,9 +86,9 @@ typedef struct s_exec_node
 	int				nofork;
 	int				error_code;
 	bool			run_cmd;
+	char			*fullcmd;
 	char			*infile;
 	char			*outfile;
-	char			*fullcmd;
 }				t_exec_node;
 
 typedef struct s_data
@@ -154,21 +155,17 @@ bool						in_quotes(char *token);
 int							add_word(char *cmd, t_list **token_list);
 
 // Pre-processing
-bool			check_fds(t_data *data, t_list *files, int oflag);
-bool			check_cmd(t_data *data, t_exec_node *node);
-t_list			*create_exec_nodes(t_data *data, t_execution *exec);
-
-// Pre-processing
-bool			check_fds(t_data *data, t_list *files, int oflag);
+bool			check_fds(t_data *data, t_list *files, t_exec_node *enode);
 bool			check_cmd(t_data *data, t_exec_node *node);
 t_list			*create_exec_nodes(t_data *data, t_execution *exec);
 
 // Execution
 int				**create_pipes(int n);
+int				waitpids(pid_t *pids, int n);
+int				oflags(t_token_type type);
 void			execution(t_data *data, t_list *parse_nodes);
 void			get_fds(t_data *data, t_exec_node *node, int **pipes);
 pid_t			*fork_processes(t_data *data, t_execution *exec);
-int				waitpids(pid_t *pids, int n);
 void			runcmd(t_data *data, t_exec_node *node);
 int				runbuiltin(t_data *data, t_exec_node *node);
 
@@ -200,7 +197,7 @@ void						init_signal_handlers(t_sigaction *sa_int,
 void			clean_exit(t_data *data, t_exec_node *enode, t_list *pnodes);
 void			close_fds(int fd_in, int fd_out, int **pipes);
 char			*ft_pathjoin(char const *s1, char const *s2);
-void			ft_putstrs_fd(char *str1, char *str2, char *str3, int fd);
+void			ft_puterr(char *str1, char *str2, char *str3);
 char			*ft_strjoin2(char *s1, char const *s2);
 int				arrncontains(char **haystack, char *needle, int cmplen);
 t_parse_node	*create_parse_node(void);
@@ -208,7 +205,7 @@ bool			isdir(char *dname);
 int				ft_isint(char *str);
 char			**get_path(void);
 char			*find_full_path(char *cmd, char *path[]);
-void	malloc_protection(void *ptr);
+void			malloc_protection(void *ptr);
 
 // Clean up
 void						cleanup(t_data *data, t_exec_node *enode,

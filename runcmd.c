@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   runcmd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:20:00 by wouter            #+#    #+#             */
-/*   Updated: 2024/09/04 21:16:27 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 21:20:00 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,6 @@ void	runcmd(t_data *data, t_exec_node *node)
 	free_array((void **)node->pipes);
 	cleanup_cmd(node->parse_nodes);
 	execve(node->fullcmd, argv, data->envp);
-	ft_putstrs_fd("minishell: ", argv[0], ERR_CANNOT_EXEC, STDERR_FILENO);
+	ft_puterr(argv[0], ERR_CANNOT_EXEC, NULL);
 	exit(1); // Change to clean exit?
 }

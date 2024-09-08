@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 16:18:22 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/05 21:19:13 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,10 @@ int	ft_cd(t_data *data, t_exec_node *node)
 		path = ft_cd_getpath(data, node->parse->argv[1]);
 		errnr = chdir(path);
 		if (errnr == EACCES)
-			ft_putstrs_fd("minishell: cd: ", node->parse->argv[1],
-				": Permission denied", STDERR_FILENO);
+			ft_puterr("cd: ", node->parse->argv[1], ": Permission denied");
 		else if (errnr)
-			ft_putstrs_fd("minishell: cd: ", node->parse->argv[1],
-				": No such file or directory", STDERR_FILENO);
+			ft_puterr("cd: ", node->parse->argv[1],
+				": No such file or directory");
 		else
 			return_value = 0;
 		getcwd(data->cwd, PATH_MAX);
