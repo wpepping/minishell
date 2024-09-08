@@ -12,7 +12,39 @@
 
 #include "minishell.h"
 
-int	parse_args_and_redirects(t_list **tokens, t_parse_node *node, t_data data)
+static void	process_tokens(t_list *tokens, t_data *data);
+static int	parse_command(t_list *tokens, t_data *data);
+static int	parse_pipe(t_list **tokens, t_data *data);
+static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
+				t_data data);
+
+int	parse(t_data *data, char *cmd)
+{
+	t_list	*tokens;
+	int		return_value;
+
+	return_value = tokenize(cmd, &tokens);
+	if (return_value == 0)
+	{
+		process_tokens(tokens, data);
+		combine_inword(&tokens);
+		return_value = parse_command(tokens, data);
+		if ((return_value == 0 && tokens != NULL)
+			&& (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
+				|| ((t_token *)(tokens)->content)->type == PIPE))
+		{
+			printf("Error: syntax error near unexpected token '|'\n");
+			return_value = 1;
+		}
+	}
+	if (tokens)
+		clear_tokens_list(&tokens);
+	data->last_exit_code = return_value;
+	return (return_value);
+}
+
+static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
+		t_data data)
 {
 	t_token	*token;
 	t_list	*head;
@@ -41,7 +73,20 @@ int	parse_args_and_redirects(t_list **tokens, t_parse_node *node, t_data data)
 	return (0);
 }
 
-int	parse_command(t_list *tokens, t_data *data)
+static int	parse_pipe(t_list **tokens, t_data *data)
+{
+	t_token	*token;
+
+	token = (t_token *)(*tokens)->content;
+	if (token->type == PIPE)
+	{
+		*tokens = (*tokens)->next;
+		return (parse_command(*tokens, data));
+	}
+	return (0);
+}
+
+static int	parse_command(t_list *tokens, t_data *data)
 {
 	t_parse_node	*node;
 
@@ -66,20 +111,7 @@ int	parse_command(t_list *tokens, t_data *data)
 	return (0);
 }
 
-int	parse_pipe(t_list **tokens, t_data *data)
-{
-	t_token	*token;
-
-	token = (t_token *)(*tokens)->content;
-	if (token->type == PIPE)
-	{
-		*tokens = (*tokens)->next;
-		return (parse_command(*tokens, data));
-	}
-	return (0);
-}
-
-void	process_tokens(t_list *tokens, t_data *data)
+static void	process_tokens(t_list *tokens, t_data *data)
 {
 	t_token	*token;
 
@@ -96,29 +128,4 @@ void	process_tokens(t_list *tokens, t_data *data)
 			token->type = WORD;
 		tokens = tokens->next;
 	}
-}
-
-int	parse(t_data *data, char *cmd)
-{
-	t_list	*tokens;
-	int		return_value;
-
-	return_value = tokenize(cmd, &tokens);
-	if (return_value == 0)
-	{
-		process_tokens(tokens, data);
-		combine_inword(&tokens);
-		return_value = parse_command(tokens, data);
-		if ((return_value == 0 && tokens != NULL)
-			&& (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
-				|| ((t_token *)(tokens)->content)->type == PIPE))
-		{
-			printf("Error: syntax error near unexpected token '|'\n");
-			return_value = 1;
-		}
-	}
-	if (tokens)
-		clear_tokens_list(&tokens);
-	data->last_exit_code = return_value;
-	return (return_value);
 }

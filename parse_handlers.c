@@ -1,9 +1,9 @@
 #include "minishell.h"
 
-
-int process_line(char *line, char *delimiter, t_data data, int fd)
+static int	process_line(char *line, char *delimiter, t_data data, int fd)
 {
 	t_token	*token;
+
 	token = malloc(sizeof(t_token));
 	if (!line || (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
 			&& line[ft_strlen(delimiter)] == '\0'))
@@ -50,8 +50,6 @@ t_token	*handle_heredoc(char *delimiter, t_data data)
 	free(delimiter);
 	return (token);
 }
-
-
 
 t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data data)
 {

@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-
-
 char	*add_until_env(char *start, char *expanded_str)
 {
 	size_t	len;
@@ -29,7 +27,7 @@ size_t	count_env_len(char *env_var)
 	while (env_var[i] && (ft_isalnum(env_var[i]) || env_var[i] == '_'
 			|| env_var[0] == '?' || env_var[0] == '$')
 		&& !ft_isdigit(env_var[0]))
-			i++;
+		i++;
 	return (i);
 }
 
@@ -39,7 +37,6 @@ void	expand_env(t_token *token, char *envpointer, t_data data)
 	char	*env_var;
 	size_t	len;
 
-	// char	*temp;
 	expanded_str = ft_strdup("");
 	expanded_str = add_until_env(token->value, expanded_str);
 	while (envpointer)
@@ -52,7 +49,6 @@ void	expand_env(t_token *token, char *envpointer, t_data data)
 			malloc_protection(expanded_str);
 			free(env_var);
 		}
-		//if (token->type == DOUBLE_QUOTE)
 		expanded_str = add_until_env(envpointer + len + 1, expanded_str);
 		envpointer = ft_strchr(envpointer + 1, '$');
 	}
@@ -70,50 +66,3 @@ size_t	count_to_next_env(char *start)
 		i++;
 	return (i);
 }
-
-void delete_leading_token(t_list **tokens, t_list **current)
-{
-	t_token *token;
-
-	token = (t_token *)(*current)->content;
-	if (token->value[0] == '\0')
-	{
-		if (*current == *tokens)
-		{
-			*tokens = (*current)->next;
-			ft_lstdelone(*current, free_token);
-			*current = *tokens;
-			if (*tokens == NULL)
-				return;
-		}
-	}
-}
-
-void combine_inword(t_list **tokens)
-{
-	t_token *token;
-	t_token *next_token;
-	t_list  *current;
-	t_list *next;
-
-	current = *tokens;
-	delete_leading_token(tokens, &current);
-	while (*tokens != NULL && current->next != NULL)
-	{
-		token = (t_token *)current->content;
-		next_token = (t_token *)current->next->content;
-		if ((token->inword && next_token->type == WORD) || next_token->value[0] == '\0')
-		{
-			token->inword = next_token->inword;
-			token->value = ft_strjoin2(token->value, next_token->value);
-			next = current->next;
-			current->next = current->next->next;
-			ft_lstdelone(next, free_token);
-		}
-		else
-		{
-			current = current->next;
-		}
-	}
-}
-

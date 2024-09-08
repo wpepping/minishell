@@ -18,44 +18,24 @@ int	get_builtin_index(char *token)
 	return (-1);
 }
 
-bool is_valid_filename(t_list *tokens)
+bool	is_valid_filename(t_list *tokens)
 {
+	t_token	*token;
+
 	if (!tokens || !tokens->content)
 	{
 		printf("Error: no filename specified for redirection\n");
-		return false;
+		return (false);
 	}
-
-	t_token *token = (t_token *)tokens->content;
+	token = (t_token *)tokens->content;
 	if (token->value == NULL || ft_strlen(token->value) == 0
 		|| (token->type != WORD && token->type != DOUBLE_QUOTE
 			&& token->type != SINGLE_QUOTE))
 	{
 		printf("Error: invalid filename specified for redirection\n");
-		return false;
+		return (false);
 	}
-	return true;
-}
-
-void	free_token(void *content)
-{
-	t_token	*token;
-
-	token = (t_token *)content;
-	if (token)
-	{
-		free(token->value);
-		free(token);
-	}
-}
-
-void	clear_tokens_list(t_list **tokens)
-{
-	if (tokens && *tokens)
-	{
-		ft_lstclear(tokens, free_token);
-		*tokens = NULL;
-	}
+	return (true);
 }
 
 char	*generate_heredoc_filename(void)
