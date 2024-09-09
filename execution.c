@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 15:27:58 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 16:04:38 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:18:37 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 
 static void	output_errors(t_list **error_list)
 {
-	while (*error_list)
+	t_list	*node;
+
+	node = *error_list;
+	while (node)
 	{
-		ft_putendl_fd((*error_list)->content, STDERR_FILENO);
-		*error_list = (*error_list)->next;
+		ft_putendl_fd(node->content, STDERR_FILENO);
+		node = node->next;
 	}
 	ft_lstclear(error_list, free);
 }
@@ -32,6 +35,7 @@ static void	one_enode_init(t_exec_node *enode, t_list *parse_nodes)
 	enode->run_cmd = true;
 	enode->infile = NULL;
 	enode->outfile = NULL;
+	enode->fullcmd = NULL;
 }
 
 static int	run_one(t_data *data, t_list *parse_nodes)
@@ -57,6 +61,7 @@ static int	run_one(t_data *data, t_list *parse_nodes)
 	exit_status = runbuiltin(data, &enode);
 	dup2(fd_stdin, STDIN_FILENO);
 	dup2(fd_stdout, STDOUT_FILENO);
+	cleanup_run_one(&enode);
 	return (exit_status);
 }
 
@@ -89,5 +94,6 @@ void	execution(t_data *data, t_list *pnodes)
 		}
 		else
 			data->last_exit_code = 1;
+		cleanup_execution(&exec);
 	}
 }
