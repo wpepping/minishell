@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/08 17:51:05 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:10:04 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,12 @@ typedef enum e_token_type
 	PIPE
 }							t_token_type;
 
-
+typedef struct s_token
+{
+	char					*value;
+	bool					inword;
+	t_token_type			type;
+}							t_token;
 
 typedef struct s_execution
 {
@@ -72,6 +77,7 @@ typedef struct s_parse_node
 	char					**argv;
 	t_list					*output_dest;
 	t_list					*input_src;
+	t_list					*redirect;
 }							t_parse_node;
 
 typedef struct s_exec_node
@@ -87,8 +93,8 @@ typedef struct s_exec_node
 	int				error_code;
 	bool			run_cmd;
 	char			*fullcmd;
-	char			*infile;
-	char			*outfile;
+	t_token			*infile;
+	t_token			*outfile;
 }				t_exec_node;
 
 typedef struct s_data
@@ -100,13 +106,6 @@ typedef struct s_data
 	int			last_exit_code;
 	t_list		*error_list;
 }				t_data;
-
-typedef struct s_token
-{
-	char					*value;
-	bool					inword;
-	t_token_type			type;
-}							t_token;
 
 typedef struct sigaction	t_sigaction;
 
@@ -196,7 +195,7 @@ void						init_signal_handlers(t_sigaction *sa_int,
 								t_sigaction *sa_quit);
 
 // Utils
-void			clean_exit(t_data *data, t_exec_node *enode, t_list *pnodes);
+void			clean_exit(t_data *d, t_exec_node *enode, t_list *pnodes, int status);
 void			close_fds(int fd_in, int fd_out, int **pipes);
 char			*ft_pathjoin(char const *s1, char const *s2);
 void			ft_puterr(char *str1, char *str2, char *str3);

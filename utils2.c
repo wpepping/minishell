@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:14:03 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 21:20:27 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:46:34 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ void	ft_puterr(char *str1, char *str2, char *str3)
 	ft_putendl_fd("", STDERR_FILENO);
 }
 
-void	clean_exit(t_data *data, t_exec_node *enode, t_list *pnodes)
+void	clean_exit(t_data *d, t_exec_node *enode, t_list *pnodes, int status)
 {
-	(void)data;
+	(void)d;
 	(void)enode;
 	(void)pnodes;
-	exit(1);
+	exit(status);
 }
 
 bool	isdir(char *dname)
