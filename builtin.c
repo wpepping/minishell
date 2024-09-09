@@ -90,28 +90,20 @@ int	ft_pwd(t_data *data, t_exec_node *node)
 
 int	ft_exit(t_data *data, t_exec_node *node)
 {
-	int	exit_code;
-	int	val;
+	int		status;
+	char	*arg;
 
-	exit_code = 0;
-	if (node->parse->argv[1])
-	{
-		val = ft_atoi(node->parse->argv[1]);
-		exit_code = val % 256;
-		if (exit_code < 0)
-			exit_code += 256;
-		if (val == 0)
-		{
-			ft_puterr("exit: ", node->parse->argv[1],
-				": numeric argument required");
-			exit_code = 2;
-		}
-		else if (node->parse->argv[2])
-		{
-			ft_puterr(ERR_EXIT_TOO_MANY_ARG, NULL, NULL);
-			exit_code = 1;
-		}
-	}
+	(void)node;
+	arg = node->parse->argv[1];
 	data->exit = 1;
-	return (exit_code);
+	status = 0;
+	if (arg)
+	{
+		status = 1;
+		if (!node->parse->argv[2] && ft_isint(arg))
+			status = ft_atol(arg) % 256;
+		if (status < 0)
+			status = 256 + status;
+	}
+	return (status);
 }

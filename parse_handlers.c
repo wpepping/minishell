@@ -1,11 +1,35 @@
 #include "minishell.h"
 
-t_token	*handle_heredoc(char *delimiter)
+static int	process_line(char *line, char *delimiter, t_data data, int fd)
 {
-	char	*line;
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	if (!line || (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
+			&& line[ft_strlen(delimiter)] == '\0'))
+	{
+		free(line);
+		return (0);
+	}
+	token->value = line;
+	if (ft_strchr(line, '$'))
+	{
+		expand_env(token, ft_strchr(line, '$'), data);
+		free(line);
+	}
+	write(fd, token->value, ft_strlen(token->value));
+	write(fd, "\n", 1);
+	free(token->value);
+	free(token);
+	return (1);
+}
+
+t_token	*handle_heredoc(char *delimiter, t_data data)
+{
 	int		fd;
 	char	*filename;
 	t_token	*token;
+	int		continue_reading;
 
 	token = malloc(sizeof(t_token));
 	malloc_protection(token);
@@ -19,29 +43,15 @@ t_token	*handle_heredoc(char *delimiter)
 		free(filename);
 		exit(1);
 	}
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-		{
-			free(line);
-			break ;
-		}
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
-		{
-			free(line);
-			break ;
-		}
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-		free(line);
-	}
+	continue_reading = 1;
+	while (continue_reading)
+		continue_reading = process_line(readline("> "), delimiter, data, fd);
 	close(fd);
 	free(delimiter);
 	return (token);
 }
 
-t_list	*handle_redirects(t_list *tokens, t_parse_node *node)
+t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data data)
 {
 	t_token	*token;
 	t_list	*current;
@@ -54,15 +64,12 @@ t_list	*handle_redirects(t_list *tokens, t_parse_node *node)
 	content_copy->type = token->type;
 	content_copy->value = ft_strdup(((t_token *)(current->next->content))->value);
 	malloc_protection(content_copy->value);
-	if (token->type == REDIRECT_IN || token->type == HEREDOC)
+	if (token->type == REDIRECT_IN || token->type == HEREDOC ||
+	 token->type == REDIRECT_OUT || token->type == APPEND)
 	{
 		if (token->type == HEREDOC)
-			content_copy = handle_heredoc(content_copy->value);
-		ft_lstadd_back(&node->input_src, ft_lstnew(content_copy));
-	}
-	else if (token->type == REDIRECT_OUT || token->type == APPEND)
-	{
-		ft_lstadd_back(&node->output_dest, ft_lstnew(content_copy));
+			content_copy = handle_heredoc(content_copy->value, data);
+		ft_lstadd_back(&node->redirect, ft_lstnew(content_copy));
 	}
 	if (current->next != NULL)
 		return (current->next->next);
@@ -105,28 +112,23 @@ char	*handle_env(char *envpointer, t_data data, size_t len)
 	char	*env_val;
 
 	if (len == 0)
-		env_var = strdup("$");
+		return (ft_strdup("$"));
+	temp = ft_substr(envpointer, 0, len);
+	malloc_protection(temp);
+	if (temp[0] == '?')
+		env_var = ft_itoa(data.last_exit_code);
 	else
 	{
-		temp = ft_substr(envpointer, 0, len);
-		malloc_protection(temp);
-		if (temp[0] == '?')
+		env_val = envp_get(data.envp, temp);
+		if (!env_val)
 		{
-			env_var = ft_itoa(data.last_exit_code);
-			malloc_protection(env_var);
+			free(temp);
+			return (NULL);
 		}
 		else
-		{
-			env_val = envp_get(data.envp, temp);
-			if (env_val)
-			{
-				env_var = ft_strdup(env_val);
-				malloc_protection(env_var);
-			}
-			else
-				env_var = NULL;
-		}
-		free(temp);
+			env_var = ft_strdup(env_val);
 	}
+	malloc_protection(env_var);
+	free(temp);
 	return (env_var);
 }

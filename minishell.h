@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 15:10:04 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:15:29 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,10 @@
 typedef enum e_token_type
 {
 	WORD,
-	AND,
-	OR,
 	HEREDOC,
 	APPEND,
 	REDIRECT_OUT,
 	REDIRECT_IN,
-	OPEN_PAREN,
-	CLOSE_PAREN,
 	DOUBLE_QUOTE,
 	SINGLE_QUOTE,
 	PIPE
@@ -62,12 +58,12 @@ typedef struct s_token
 
 typedef struct s_execution
 {
-	t_list	*enodes;
-	t_list	*pnodes;
-	int		**pipes;
-	int		lsize;
-	int		nofork;
-}				t_execution;
+	t_list					*enodes;
+	t_list					*pnodes;
+	int						**pipes;
+	int						lsize;
+	int						nofork;
+}							t_execution;
 
 typedef struct s_parse_node
 {
@@ -99,47 +95,43 @@ typedef struct s_exec_node
 
 typedef struct s_data
 {
-	char		cwd[PATH_MAX];
-	t_list		*node_list;
-	int			exit;
-	char		**envp;
-	int			last_exit_code;
-	t_list		*error_list;
-}				t_data;
+	char					cwd[PATH_MAX];
+	t_list					*node_list;
+	int						exit;
+	char					**envp;
+	int						last_exit_code;
+	t_list					*error_list;
+}							t_data;
 
 typedef struct sigaction	t_sigaction;
 
 // parse
 int							parse(t_data *data, char *cmd);
-int							parse_pipe(t_list **tokens, t_data *data);
-int							parse_command(t_list *tokens, t_data *data);
-int							parse_redirects(t_list **tokens, t_parse_node *node);
-void						parse_args(t_list **tokens, t_parse_node *node);
+// Tokenization
+int							tokenize(char *cmd, t_list **token_list);
+
+/// token_utils.c
+int							append_token(t_list **token_list, t_token_type type,
+								char *cmd, int len);
+void						clear_tokens_list(t_list **tokens);
+void						combine_inword(t_list **tokens);
 
 // parse_handlers
 t_list						*handle_redirects(t_list *tokens,
-								t_parse_node *node);
-t_token						*handle_heredoc(char *delimiter);
-void	handle_args(t_list *tokens, t_parse_node *node, int argc);
+								t_parse_node *node, t_data data);
+t_token						*handle_heredoc(char *delimiter, t_data data);
+void						handle_args(t_list *tokens, t_parse_node *node,
+								int argc);
 char						*handle_env(char *envpointer, t_data data,
 								size_t len);
-
 
 // expand_env
 void						expand_env(t_token *token, char *envpointer,
 								t_data data);
-char						*add_until_env(char *start, char *expanded_str);
-size_t						count_env_len(char *env_var);
-size_t						count_to_next_env(char *start);
-void						combine_inword(t_list **tokens);
-
-
 
 // parse utils
 int							get_builtin_index(char *token);
-bool						is_valid_filename(t_token *token);
-void						free_token(void *content);
-void						clear_tokens_list(t_list **tokens);
+bool						is_valid_filename(t_list *tokens);
 char						*generate_heredoc_filename(void);
 
 void						print_prompt(t_data *data);
@@ -147,28 +139,22 @@ void						print_argv(t_parse_node *node);
 void						print_argv_from_nodes(t_data *data);
 void						clear_node_list(t_data *data);
 
-// Tokenization
-int							tokenize(char *cmd, t_list **token_list);
-int							append_token(t_list **token_list, t_token_type type,
-								char *cmd, int len);
-int							handle_other_tokens(char *cmd, t_list **token_list);
-bool						in_quotes(char *token);
-int							add_word(char *cmd, t_list **token_list);
-
 // Pre-processing
-bool			check_fds(t_data *data, t_list *files, t_exec_node *enode);
-bool			check_cmd(t_data *data, t_exec_node *node);
-t_list			*create_exec_nodes(t_data *data, t_execution *exec);
+bool						check_fds(t_data *data, t_list *files,
+								t_exec_node *enode);
+bool						check_cmd(t_data *data, t_exec_node *node);
+t_list						*create_exec_nodes(t_data *data, t_execution *exec);
 
 // Execution
-int				**create_pipes(int n);
-int				waitpids(pid_t *pids, int n);
-int				oflags(t_token_type type);
-void			execution(t_data *data, t_list *parse_nodes);
-void			get_fds(t_data *data, t_exec_node *node, int **pipes);
-pid_t			*fork_processes(t_data *data, t_execution *exec);
-void			runcmd(t_data *data, t_exec_node *node);
-int				runbuiltin(t_data *data, t_exec_node *node);
+int							**create_pipes(int n);
+int							waitpids(pid_t *pids, int n);
+int							oflags(t_token_type type);
+void						execution(t_data *data, t_list *parse_nodes);
+void						get_fds(t_data *data, t_exec_node *node,
+								int **pipes);
+pid_t						*fork_processes(t_data *data, t_execution *exec);
+void						runcmd(t_data *data, t_exec_node *node);
+int							runbuiltin(t_data *data, t_exec_node *node);
 
 // Builtins
 int							ft_echo(t_data *data, t_exec_node *node);

@@ -12,38 +12,43 @@
 
 #include "minishell.h"
 
-int	parse_redirects(t_list **tokens, t_parse_node *node)
-{
-	t_token	*token;
+static void	process_tokens(t_list *tokens, t_data *data);
+static int	parse_command(t_list *tokens, t_data *data);
+static int	parse_pipe(t_list **tokens, t_data *data);
+static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
+				t_data data);
 
-	while (*tokens != NULL)
+int	parse(t_data *data, char *cmd)
+{
+	t_list	*tokens;
+	int		return_value;
+
+	return_value = tokenize(cmd, &tokens);
+	if (return_value == 0)
 	{
-		token = (t_token *)(*tokens)->content;
-		if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN
-			|| token->type == APPEND || token->type == HEREDOC)
+		process_tokens(tokens, data);
+		combine_inword(&tokens);
+		return_value = parse_command(tokens, data);
+		if ((return_value == 0 && tokens != NULL)
+			&& (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
+				|| ((t_token *)(tokens)->content)->type == PIPE))
 		{
-			if (!(*tokens)->next
-				|| !is_valid_filename((*tokens)->next->content))
-			{
-				printf("Error: no filename specified for redirection\n");
-				return (1);
-			}
-			*tokens = handle_redirects(*tokens, node);
-		}
-		else
-		{
-			break ;
+			printf("Error: syntax error near unexpected token '|'\n");
+			return_value = 1;
 		}
 	}
-	return (0);
+	if (tokens)
+		clear_tokens_list(&tokens);
+	data->last_exit_code = return_value;
+	return (return_value);
 }
 
-
-int	parse_args_and_redirects(t_list **tokens, t_parse_node *node)
+static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
+		t_data data)
 {
-	t_token *token;
+	t_token	*token;
 	t_list	*head;
-	int argc;
+	int		argc;
 
 	head = *tokens;
 	argc = 0;
@@ -52,56 +57,23 @@ int	parse_args_and_redirects(t_list **tokens, t_parse_node *node)
 		token = (t_token *)(*tokens)->content;
 		if (token->type == WORD)
 		{
-			argc++;
+			if (ft_strncmp(token->value, "", 1) != 0)
+				argc++;
 			*tokens = (*tokens)->next;
 		}
 		else if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN
 			|| token->type == APPEND || token->type == HEREDOC)
 		{
-			if (!(*tokens)->next || !is_valid_filename((*tokens)->next->content))
-			{
-				printf("Error: no filename specified for redirection\n");
+			if (!is_valid_filename((*tokens)->next))
 				return (1);
-			}
-			*tokens = handle_redirects(*tokens, node);
+			*tokens = handle_redirects(*tokens, node, data);
 		}
 	}
 	handle_args(head, node, argc);
 	return (0);
 }
 
-
-int	parse_command(t_list *tokens, t_data *data)
-{
-	t_parse_node	*node;
-	t_token			*token;
-
-	if (tokens)
-		token = (t_token *)tokens->content;
-	node = create_parse_node();
-	if (tokens)
-	{
-		if (parse_redirects(&tokens, node))
-			return (1);
-		if (get_builtin_index(token->value) != -1)
-			node->is_builtin = true;
-		else
-			node->exec = ft_strdup(token->value);
-		if (tokens)
-			parse_args_and_redirects(&tokens, node);
-	}
-	if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
-		node->is_last = true;
-	ft_lstadd_back(&data->node_list, ft_lstnew(node));
-	if (tokens)
-	{
-		token = (t_token *)tokens->content;
-		parse_pipe(&tokens, data);
-	}
-	return (0);
-}
-
-int	parse_pipe(t_list **tokens, t_data *data)
+static int	parse_pipe(t_list **tokens, t_data *data)
 {
 	t_token	*token;
 
@@ -114,16 +86,35 @@ int	parse_pipe(t_list **tokens, t_data *data)
 	return (0);
 }
 
-
-int	parse(t_data *data, char *cmd)
+static int	parse_command(t_list *tokens, t_data *data)
 {
-	t_list	*tokens;
-	t_list	*head;
-	t_token	*token;
-	int		return_value;
+	t_parse_node	*node;
 
-	return_value = tokenize(cmd, &tokens);
-	head = tokens;
+	if (tokens)
+	{
+		node = create_parse_node();
+		if (parse_args_and_redirects(&tokens, node, *data))
+			return (1);
+		if (node->argv[0] != NULL)
+		{
+			if (get_builtin_index(node->argv[0]) != -1)
+				node->is_builtin = true;
+			else
+				node->exec = ft_strdup(node->argv[0]);
+		}
+		if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
+			node->is_last = true;
+		ft_lstadd_back(&data->node_list, ft_lstnew(node));
+		if (tokens)
+			parse_pipe(&tokens, data);
+	}
+	return (0);
+}
+
+static void	process_tokens(t_list *tokens, t_data *data)
+{
+	t_token	*token;
+
 	while (tokens)
 	{
 		token = (t_token *)tokens->content;
@@ -137,16 +128,4 @@ int	parse(t_data *data, char *cmd)
 			token->type = WORD;
 		tokens = tokens->next;
 	}
-	tokens = head;
-	combine_inword(&tokens);
-	return_value = parse_command(tokens, data);
-	if ((return_value == 0)
-		&& (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
-			|| ((t_token *)(tokens)->content)->type == PIPE))
-	{
-		printf("Error: syntax error near unexpected token '|'\n");
-		return_value = 1;
-	}
-	clear_tokens_list(&head);
-	return (return_value);
 }

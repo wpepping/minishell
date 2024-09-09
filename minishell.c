@@ -60,6 +60,7 @@ void	print_argv_from_nodes(t_data *data)
 		while (input_src)
 		{
 			printf("Input: %s\n", ((t_token *)input_src->content)->value);
+			printf("Input TYPE: %i\n", ((t_token *)input_src->content)->type);
 			input_src = input_src->next;
 		}
 		if (node->is_last)
@@ -93,7 +94,7 @@ int	main(int argc, char **argv, char **envp)
 			//print_argv_from_nodes(&data);
 			sa_int.sa_handler = process_running_sigint_handler;
 			sigaction(SIGINT, &sa_int, NULL);
-			if(!parse(&data, cmd))
+			if(!parse(&data, cmd) && data.node_list)
 				execution(&data, data.node_list);
 			sa_int.sa_handler = default_sigint_handler;
 			sigaction(SIGINT, &sa_int, NULL);
