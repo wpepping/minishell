@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 18:51:50 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:54:14 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	parse(t_data *data, char *cmd)
 	if (return_value == 0)
 	{
 		if ((return_value == 0 && tokens != NULL)
-			&& ((t_token *)ft_lstlast(tokens)->content)->type == PIPE
+			&& (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
 				|| ((t_token *)(tokens)->content)->type == PIPE))
 		{
 			ft_puterr(NULL, "syntax error near unexpected token '|'", NULL);
