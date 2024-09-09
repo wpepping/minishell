@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 15:08:44 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:26:49 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ static int	run_one(t_data *data, t_list *parse_nodes)
 	int			exit_status;
 
 	one_enode_init(&enode, parse_nodes);
-	if (!check_fds(data, enode.parse->input_src, &enode)
-		|| !check_fds(data, enode.parse->output_dest, &enode))
+	if (!check_fds(data, enode.parse->redirect, &enode))
 	{
 		output_errors(&data->error_list);
 		return (1);
