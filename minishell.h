@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 15:10:40 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:15:29 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,13 @@ typedef enum e_token_type
 	PIPE
 }							t_token_type;
 
+typedef struct s_token
+{
+	char					*value;
+	bool					inword;
+	t_token_type			type;
+}							t_token;
+
 typedef struct s_execution
 {
 	t_list					*enodes;
@@ -64,25 +71,27 @@ typedef struct s_parse_node
 	bool					is_last;
 	char					*exec;
 	char					**argv;
-	t_list					*redirects;
+	t_list					*output_dest;
+	t_list					*input_src;
+	t_list					*redirect;
 }							t_parse_node;
 
 typedef struct s_exec_node
 {
-	t_parse_node			*parse;
-	t_list					*parse_nodes;
-	int						fd_in;
-	int						fd_out;
-	int						**pipes;
-	int						pindex;
-	int						list_size;
-	int						nofork;
-	int						error_code;
-	bool					run_cmd;
-	char					*fullcmd;
-	char					*infile;
-	char					*outfile;
-}							t_exec_node;
+	t_parse_node	*parse;
+	t_list			*parse_nodes;
+	int				fd_in;
+	int				fd_out;
+	int				**pipes;
+	int				pindex;
+	int				list_size;
+	int				nofork;
+	int				error_code;
+	bool			run_cmd;
+	char			*fullcmd;
+	t_token			*infile;
+	t_token			*outfile;
+}				t_exec_node;
 
 typedef struct s_data
 {
@@ -93,13 +102,6 @@ typedef struct s_data
 	int						last_exit_code;
 	t_list					*error_list;
 }							t_data;
-
-typedef struct s_token
-{
-	char					*value;
-	bool					inword;
-	t_token_type			type;
-}							t_token;
 
 typedef struct sigaction	t_sigaction;
 
@@ -179,20 +181,18 @@ void						init_signal_handlers(t_sigaction *sa_int,
 								t_sigaction *sa_quit);
 
 // Utils
-void						clean_exit(t_data *data, t_exec_node *enode,
-								t_list *pnodes);
-void						close_fds(int fd_in, int fd_out, int **pipes);
-char						*ft_pathjoin(char const *s1, char const *s2);
-void						ft_puterr(char *str1, char *str2, char *str3);
-char						*ft_strjoin2(char *s1, char const *s2);
-int							arrncontains(char **haystack, char *needle,
-								int cmplen);
-t_parse_node				*create_parse_node(void);
-bool						isdir(char *dname);
-int							ft_isint(char *str);
-char						**get_path(void);
-char						*find_full_path(char *cmd, char *path[]);
-void						malloc_protection(void *ptr);
+void			clean_exit(t_data *d, t_exec_node *enode, t_list *pnodes, int status);
+void			close_fds(int fd_in, int fd_out, int **pipes);
+char			*ft_pathjoin(char const *s1, char const *s2);
+void			ft_puterr(char *str1, char *str2, char *str3);
+char			*ft_strjoin2(char *s1, char const *s2);
+int				arrncontains(char **haystack, char *needle, int cmplen);
+t_parse_node	*create_parse_node(void);
+bool			isdir(char *dname);
+int				ft_isint(char *str);
+char			**get_path(void);
+char			*find_full_path(char *cmd, char *path[]);
+void			malloc_protection(void *ptr);
 
 // Clean up
 void						cleanup(t_data *data, t_exec_node *enode,

@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 19:28:53 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/08 17:55:14 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:06:01 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	err_handl(char *msg, char *fname, t_data *data, t_exec_node *node)
 		ft_putendl_fd("", STDERR_FILENO);
 	}
 	if (!node->nofork)
-		clean_exit(data, node, node->parse_nodes);
+		clean_exit(data, node, node->parse_nodes, 1);
 	return (-1);
 }
 
@@ -40,28 +40,22 @@ static int	get_file_fd(t_data *d, t_exec_node *node, t_list *files, int oflag)
 		oflag = oflag | O_APPEND;
 	fd = open(fname, oflag, 0644);
 	if (fd == -1 && !node->nofork)
-		clean_exit(d, node, node->parse_nodes);
+		clean_exit(d, node, node->parse_nodes, node->error_code);
 	return (fd);
 }
 
 void	get_fds(t_data *data, t_exec_node *node, int **pipes)
 {
-	int	oflag;
-
 	if (node->infile)
-	{
-		oflag = oflags(((t_token *)node->parse->input_src->content)->type);
-		node->fd_in = get_file_fd(data, node, node->parse->input_src, oflag);
-	}
+		node->fd_in = get_file_fd(data, node, node->parse->input_src,
+				oflags(node->infile->type));
 	else if (node->pindex == 0)
 		node->fd_in = STDIN_FILENO;
 	else
 		node->fd_in = pipes[node->pindex - 1][0];
 	if (node->outfile)
-	{
-		oflag = oflags(((t_token *)node->parse->output_dest->content)->type);
-		node->fd_out = get_file_fd(data, node, node->parse->output_dest, oflag);
-	}
+		node->fd_out = get_file_fd(data, node, node->parse->output_dest,
+				oflags(node->outfile->type));
 	else if (node->parse->is_last)
 		node->fd_out = STDOUT_FILENO;
 	else
@@ -78,7 +72,7 @@ static pid_t	forkproc(t_data *d, t_exec_node *enode, t_parse_node *pnode)
 	else if (pid == 0)
 	{
 		if (!enode->run_cmd)
-			clean_exit(d, enode, enode->parse_nodes);
+			clean_exit(d, enode, enode->parse_nodes, enode->error_code);
 		sigaction(SIGINT, NULL, NULL);
 		get_fds(d, enode, enode->pipes);
 		dup2(enode->fd_in, STDIN_FILENO);

@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/08 17:24:19 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:53:27 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	init(t_data *data, char **envp)
 	if (!data->envp)
 	{
 		ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
-		clean_exit(data, NULL, NULL);
+		clean_exit(data, NULL, NULL, 1);
 	}
 	getcwd(data->cwd, PATH_MAX);
 }

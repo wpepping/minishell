@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:42:40 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/08 17:51:24 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:04:26 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,9 @@ bool	check_fds(t_data *data, t_list *files, t_exec_node *enode)
 		if (fd == -1)
 			return (err_handl(ERR_PERMISSION_DENIED, file->value, data));
 		if ((file->type == REDIRECT_IN || file->type == HEREDOC))
-			enode->infile = file->value;
+			enode->infile = file;
 		else
-			enode->outfile = file->value;
+			enode->outfile = file;
 		close(fd);
 		files = files->next;
 	}
