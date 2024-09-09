@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 16:05:36 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 15:08:44 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:23:14 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,15 +77,6 @@ void	execution(t_data *data, t_list *pnodes)
 	pid_t		*pids;
 	t_execution	exec;
 
-	// TEST CODE TEST CODE TEST CODE TEST CODE TEST CODE TEST CODE TEST CODE
-	t_list		*node;
-	node = pnodes;
-	while (node)
-	{
-		((t_parse_node *)node->content)->redirect = ((t_parse_node *)node->content)->input_src;
-		node = node->next;
-	}
-	// TEST CODE TEST CODE TEST CODE TEST CODE TEST CODE TEST CODE TEST CODE
 	if (((t_parse_node *)pnodes->content)->is_builtin && !pnodes->next)
 		data->last_exit_code = run_one(data, pnodes);
 	else
