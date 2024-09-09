@@ -38,17 +38,20 @@ bool	is_valid_filename(t_list *tokens)
 	return (true);
 }
 
-char	*generate_heredoc_filename(void)
+int get_tempfile_name(char *tempfile)
 {
-	static int	i;
-	char		*filename;
-	char		*temp;
-
-	temp = ft_itoa(i);
-	malloc_protection(temp);
-	filename = ft_strjoin("heredoc", temp);
-	malloc_protection(filename);
-	free(temp);
-	i++;
-	return (filename);
+    int i;
+    ft_memcpy(tempfile, "tmphered000", 12);
+    i = 1;
+    while (i < 1000)
+    {
+        tempfile[10] = '0' + (i % 10);
+        tempfile[9] = '0' + ((i / 10) % 10);
+        tempfile[8] = '0' + (i / 100);
+        if (access(tempfile, F_OK) != 0)
+            return (0);
+        i++;
+    }
+    return (-1);
 }
+

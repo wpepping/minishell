@@ -33,15 +33,16 @@ t_token	*handle_heredoc(char *delimiter, t_data data)
 
 	token = malloc(sizeof(t_token));
 	malloc_protection(token);
-	filename = generate_heredoc_filename();
+	filename = (char *)malloc(12*sizeof(char));
+	get_tempfile_name(filename);
 	token->value = filename;
 	token->type = HEREDOC;
 	fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd == -1)
 	{
-		printf("Error: could not create heredoc file\n");
-		free(filename);
-		exit(1);
+		ft_puterr(" could not create heredoc file", NULL, NULL);
+		free(delimiter);
+		return(token);
 	}
 	continue_reading = 1;
 	while (continue_reading)

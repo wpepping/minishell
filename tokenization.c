@@ -37,7 +37,7 @@ static int	add_quote(char *cmd, char quote, t_list **token_list)
 	i = 1;
 	if (strchr(cmd + 1, quote) == NULL)
 	{
-		printf("Error: no matching quote\n");
+		ft_puterr("no matching quote", NULL, NULL);
 		return (-1);
 	}
 	while (cmd[i] && cmd[i] != quote)
@@ -104,7 +104,7 @@ static int	handle_quotes(char **cmd, t_list **token_list)
 	}
 	else if (ft_strncmp(*cmd, "||", 2) == 0)
 	{
-		printf("Error: syntax error near unexpected token '|'\n");
+		ft_puterr(NULL, "syntax error near unexpected token '|'", NULL);
 		return (-1);
 	}
 	((t_token *)ft_lstlast(*token_list)->content)->inword = true;

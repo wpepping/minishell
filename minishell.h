@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 16:20:54 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:14:56 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ typedef struct s_parse_node
 	bool					is_last;
 	char					*exec;
 	char					**argv;
-	t_list					*output_dest;
-	t_list					*input_src;
+	//t_list					*output_dest;
+	//t_list					*input_src;
 	t_list					*redirect;
 }							t_parse_node;
 
@@ -132,7 +132,7 @@ void						expand_env(t_token *token, char *envpointer,
 // parse utils
 int							get_builtin_index(char *token);
 bool						is_valid_filename(t_list *tokens);
-char						*generate_heredoc_filename(void);
+int get_tempfile_name(char *tempfile);
 
 void						print_prompt(t_data *data);
 void						print_argv(t_parse_node *node);

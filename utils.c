@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:18:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 16:15:50 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:15:26 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,6 @@ t_parse_node	*create_parse_node(void)
 	node->is_builtin = false;
 	node->exec = NULL;
 	node->argv = NULL;
-	node->output_dest = NULL;
-	node->input_src = NULL;
 	node->redirect = NULL;
 	return (node);
 }

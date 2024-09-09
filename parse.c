@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/04 20:02:49 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:32:08 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static int	parse_pipe(t_list **tokens, t_data *data);
 static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
 				t_data data);
 
+
 int	parse(t_data *data, char *cmd)
 {
 	t_list	*tokens;
@@ -26,16 +27,17 @@ int	parse(t_data *data, char *cmd)
 	return_value = tokenize(cmd, &tokens);
 	if (return_value == 0)
 	{
-		process_tokens(tokens, data);
-		combine_inword(&tokens);
-		return_value = parse_command(tokens, data);
 		if ((return_value == 0 && tokens != NULL)
 			&& (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
 				|| ((t_token *)(tokens)->content)->type == PIPE))
 		{
-			printf("Error: syntax error near unexpected token '|'\n");
+			ft_puterr(NULL, "syntax error near unexpected token '|'", NULL);
 			return_value = 1;
 		}
+		process_tokens(tokens, data);
+		combine_inword(&tokens);
+		return_value = parse_command(tokens, data);
+		
 	}
 	if (tokens)
 		clear_tokens_list(&tokens);
@@ -95,13 +97,8 @@ static int	parse_command(t_list *tokens, t_data *data)
 		node = create_parse_node();
 		if (parse_args_and_redirects(&tokens, node, *data))
 			return (1);
-		if (node->argv[0] != NULL)
-		{
-			if (get_builtin_index(node->argv[0]) != -1)
-				node->is_builtin = true;
-			else
-				node->exec = ft_strdup(node->argv[0]);
-		}
+		if (node->argv[0] != NULL && get_builtin_index(node->argv[0]) != -1)
+			node->is_builtin = true;
 		if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
 			node->is_last = true;
 		ft_lstadd_back(&data->node_list, ft_lstnew(node));
