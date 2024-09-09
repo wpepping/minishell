@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 18:32:08 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:51:50 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	parse(t_data *data, char *cmd)
 	if (return_value == 0)
 	{
 		if ((return_value == 0 && tokens != NULL)
-			&& (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
+			&& ((t_token *)ft_lstlast(tokens)->content)->type == PIPE
 				|| ((t_token *)(tokens)->content)->type == PIPE))
 		{
 			ft_puterr(NULL, "syntax error near unexpected token '|'", NULL);
@@ -98,7 +98,7 @@ static int	parse_command(t_list *tokens, t_data *data)
 		if (parse_args_and_redirects(&tokens, node, *data))
 			return (1);
 		if (node->argv[0] != NULL && get_builtin_index(node->argv[0]) != -1)
-			node->is_builtin = true;
+				node->is_builtin = true;
 		if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
 			node->is_last = true;
 		ft_lstadd_back(&data->node_list, ft_lstnew(node));

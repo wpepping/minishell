@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 16:57:59 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:51:28 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,7 @@ int	main(int argc, char **argv, char **envp)
 				
 			sa_int.sa_handler = default_sigint_handler;
 			sigaction(SIGINT, &sa_int, NULL);
-			free(cmd);
-			cleanup_cmd(data.node_list);
+			cleanup_cmd(cmd, data.node_list);
 			data.node_list = NULL;
 		}
 	}

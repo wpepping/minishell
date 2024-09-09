@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 18:14:56 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:51:08 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,6 @@ void						init_signal_handlers(t_sigaction *sa_int,
 // Utils
 void			clean_exit(t_data *d, t_exec_node *enode, t_list *pnodes, int status);
 void			close_fds(int fd_in, int fd_out, int **pipes);
-char			*ft_pathjoin(char const *s1, char const *s2);
 void			ft_puterr(char *str1, char *str2, char *str3);
 char			*ft_strjoin2(char *s1, char const *s2);
 int				arrncontains(char **haystack, char *needle, int cmplen);
@@ -197,7 +196,9 @@ void			malloc_protection(void *ptr);
 // Clean up
 void						cleanup(t_data *data, t_exec_node *enode,
 								t_parse_node *pnode);
-void						cleanup_cmd(t_list *pnode);
+void						cleanup_cmd(char *cmd, t_list *pnode);
+void						cleanup_execution(t_execution *exec);
+void						cleanup_run_one(void *node);
 void						free_array(void **arr);
 
 #endif

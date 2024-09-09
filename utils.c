@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:18:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 18:48:56 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:51:55 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,30 +42,6 @@ void	close_fds(int fd_in, int fd_out, int **pipes)
 			close(pipes[i][1]);
 		i++;
 	}
-}
-
-char	*ft_pathjoin(char const *s1, char const *s2)
-{
-	size_t	len1;
-	size_t	len2;
-	char	*result;
-
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	if (s1[len1 - 1] == '/')
-		result = malloc((len1 + len2 + 1) * sizeof(char));
-	else
-		result = malloc((len1 + len2 + 2) * sizeof(char));
-	if (result == NULL)
-		return (NULL);
-	ft_memcpy(result, s1, len1);
-	if (s1[len1 - 1] != '/')
-	{
-		result[len1] = '/';
-		len1++;
-	}
-	ft_memcpy(result + len1, s2, len2 + 1);
-	return (result);
 }
 
 int	arrncontains(char **haystack, char *needle, int cmplen)

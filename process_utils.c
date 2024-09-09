@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 18:43:25 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/08 17:25:24 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:09:14 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,13 @@ int	**create_pipes(int n)
 	pipes = malloc((n + 1) * sizeof(int *));
 	if (pipes == NULL)
 		return (NULL);
-	pipes[n] = NULL;
+	pipes[0] = NULL;
 	i = 0;
 	while (i < n)
 	{
 		pipes[i] = malloc(2 * sizeof(int));
 		pipe(pipes[i++]);
+		pipes[i] = NULL;
 	}
 	return (pipes);
 }
