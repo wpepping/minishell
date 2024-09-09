@@ -69,7 +69,7 @@ t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data data)
 	{
 		if (token->type == HEREDOC)
 			content_copy = handle_heredoc(content_copy->value, data);
-		ft_lstadd_back(&node->redirects, ft_lstnew(content_copy));
+		ft_lstadd_back(&node->redirect, ft_lstnew(content_copy));
 	}
 	if (current->next != NULL)
 		return (current->next->next);
