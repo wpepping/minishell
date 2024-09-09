@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 18:18:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 21:20:17 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:44:37 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	malloc_protection(void *ptr)
 {
 	if (!ptr)
 	{
-		printf("Error: malloc failed\n");
+		ft_puterr("Error: malloc failed", NULL, NULL);
 		exit(1);
 	}
 }

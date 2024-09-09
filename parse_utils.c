@@ -24,7 +24,7 @@ bool	is_valid_filename(t_list *tokens)
 
 	if (!tokens || !tokens->content)
 	{
-		printf("Error: no filename specified for redirection\n");
+		ft_puterr(" syntax error near unexpected token `newline'", NULL, NULL);
 		return (false);
 	}
 	token = (t_token *)tokens->content;
@@ -32,7 +32,7 @@ bool	is_valid_filename(t_list *tokens)
 		|| (token->type != WORD && token->type != DOUBLE_QUOTE
 			&& token->type != SINGLE_QUOTE))
 	{
-		printf("Error: invalid filename specified for redirection\n");
+		ft_puterr("syntax error near unexpected token `>' or '<'", NULL, NULL);
 		return (false);
 	}
 	return (true);
