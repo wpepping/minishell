@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 19:28:53 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 16:05:56 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:08:35 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,7 @@ pid_t	*fork_processes(t_data *data, t_execution *exec)
 	enodes = exec->enodes;
 	i = 0;
 	while (enodes != NULL)
-	{
-		pids[i] = forkproc(data, enodes->content,
+	{		pids[i] = forkproc(data, enodes->content,
 				((t_exec_node *)enodes->content)->parse);
 		enodes = enodes->next;
 		i++;
