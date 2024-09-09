@@ -56,7 +56,7 @@ static int	add_word(char *cmd, t_list **token_list)
 	i = 1;
 	while (cmd[i] && cmd[i] != ' ' && cmd[i] != '|' && cmd[i] != '<'
 		&& cmd[i] != '>' && cmd[i] != '(' && cmd[i] != ')' && cmd[i] != '\t'
-		&& cmd[i] != '"' && cmd[i] != '\'')
+		&& cmd[i] != '"' && cmd[i] != '\'' && cmd[i] != '\n')
 	{
 		i++;
 	}
@@ -67,7 +67,8 @@ static int	add_word(char *cmd, t_list **token_list)
 
 static int	handle_other_tokens(char *cmd, t_list **token_list)
 {
-	((t_token *)ft_lstlast(*token_list)->content)->inword = false;
+	if(*token_list)
+		((t_token *)ft_lstlast(*token_list)->content)->inword = false;
 	if (ft_strncmp(cmd, "<<", 2) == 0)
 		return (append_token(token_list, HEREDOC, cmd, 2));
 	else if (ft_strncmp(cmd, ">>", 2) == 0)
