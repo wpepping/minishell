@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 19:28:53 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 15:38:06 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 16:05:56 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,10 @@ static int	get_file_fd(t_data *d, t_exec_node *node, t_token *file)
 {
 	char	*fname;
 	int		fd;
-	int		type;
 	int		oflag;
 
-	oflag = oflags(node->infile->type);
-	type = file->type;
+	oflag = oflags(file->type);
 	fname = file->value;
-	if (type == APPEND)
-		oflag = oflag | O_APPEND;
 	fd = open(fname, oflag, 0644);
 	if (fd == -1 && !node->nofork)
 		clean_exit(d, node, node->parse_nodes, node->error_code);
