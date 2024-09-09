@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/08 17:51:05 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:10:40 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,10 @@
 typedef enum e_token_type
 {
 	WORD,
-	AND,
-	OR,
 	HEREDOC,
 	APPEND,
 	REDIRECT_OUT,
 	REDIRECT_IN,
-	OPEN_PAREN,
-	CLOSE_PAREN,
 	DOUBLE_QUOTE,
 	SINGLE_QUOTE,
 	PIPE
@@ -68,8 +64,7 @@ typedef struct s_parse_node
 	bool					is_last;
 	char					*exec;
 	char					**argv;
-	t_list					*output_dest;
-	t_list					*input_src;
+	t_list					*redirects;
 }							t_parse_node;
 
 typedef struct s_exec_node
@@ -131,9 +126,6 @@ char						*handle_env(char *envpointer, t_data data,
 // expand_env
 void						expand_env(t_token *token, char *envpointer,
 								t_data data);
-char						*add_until_env(char *start, char *expanded_str);
-size_t						count_env_len(char *env_var);
-size_t						count_to_next_env(char *start);
 
 // parse utils
 int							get_builtin_index(char *token);

@@ -1,35 +1,11 @@
+
+
 #include "minishell.h"
 
-char	*add_until_env(char *start, char *expanded_str)
-{
-	size_t	len;
-	char	*temp;
 
-	len = count_to_next_env(start);
-	if (len)
-	{
-		temp = ft_substr(start, 0, len);
-		malloc_protection(temp);
-		expanded_str = ft_strjoin2(expanded_str, temp);
-		malloc_protection(expanded_str);
-		free(temp);
-	}
-	return (expanded_str);
-}
-
-size_t	count_env_len(char *env_var)
-{
-	size_t	i;
-
-	i = 0;
-	if (env_var[0] == '?')
-		return (1);
-	while (env_var[i] && (ft_isalnum(env_var[i]) || env_var[i] == '_'
-			|| env_var[0] == '?' || env_var[0] == '$')
-		&& !ft_isdigit(env_var[0]))
-		i++;
-	return (i);
-}
+static size_t	count_to_next_env(char *start);
+static char	*add_until_env(char *start, char *expanded_str);
+static size_t	count_env_len(char *env_var);
 
 void	expand_env(t_token *token, char *envpointer, t_data data)
 {
@@ -57,7 +33,40 @@ void	expand_env(t_token *token, char *envpointer, t_data data)
 	free(expanded_str);
 }
 
-size_t	count_to_next_env(char *start)
+static char	*add_until_env(char *start, char *expanded_str)
+{
+	size_t	len;
+	char	*temp;
+
+	len = count_to_next_env(start);
+	if (len)
+	{
+		temp = ft_substr(start, 0, len);
+		malloc_protection(temp);
+		expanded_str = ft_strjoin2(expanded_str, temp);
+		malloc_protection(expanded_str);
+		free(temp);
+	}
+	return (expanded_str);
+}
+
+static size_t	count_env_len(char *env_var)
+{
+	size_t	i;
+
+	i = 0;
+	if (env_var[0] == '?')
+		return (1);
+	while (env_var[i] && (ft_isalnum(env_var[i]) || env_var[i] == '_'
+			|| env_var[0] == '?' || env_var[0] == '$')
+		&& !ft_isdigit(env_var[0]))
+		i++;
+	return (i);
+}
+
+
+
+static size_t	count_to_next_env(char *start)
 {
 	size_t	i;
 

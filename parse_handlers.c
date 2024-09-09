@@ -64,15 +64,12 @@ t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data data)
 	content_copy->type = token->type;
 	content_copy->value = ft_strdup(((t_token *)(current->next->content))->value);
 	malloc_protection(content_copy->value);
-	if (token->type == REDIRECT_IN || token->type == HEREDOC)
+	if (token->type == REDIRECT_IN || token->type == HEREDOC ||
+	 token->type == REDIRECT_OUT || token->type == APPEND)
 	{
 		if (token->type == HEREDOC)
 			content_copy = handle_heredoc(content_copy->value, data);
-		ft_lstadd_back(&node->input_src, ft_lstnew(content_copy));
-	}
-	else if (token->type == REDIRECT_OUT || token->type == APPEND)
-	{
-		ft_lstadd_back(&node->output_dest, ft_lstnew(content_copy));
+		ft_lstadd_back(&node->redirects, ft_lstnew(content_copy));
 	}
 	if (current->next != NULL)
 		return (current->next->next);
