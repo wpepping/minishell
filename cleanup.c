@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:29:04 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 17:55:08 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:45:34 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ static void	free_redirect(void *node)
 	t_token	*token;
 
 	token = (t_token *)node;
-	if (token->type == HEREDOC && access(token->value, W_OK))
-		unlink(token->value);
 	free(token->value);
 	free(node);
 }

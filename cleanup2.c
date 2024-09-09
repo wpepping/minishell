@@ -6,18 +6,37 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 17:54:13 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 18:07:02 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:50:25 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	cleanup(t_data *data, t_exec_node *enode, t_parse_node *pnode)
+void	clean_heredocs(t_list *node)
+{
+	t_list			*redirect_node;
+	t_parse_node	*pnode;
+	t_token			*token;
+
+	while (node)
+	{
+		pnode = node->content;
+		redirect_node = pnode->redirect;
+		while (redirect_node)
+		{
+			token = (t_token *)redirect_node->content;
+			if (token->type == HEREDOC && access(token->value, F_OK) == 0)
+				unlink(token->value);
+			redirect_node = redirect_node->next;
+		}
+		node = node->next;
+	}
+}
+
+void	cleanup(t_data *data)
 {
 	free_array((void **)data->envp);
 	clear_history();
-	(void)enode;
-	(void)pnode;
 }
 
 void	cleanup_run_one(void *node)
