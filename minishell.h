@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 15:15:29 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/09 16:02:14 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ typedef struct s_parse_node
 	bool					is_last;
 	char					*exec;
 	char					**argv;
-	t_list					*output_dest;
-	t_list					*input_src;
+	//t_list					*output_dest;
+	//t_list					*input_src;
 	t_list					*redirect;
 }							t_parse_node;
 

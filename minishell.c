@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 14:53:27 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 16:04:38 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,14 @@ void	print_argv_from_nodes(t_data *data)
 			printf("  %s\n", argv[i]);
 		}
 		// Use temporary pointers to iterate through the lists
-		output_dest = node->output_dest;
+		//output_dest = node->output_dest;
 		while (output_dest)
 		{
 			printf("Output: %s type: %i\n", ((t_token *)output_dest->content)->value, ((t_token *)output_dest->content)->type);
 
 			output_dest = output_dest->next;
 		}
-		input_src = node->input_src;
+		//input_src = node->input_src;
 		while (input_src)
 		{
 			printf("Input: %s\n", ((t_token *)input_src->content)->value);
@@ -91,11 +91,15 @@ int	main(int argc, char **argv, char **envp)
 		else if (*cmd != '\0')
 		{
 			add_history(cmd);
-			//print_argv_from_nodes(&data);
+			
 			sa_int.sa_handler = process_running_sigint_handler;
 			sigaction(SIGINT, &sa_int, NULL);
 			if(!parse(&data, cmd) && data.node_list)
+			{
+				//print_argv_from_nodes(&data);
 				execution(&data, data.node_list);
+			}
+				
 			sa_int.sa_handler = default_sigint_handler;
 			sigaction(SIGINT, &sa_int, NULL);
 			free(cmd);
