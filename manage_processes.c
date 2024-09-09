@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 19:28:53 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 15:06:01 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:38:06 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,16 @@ static int	err_handl(char *msg, char *fname, t_data *data, t_exec_node *node)
 	return (-1);
 }
 
-static int	get_file_fd(t_data *d, t_exec_node *node, t_list *files, int oflag)
+static int	get_file_fd(t_data *d, t_exec_node *node, t_token *file)
 {
 	char	*fname;
 	int		fd;
 	int		type;
+	int		oflag;
 
-	while (files->next)
-		files = files->next;
-	type = ((t_token *)files->content)->type;
-	fname = ((t_token *)files->content)->value;
+	oflag = oflags(node->infile->type);
+	type = file->type;
+	fname = file->value;
 	if (type == APPEND)
 		oflag = oflag | O_APPEND;
 	fd = open(fname, oflag, 0644);
@@ -47,15 +47,13 @@ static int	get_file_fd(t_data *d, t_exec_node *node, t_list *files, int oflag)
 void	get_fds(t_data *data, t_exec_node *node, int **pipes)
 {
 	if (node->infile)
-		node->fd_in = get_file_fd(data, node, node->parse->input_src,
-				oflags(node->infile->type));
+		node->fd_in = get_file_fd(data, node, node->infile);
 	else if (node->pindex == 0)
 		node->fd_in = STDIN_FILENO;
 	else
 		node->fd_in = pipes[node->pindex - 1][0];
 	if (node->outfile)
-		node->fd_out = get_file_fd(data, node, node->parse->output_dest,
-				oflags(node->outfile->type));
+		node->fd_out = get_file_fd(data, node, node->outfile);
 	else if (node->parse->is_last)
 		node->fd_out = STDOUT_FILENO;
 	else
