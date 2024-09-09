@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:42:40 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 15:04:26 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:15:40 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static bool	err_handl(char *msg, char *fname, t_data *data)
 	char	*errmsg;
 	t_list	*node;
 
+	if (!msg)
+		return (false);
 	errmsg = ft_strdup(msg);
 	if (fname != NULL)
 		errmsg = ft_strjoin2(errmsg, fname);
@@ -32,6 +34,9 @@ bool	check_cmd(t_data *data, t_exec_node *node)
 {
 	char	**path;
 
+	node->error_code = 139;
+	if (!node->parse->argv[0] || !node->parse->argv[0][0])
+		return (err_handl(NULL, NULL, data));
 	path = get_path();
 	if (path == NULL)
 		err_handl(ERR_OUT_OF_MEMORY, NULL, data);
