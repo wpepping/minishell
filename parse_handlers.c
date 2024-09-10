@@ -41,12 +41,12 @@ int fork_heredoc(char *filename, char *delimiter, t_data data)
 	else if (pid == 0)
 	{
 		printf("begin heredoc \n");
-		//sa.sa_handler = SIG_DFL;
+		sa.sa_handler = SIG_DFL;
 		sigemptyset(&sa.sa_mask);
 		sigaddset(&sa.sa_mask, SIGINT);
 		sa.sa_flags = 0;
-		sa.sa_handler = heredoc_sigint_handler;
 		sigaction(SIGINT, &sa, NULL);
+	
 		
 		continue_reading = 1;
 		fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
@@ -63,13 +63,16 @@ int fork_heredoc(char *filename, char *delimiter, t_data data)
 	}
 	else
 	{
+		
 		if(waitpid(pid, &status, 0) == -1)
 		{
-			printf("waitpid failed\n");
+			ft_puterr("failed to wait for heredoc process", NULL, NULL);
 			return (1);
 		}
-		else
+		if(WIFEXITED(status))
 			return (0);
+		else
+			return (1);
 	}
 }
 

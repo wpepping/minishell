@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 18:43:25 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/10 16:34:45 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:45:35 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,13 @@ int	waitpids(pid_t *pids, int n)
 		if (pids[i] != -1)
 		{
 			if (waitpid(pids[i], &temp, 0) == -1)
-				status = 130;
+				status = 1;
 			else if (WIFEXITED(temp))
 				status = WEXITSTATUS(temp);
+			else if (WTERMSIG(temp) == SIGINT)
+				status = 130;
+			else
+				status = 1;
 		}
 		i++;
 	}

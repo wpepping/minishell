@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 18:35:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/10 16:42:53 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:35:24 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	init_signal_handlers(t_sigaction *sa_int, t_sigaction *sa_quit)
 	(void)sa_quit;
 	sigemptyset(&sa_int->sa_mask);
 	sigaddset(&sa_int->sa_mask, SIGINT);
+	sa_int->sa_flags = SA_RESTART;
 	sa_int->sa_handler = default_sigint_handler;
 	sigaction(SIGINT, sa_int, NULL);
 	sigemptyset(&sa_quit->sa_mask);
