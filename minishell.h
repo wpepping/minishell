@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 18:51:08 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:51:44 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,11 +195,11 @@ char			*find_full_path(char *cmd, char *path[]);
 void			malloc_protection(void *ptr);
 
 // Clean up
-void						cleanup(t_data *data, t_exec_node *enode,
-								t_parse_node *pnode);
+void						cleanup(t_data *data);
 void						cleanup_cmd(char *cmd, t_list *pnode);
 void						cleanup_execution(t_execution *exec);
 void						cleanup_run_one(void *node);
+void						clean_heredocs(t_list *node);
 void						free_array(void **arr);
 
 #endif

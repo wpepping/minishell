@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 17:05:31 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 15:51:47 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:44:32 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void				ft_lstadd_back(t_list **lst, t_list *new);
 void				ft_lstdelone(t_list *lst, void (*del)(void *));
 void				ft_lstclear(t_list **lst, void (*del)(void *));
 t_list				*ft_lstfind(t_list *begin_list, void *ref, int (*cmp)());
+void				ft_lstiter(t_list *lst, void (*f)(void *));
 void				*ft_memcpy(void *dest, const void *src, size_t n);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
