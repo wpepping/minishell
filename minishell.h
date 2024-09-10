@@ -124,6 +124,7 @@ void						handle_args(t_list *tokens, t_parse_node *node,
 								int argc);
 char						*handle_env(char *envpointer, t_data data,
 								size_t len);
+int fork_heredoc(char *delimiter, t_data data, int fd);
 
 // expand_env
 void						expand_env(t_token *token, char *envpointer,

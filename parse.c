@@ -37,7 +37,6 @@ int	parse(t_data *data, char *cmd)
 		process_tokens(tokens, data);
 		combine_inword(&tokens);
 		return_value = parse_command(tokens, data);
-		
 	}
 	if (tokens)
 		clear_tokens_list(&tokens);
@@ -69,6 +68,8 @@ static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
 			if (!is_valid_filename((*tokens)->next))
 				return (1);
 			*tokens = handle_redirects(*tokens, node, data);
+			//if (*tokens == NULL)
+				//return (1);
 		}
 	}
 	handle_args(head, node, argc);

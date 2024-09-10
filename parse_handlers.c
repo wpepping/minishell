@@ -24,12 +24,44 @@ static int	process_line(char *line, char *delimiter, t_data data, int fd)
 	return (1);
 }
 
+int fork_heredoc(char *delimiter, t_data data, int fd)
+{
+	pid_t		pid;
+	struct sigaction sa;
+	int		continue_reading;
+	int status;
+
+	pid = fork();
+	if (pid < 0)
+	{
+		ft_puterr("failed to create process: ", NULL , NULL);
+		return (1);
+	}
+-	else if (pid == 0)
+	{
+		sa.sa_handler = SIG_DFL;
+		sigemptyset(&sa.sa_mask);
+		sigaction(SIGINT, &sa, NULL);
+		continue_reading = 1;
+		while (continue_reading)
+			continue_reading = process_line(readline("> "), delimiter, data, fd);
+		exit(0);
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			return WEXITSTATUS(status);
+		else
+			return (1);
+	}
+}
+
 t_token	*handle_heredoc(char *delimiter, t_data data)
 {
 	int		fd;
 	char	*filename;
 	t_token	*token;
-	int		continue_reading;
 
 	token = malloc(sizeof(t_token));
 	malloc_protection(token);
@@ -44,9 +76,8 @@ t_token	*handle_heredoc(char *delimiter, t_data data)
 		free(delimiter);
 		return(token);
 	}
-	continue_reading = 1;
-	while (continue_reading)
-		continue_reading = process_line(readline("> "), delimiter, data, fd);
+	if (fork_heredoc(delimiter, data, fd))
+		token = NULL;
 	close(fd);
 	free(delimiter);
 	return (token);
@@ -70,6 +101,8 @@ t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data data)
 	{
 		if (token->type == HEREDOC)
 			content_copy = handle_heredoc(content_copy->value, data);
+		if (content_copy == NULL)
+			return (NULL);
 		ft_lstadd_back(&node->redirect, ft_lstnew(content_copy));
 	}
 	if (current->next != NULL)
