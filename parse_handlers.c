@@ -24,12 +24,13 @@ static int	process_line(char *line, char *delimiter, t_data data, int fd)
 	return (1);
 }
 
-int fork_heredoc(char *delimiter, t_data data, int fd)
+int fork_heredoc(char *filename, char *delimiter, t_data data)
 {
 	pid_t		pid;
 	struct sigaction sa;
 	int		continue_reading;
 	int status;
+	int fd;
 
 	pid = fork();
 	if (pid < 0)
@@ -37,50 +38,55 @@ int fork_heredoc(char *delimiter, t_data data, int fd)
 		ft_puterr("failed to create process: ", NULL , NULL);
 		return (1);
 	}
--	else if (pid == 0)
+	else if (pid == 0)
 	{
-		sa.sa_handler = SIG_DFL;
+		printf("begin heredoc \n");
+		//sa.sa_handler = SIG_DFL;
 		sigemptyset(&sa.sa_mask);
+		sigaddset(&sa.sa_mask, SIGINT);
+		sa.sa_flags = 0;
+		sa.sa_handler = heredoc_sigint_handler;
 		sigaction(SIGINT, &sa, NULL);
+		
 		continue_reading = 1;
+		fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
+		if (fd == -1)
+		{
+			ft_puterr(" could not create heredoc file", NULL, NULL);
+			return(1);
+		}
 		while (continue_reading)
 			continue_reading = process_line(readline("> "), delimiter, data, fd);
+		close(fd);
+		printf("successful exit heredoc \n");
 		exit(0);
 	}
 	else
 	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			return WEXITSTATUS(status);
-		else
+		if(waitpid(pid, &status, 0) == -1)
+		{
+			printf("waitpid failed\n");
 			return (1);
+		}
+		else
+			return (0);
 	}
 }
 
-t_token	*handle_heredoc(char *delimiter, t_data data)
+int	handle_heredoc(char *delimiter, t_data data, t_token *token)
 {
-	int		fd;
 	char	*filename;
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	malloc_protection(token);
+	int return_val;
+	
+	return_val = 0;
 	filename = (char *)malloc(12*sizeof(char));
 	get_tempfile_name(filename);
 	token->value = filename;
 	token->type = HEREDOC;
-	fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
-	if (fd == -1)
-	{
-		ft_puterr(" could not create heredoc file", NULL, NULL);
-		free(delimiter);
-		return(token);
-	}
-	if (fork_heredoc(delimiter, data, fd))
-		token = NULL;
-	close(fd);
+	if (fork_heredoc(filename, delimiter, data))
+		return_val = 1;
 	free(delimiter);
-	return (token);
+	return (return_val);
 }
 
 t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data data)
@@ -100,9 +106,8 @@ t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data data)
 	 token->type == REDIRECT_OUT || token->type == APPEND)
 	{
 		if (token->type == HEREDOC)
-			content_copy = handle_heredoc(content_copy->value, data);
-		if (content_copy == NULL)
-			return (NULL);
+			if(handle_heredoc(content_copy->value, data, content_copy))
+				node->heredoc_fail = true;
 		ft_lstadd_back(&node->redirect, ft_lstnew(content_copy));
 	}
 	if (current->next != NULL)

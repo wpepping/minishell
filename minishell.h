@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 18:51:44 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:48:23 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ typedef struct s_parse_node
 {
 	bool					is_builtin;
 	bool					is_last;
+	bool 					heredoc_fail;
 	char					*exec;
 	char					**argv;
 	//t_list					*output_dest;
@@ -119,12 +120,12 @@ void						combine_inword(t_list **tokens);
 // parse_handlers
 t_list						*handle_redirects(t_list *tokens,
 								t_parse_node *node, t_data data);
-t_token						*handle_heredoc(char *delimiter, t_data data);
+int	handle_heredoc(char *delimiter, t_data data, t_token *token);
 void						handle_args(t_list *tokens, t_parse_node *node,
 								int argc);
 char						*handle_env(char *envpointer, t_data data,
 								size_t len);
-int fork_heredoc(char *delimiter, t_data data, int fd);
+int fork_heredoc(char *filename, char *delimiter, t_data data);
 
 // expand_env
 void						expand_env(t_token *token, char *envpointer,
@@ -180,7 +181,7 @@ void						process_running_sigint_handler(int signum);
 void						sigquit_handler(int signum);
 void						init_signal_handlers(t_sigaction *sa_int,
 								t_sigaction *sa_quit);
-
+								void heredoc_sigint_handler(int signum);
 // Utils
 void			clean_exit(t_data *d, t_exec_node *enode, t_list *pnodes, int status);
 void			close_fds(int fd_in, int fd_out, int **pipes);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handlers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 18:35:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/01 19:00:18 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:42:53 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ void	process_running_sigint_handler(int signum)
 {
 	ft_putendl_fd("", STDOUT_FILENO);
 	(void)signum;
+}
+
+void heredoc_sigint_handler(int signum)
+{
+	(void)signum;
+	exit (130);
 }
 
 void	sigquit_handler(int signum)

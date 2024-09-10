@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 18:43:25 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 18:09:14 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:34:45 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,9 @@ int	waitpids(pid_t *pids, int n)
 	{
 		if (pids[i] != -1)
 		{
-			waitpid(pids[i], &temp, 0);
-			if (WIFEXITED(temp))
+			if (waitpid(pids[i], &temp, 0) == -1)
+				status = 130;
+			else if (WIFEXITED(temp))
 				status = WEXITSTATUS(temp);
 		}
 		i++;

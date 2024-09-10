@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 18:54:14 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/10 15:45:14 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
 	t_token	*token;
 	t_list	*head;
 	int		argc;
-
+	
 	head = *tokens;
 	argc = 0;
 	while (*tokens != NULL && ((t_token *)(*tokens)->content)->type != PIPE)
@@ -68,8 +68,8 @@ static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
 			if (!is_valid_filename((*tokens)->next))
 				return (1);
 			*tokens = handle_redirects(*tokens, node, data);
-			//if (*tokens == NULL)
-				//return (1);
+			if(*tokens == (t_list *)-1)
+				return (1);
 		}
 	}
 	handle_args(head, node, argc);

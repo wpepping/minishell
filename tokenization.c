@@ -15,7 +15,10 @@ int	tokenize(char *cmd, t_list **token_list)
 		if (*cmd == ' ' || *cmd == '\t')
 		{
 			cmd++;
-			((t_token *)ft_lstlast(*token_list)->content)->inword = false;
+			if(!*cmd)
+				return (1);
+			if(*token_list)
+				((t_token *)ft_lstlast(*token_list)->content)->inword = false;
 		}
 		else if (ft_strncmp(cmd, "\"", 1) == 0 || ft_strncmp(cmd, "'", 1) == 0
 				|| ft_strncmp(cmd, "||", 2) == 0)
