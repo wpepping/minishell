@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/10 15:45:14 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/10 18:58:51 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
 	while (*tokens != NULL && ((t_token *)(*tokens)->content)->type != PIPE)
 	{
 		token = (t_token *)(*tokens)->content;
-		if (token->type == WORD)
+		if (token->type == WORD || token->type == EMPTY)
 		{
-			if (ft_strncmp(token->value, "", 1) != 0)
+			if (ft_strncmp(token->value, "", 1) != 0 || token->type == EMPTY)
 				argc++;
 			*tokens = (*tokens)->next;
 		}
@@ -122,6 +122,8 @@ static void	process_tokens(t_list *tokens, t_data *data)
 		if ((token->type == DOUBLE_QUOTE || token->type == WORD)
 			&& ft_strchr(token->value, '$'))
 			expand_env(token, ft_strchr(token->value, '$'), *data);
+		if((token->type == DOUBLE_QUOTE || token->type == SINGLE_QUOTE) && token->value[0] == '\0')
+			token->type = EMPTY;
 		if (token->type == DOUBLE_QUOTE || token->type == SINGLE_QUOTE)
 			token->type = WORD;
 		tokens = tokens->next;

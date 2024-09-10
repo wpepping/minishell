@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/10 16:48:23 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/10 18:50:16 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef enum e_token_type
 	REDIRECT_IN,
 	DOUBLE_QUOTE,
 	SINGLE_QUOTE,
+	EMPTY,
 	PIPE
 }							t_token_type;
 
@@ -181,7 +182,6 @@ void						process_running_sigint_handler(int signum);
 void						sigquit_handler(int signum);
 void						init_signal_handlers(t_sigaction *sa_int,
 								t_sigaction *sa_quit);
-								void heredoc_sigint_handler(int signum);
 // Utils
 void			clean_exit(t_data *d, t_exec_node *enode, t_list *pnodes, int status);
 void			close_fds(int fd_in, int fd_out, int **pipes);
