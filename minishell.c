@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 17:49:26 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:10:21 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	init(t_data *data, char **envp)
 	data->envp = envp_create(envp);
 	data->last_exit_code = 0;
 	data->error_list = NULL;
+	data->fd_stdin = dup(STDIN_FILENO);
+	data->fd_stdout = dup(STDOUT_FILENO);
 	if (!data->envp)
 	{
 		ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);

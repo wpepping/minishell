@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 17:54:13 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 14:53:37 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:11:00 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	clean_heredocs(t_list *node)
 void	cleanup(t_data *data)
 {
 	free_array((void **)data->envp);
+	close(data->fd_stdin);
+	close(data->fd_stdout);
 	clear_history();
 }
 

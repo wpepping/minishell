@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:20:00 by wouter            #+#    #+#             */
-/*   Updated: 2024/09/11 18:26:12 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:11:18 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	runcmd(t_data *data, t_exec_node *node)
 	argv = node->parse->argv;
 	node->parse->argv = NULL;
 	close_fds(node->fd_in, node->fd_out, node->pipes);
+	close(data->fd_stdin);
+	close(data->fd_stdout);
 	free_array((void **)node->pipes);
 	cleanup_cmd(NULL, node->parse_nodes);
 	execve(node->fullcmd, argv, data->envp);

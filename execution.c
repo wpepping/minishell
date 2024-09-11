@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 15:27:58 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 18:45:23 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:11:38 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,18 @@ static void	output_errors(t_list **error_list)
 	ft_lstclear(error_list, free);
 }
 
-static void	one_enode_init(t_exec_node *enode, t_list *parse_nodes)
+static void	one_enode_init(t_data *data, t_exec_node *enode, t_list *pnodes)
 {
-	enode->parse = (t_parse_node *)parse_nodes->content;
+	enode->parse = (t_parse_node *)pnodes->content;
 	enode->pipes = create_pipes(0);
+	if (!enode->pipes)
+	{
+		ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
+		clean_exit(data, NULL, pnodes, 1);
+	}
 	enode->pindex = 0;
 	enode->nofork = 1;
-	enode->parse_nodes = parse_nodes;
+	enode->parse_nodes = pnodes;
 	enode->run_cmd = true;
 	enode->infile = NULL;
 	enode->outfile = NULL;
@@ -41,11 +46,9 @@ static void	one_enode_init(t_exec_node *enode, t_list *parse_nodes)
 static int	run_one(t_data *data, t_list *parse_nodes)
 {
 	t_exec_node	enode;
-	int			fd_stdin;
-	int			fd_stdout;
 	int			exit_status;
 
-	one_enode_init(&enode, parse_nodes);
+	one_enode_init(data, &enode, parse_nodes);
 	if (!check_fds(data, enode.parse->redirect, &enode))
 	{
 		output_errors(&data->error_list);
@@ -54,13 +57,12 @@ static int	run_one(t_data *data, t_list *parse_nodes)
 	get_fds(data, &enode, enode.pipes);
 	if (enode.fd_in == -1 || enode.fd_out == -1)
 		return (1);
-	fd_stdin = dup(STDIN_FILENO);
-	fd_stdout = dup(STDOUT_FILENO);
 	dup2(enode.fd_in, STDIN_FILENO);
 	dup2(enode.fd_out, STDOUT_FILENO);
 	exit_status = runbuiltin(data, &enode);
-	dup2(fd_stdin, STDIN_FILENO);
-	dup2(fd_stdout, STDOUT_FILENO);
+	dup2(data->fd_stdin, STDIN_FILENO);
+	dup2(data->fd_stdout, STDOUT_FILENO);
+	close_fds(enode.fd_in, enode.fd_out, enode.pipes);
 	cleanup_run_one(&enode);
 	return (exit_status);
 }

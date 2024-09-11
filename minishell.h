@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 17:33:22 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/11 20:08:30 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ typedef struct s_data
 	char					cwd[PATH_MAX];
 	t_list					*node_list;
 	int						exit;
+	int						fd_stdin;
+	int						fd_stdout;
 	char					**envp;
 	int						last_exit_code;
 	t_list					*error_list;
