@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:14:03 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 14:46:34 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:23:00 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,14 @@ void	ft_puterr(char *str1, char *str2, char *str3)
 
 void	clean_exit(t_data *d, t_exec_node *enode, t_list *pnodes, int status)
 {
-	(void)d;
-	(void)enode;
-	(void)pnodes;
+	cleanup(d);
+	if (enode)
+	{
+		close_fds(enode->fd_in, enode->fd_out, enode->pipes);
+		free_array((void **)enode->pipes);
+	}
+	if (pnodes)
+		cleanup_cmd(NULL, pnodes);
 	exit(status);
 }
 

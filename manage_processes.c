@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 19:28:53 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 17:40:55 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:20:28 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static pid_t	forkproc(t_data *d, t_exec_node *enode, t_parse_node *pnode)
 		dup2(enode->fd_in, STDIN_FILENO);
 		dup2(enode->fd_out, STDOUT_FILENO);
 		if (pnode->is_builtin)
-			exit(runbuiltin(d, enode)); // Change to clean exit?
+			clean_exit(d, enode, enode->parse_nodes, runbuiltin(d, enode));
 		runcmd(d, enode);
 	}
 	else
@@ -90,7 +90,8 @@ pid_t	*fork_processes(t_data *data, t_execution *exec)
 	enodes = exec->enodes;
 	i = 0;
 	while (enodes != NULL)
-	{		pids[i] = forkproc(data, enodes->content,
+	{
+		pids[i] = forkproc(data, enodes->content,
 				((t_exec_node *)enodes->content)->parse);
 		enodes = enodes->next;
 		i++;

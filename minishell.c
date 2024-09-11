@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 19:03:50 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:49:26 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void	init(t_data *data, char **envp)
 	if (!data->envp)
 	{
 		ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
-		clean_exit(data, NULL, NULL, 1);
+		cleanup(data);
+		exit(1);
 	}
 	getcwd(data->cwd, PATH_MAX);
 }
@@ -61,6 +62,20 @@ void	print_argv_from_nodes(t_data *data)
 	}
 }
 
+static void	cmd_handl(t_data *data, char *cmd, t_sigact sa_int)
+{
+	add_history(cmd);
+	sa_int.sa_handler = process_running_sigint_handler;
+	sigaction(SIGINT, &sa_int, NULL);
+	if (!parse(data, cmd) && data->node_list)
+		execution(data, data->node_list);
+	sa_int.sa_handler = default_sigint_handler;
+	sigaction(SIGINT, &sa_int, NULL);
+	clean_heredocs(data->node_list);
+	cleanup_cmd(cmd, data->node_list);
+	data->node_list = NULL;
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_data		data;
@@ -81,24 +96,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!cmd)
 			data.exit = 1;
 		else if (*cmd != '\0')
-		{
-			add_history(cmd);
-			
-			sa_int.sa_handler = process_running_sigint_handler;
-			sigaction(SIGINT, &sa_int, NULL);
-			if(!parse(&data, cmd) && data.node_list)
-			{
-				//print_argv_from_nodes(&data);
-				execution(&data, data.node_list);
-			}
-				
-				
-			sa_int.sa_handler = default_sigint_handler;
-			sigaction(SIGINT, &sa_int, NULL);
-			clean_heredocs(data.node_list);
-			cleanup_cmd(cmd, data.node_list);
-			data.node_list = NULL;
-		}
+			cmd_handl(&data, cmd, sa_int);
 	}
 	cleanup(&data);
 	return (data.last_exit_code);

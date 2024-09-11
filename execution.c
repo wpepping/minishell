@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 15:27:58 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/10 17:41:49 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/11 18:45:23 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,12 @@ static void	init_execution(t_data *data, t_execution *exec, t_list *pnodes)
 	exec->lsize = ft_lstsize(pnodes);
 	exec->nofork = 0;
 	exec->enodes = NULL;
-	exec->pipes = create_pipes(exec->lsize - 1); // Deal with NULL
+	exec->pipes = create_pipes(exec->lsize - 1);
+	if (!exec->pipes)
+	{
+		ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
+		clean_exit(data, NULL, pnodes, 1);
+	}
 	exec->enodes = create_exec_nodes(data, exec);
 	output_errors(&data->error_list);
 }

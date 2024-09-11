@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:40:27 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/05 21:18:18 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/11 18:31:42 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,7 @@ int	ft_export(t_data *data, t_exec_node *node)
 		if (var == NULL || envp_set(&data->envp, var))
 		{
 			ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
-			return_value = 1;
-			free(var);
-			break ;
+			return (free(var), 1);
 		}
 	}
 	return (return_value);
@@ -95,4 +93,32 @@ int	ft_env(t_data *data, t_exec_node *node)
 		return_value = 0;
 	}
 	return (return_value);
+}
+
+int	ft_exit(t_data *data, t_exec_node *node)
+{
+	int	exit_code;
+	int	val;
+
+	exit_code = 0;
+	if (node->parse->argv[1])
+	{
+		val = ft_atoi(node->parse->argv[1]);
+		exit_code = val % 256;
+		if (exit_code < 0)
+			exit_code += 256;
+		if (val == 0)
+		{
+			ft_puterr("exit: ", node->parse->argv[1],
+				": numeric argument required");
+			exit_code = 2;
+		}
+		else if (node->parse->argv[2])
+		{
+			ft_puterr(ERR_EXIT_TOO_MANY_ARG, NULL, NULL);
+			exit_code = 1;
+		}
+	}
+	data->exit = 1;
+	return (exit_code);
 }

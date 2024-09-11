@@ -13,7 +13,7 @@ void	expand_env(t_token *token, char *envpointer, t_data data)
 	char	*env_var;
 	size_t	len;
 
-	expanded_str = ft_strdup("");
+	expanded_str = ft_strdup(""); // Deal with NULL
 	expanded_str = add_until_env(token->value, expanded_str);
 	while (envpointer)
 	{

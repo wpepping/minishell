@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 15:57:21 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:38:27 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,60 @@ static char	*ft_cd_getpath(t_data *data, char	*arg)
 		path = ft_strdup("");
 	else
 		path = ft_strjoin(data->cwd, "/");
+	if (path == NULL)
+		return (NULL);
 	path = ft_strjoin2(path, arg);
+	if (path == NULL)
+		return (NULL);
 	return (path);
+}
+
+static bool	ft_cd_check_errors(int errnr, char *dir)
+{
+	if (errnr == EACCES)
+		ft_puterr("cd: ", dir, ERR_PERMISSION_DENIED);
+	else if (errnr)
+		ft_puterr("cd: ", dir, ERR_NO_SUCH_FILE);
+	else
+		return (0);
+	return (1);
+}
+
+int	ft_cd(t_data *data, t_exec_node *node)
+{
+	char	*path;
+	int		return_value;
+
+	return_value = 1;
+	if (node->parse->argv[2])
+		ft_putendl_fd("minishell: cd: too many arguments", STDERR_FILENO);
+	else if (node->parse->argv[1] && node->parse->argv[1][0] == '-')
+		invalid_option("cd", node->parse->argv[1]);
+	else if (node->parse->argv[1])
+	{
+		path = ft_cd_getpath(data, node->parse->argv[1]);
+		if (path == NULL)
+		{
+			ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
+			clean_exit(data, node, node->parse_nodes, 1);
+		}
+		return_value = ft_cd_check_errors(chdir(path), node->parse->argv[1]);
+		getcwd(data->cwd, PATH_MAX);
+		free(path);
+	}
+	return (return_value);
+}
+
+int	ft_pwd(t_data *data, t_exec_node *node)
+{
+	if (node->parse->argv[1] && node->parse->argv[1][0] == '-'
+		&& ft_strlen(node->parse->argv[1]) > 1)
+	{
+		invalid_option("pwd", node->parse->argv[1]);
+		return (1);
+	}
+	ft_putendl_fd(data->cwd, 1);
+	return (0);
 }
 
 int	ft_echo(t_data *data, t_exec_node *node)
@@ -46,72 +98,4 @@ int	ft_echo(t_data *data, t_exec_node *node)
 	if (!arg_no_newln)
 		ft_putendl_fd("", STDOUT_FILENO);
 	return (0);
-}
-
-int	ft_cd(t_data *data, t_exec_node *node)
-{
-	char	*path;
-	int		return_value;
-	int		errnr;
-
-	return_value = 1;
-	if (node->parse->argv[2])
-		ft_putendl_fd("minishell: cd: too many arguments", STDERR_FILENO);
-	else if (node->parse->argv[1] && node->parse->argv[1][0] == '-')
-		invalid_option("cd", node->parse->argv[1]);
-	else if (node->parse->argv[1])
-	{
-		path = ft_cd_getpath(data, node->parse->argv[1]);
-		errnr = chdir(path);
-		if (errnr == EACCES)
-			ft_puterr("cd: ", node->parse->argv[1], ": Permission denied");
-		else if (errnr)
-			ft_puterr("cd: ", node->parse->argv[1],
-				": No such file or directory");
-		else
-			return_value = 0;
-		getcwd(data->cwd, PATH_MAX);
-		free(path);
-	}
-	return (return_value);
-}
-
-int	ft_pwd(t_data *data, t_exec_node *node)
-{
-	if (node->parse->argv[1] && node->parse->argv[1][0] == '-'
-		&& ft_strlen(node->parse->argv[1]) > 1)
-	{
-		invalid_option("pwd", node->parse->argv[1]);
-		return (1);
-	}
-	ft_putendl_fd(data->cwd, 1);
-	return (0);
-}
-
-int	ft_exit(t_data *data, t_exec_node *node)
-{
-	int	exit_code;
-	int	val;
-
-	exit_code = 0;
-	if (node->parse->argv[1])
-	{
-		val = ft_atoi(node->parse->argv[1]);
-		exit_code = val % 256;
-		if (exit_code < 0)
-			exit_code += 256;
-		if (val == 0)
-		{
-			ft_puterr("exit: ", node->parse->argv[1],
-				": numeric argument required");
-			exit_code = 2;
-		}
-		else if (node->parse->argv[2])
-		{
-			ft_puterr(ERR_EXIT_TOO_MANY_ARG, NULL, NULL);
-			exit_code = 1;
-		}
-	}
-	data->exit = 1;
-	return (exit_code);
 }
