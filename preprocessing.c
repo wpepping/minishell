@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:59:44 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 15:33:29 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/12 15:53:53 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ static t_exec_node	*init_exec_node(t_parse_node *pnode, t_execution *exec)
 	enode->infile = NULL;
 	enode->outfile = NULL;
 	enode->fullcmd = NULL;
+	enode->fd_in = -1;
+	enode->fd_out = -1;
 	return (enode);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/18 19:18:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 16:52:59 by phartman         ###   ########.fr       */
+/*   Created: 2024/09/12 17:07:44 by wpepping          #+#    #+#             */
+/*   Updated: 2024/09/12 17:08:08 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ t_parse_node	*create_parse_node(void)
 void ft_safelst_add_back(void *content, t_list **list)
 {
 	t_list	*new;
-	
+
 	new = ft_lstnew(content);
 	malloc_protection(new);
 	ft_lstadd_back(list, new);

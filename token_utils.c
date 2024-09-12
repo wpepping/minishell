@@ -25,7 +25,7 @@ int	append_token(t_list **token_list, t_token_type type, char *cmd, int len)
 	token->value = ft_substr(cmd, 0, len);
 	malloc_protection(token->value);
 	token->type = type;
-	ft_lstadd_back(token_list, ft_lstnew(token));
+	ft_lstadd_back(token_list, ft_lstnew(token)); // Deal with NULL from ft_lstnew
 	return (len);
 }
 
