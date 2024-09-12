@@ -1,10 +1,19 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_envs.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 15:53:56 by phartman          #+#    #+#             */
+/*   Updated: 2024/09/12 16:10:13 by phartman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
-
 static size_t	count_to_next_env(char *start);
-static char	*add_until_env(char *start, char *expanded_str);
+static char		*add_until_env(char *start, char *expanded_str);
 static size_t	count_env_len(char *env_var);
 
 void	expand_env(t_token *token, char *envpointer, t_data data)
@@ -13,7 +22,8 @@ void	expand_env(t_token *token, char *envpointer, t_data data)
 	char	*env_var;
 	size_t	len;
 
-	expanded_str = ft_strdup(""); // Deal with NULL
+	expanded_str = ft_strdup("");
+	malloc_protection(expanded_str);
 	expanded_str = add_until_env(token->value, expanded_str);
 	while (envpointer)
 	{
@@ -28,6 +38,7 @@ void	expand_env(t_token *token, char *envpointer, t_data data)
 		expanded_str = add_until_env(envpointer + len + 1, expanded_str);
 		envpointer = ft_strchr(envpointer + 1, '$');
 	}
+	free(token->value);
 	token->value = ft_strdup(expanded_str);
 	malloc_protection(token->value);
 	free(expanded_str);
@@ -63,8 +74,6 @@ static size_t	count_env_len(char *env_var)
 		i++;
 	return (i);
 }
-
-
 
 static size_t	count_to_next_env(char *start)
 {

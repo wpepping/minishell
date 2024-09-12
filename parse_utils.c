@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 15:40:54 by phartman          #+#    #+#             */
+/*   Updated: 2024/09/12 15:41:18 by phartman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	get_builtin_index(char *token)
 {
 	int			i;
 	const char	*builtin_str[] = {"echo", "cd", "unset", "export", "pwd", "env",
-			"exit"};
+		"exit"};
 
 	i = 0;
 	while (i < 7)
@@ -38,20 +50,20 @@ bool	is_valid_filename(t_list *tokens)
 	return (true);
 }
 
-int get_tempfile_name(char *tempfile)
+int	get_tempfile_name(char *tempfile)
 {
-    int i;
-    ft_memcpy(tempfile, "tmphered000", 12);
-    i = 1;
-    while (i < 1000)
-    {
-        tempfile[10] = '0' + (i % 10);
-        tempfile[9] = '0' + ((i / 10) % 10);
-        tempfile[8] = '0' + (i / 100);
-        if (access(tempfile, F_OK) != 0)
-            return (0);
-        i++;
-    }
-    return (-1);
-}
+	int	i;
 
+	ft_memcpy(tempfile, "tmphered000", 12);
+	i = 1;
+	while (i < 1000)
+	{
+		tempfile[10] = '0' + (i % 10);
+		tempfile[9] = '0' + ((i / 10) % 10);
+		tempfile[8] = '0' + (i / 100);
+		if (access(tempfile, F_OK) != 0)
+			return (0);
+		i++;
+	}
+	return (-1);
+}

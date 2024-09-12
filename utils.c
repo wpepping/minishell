@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:18:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 17:11:45 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/12 15:52:07 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ t_parse_node	*create_parse_node(void)
 	malloc_protection(node);
 	node->is_last = false;
 	node->is_builtin = false;
+	node->heredoc_fail = false;
 	node->argv = NULL;
 	node->redirect = NULL;
 	return (node);

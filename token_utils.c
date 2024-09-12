@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 16:15:12 by phartman          #+#    #+#             */
+/*   Updated: 2024/09/12 16:15:59 by phartman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	delete_leading_token(t_list **tokens, t_list **current);
@@ -43,7 +55,7 @@ static void	delete_leading_token(t_list **tokens, t_list **current)
 	t_token	*token;
 
 	token = (t_token *)(*current)->content;
-	if (token->value[0] == '\0' &&	token->type != EMPTY)
+	if (token->value[0] == '\0')
 	{
 		if (*current == *tokens)
 		{
@@ -73,14 +85,13 @@ void	combine_inword(t_list **tokens)
 			|| next_token->value[0] == '\0')
 		{
 			token->inword = next_token->inword;
-			token->value = ft_strjoin2(token->value, next_token->value); // Deal with NULL
+			token->value = ft_strjoin2(token->value, next_token->value);
+			malloc_protection(token->value);
 			next = current->next;
 			current->next = current->next->next;
 			ft_lstdelone(next, free_token);
 		}
 		else
-		{
 			current = current->next;
-		}
 	}
 }
