@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/18 19:18:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 15:55:29 by wpepping         ###   ########.fr       */
+/*   Created: 2024/09/12 17:07:44 by wpepping          #+#    #+#             */
+/*   Updated: 2024/09/12 17:08:08 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,17 @@ t_parse_node	*create_parse_node(void)
 	malloc_protection(node);
 	node->is_last = false;
 	node->is_builtin = false;
+	node->heredoc_fail = false;
 	node->argv = NULL;
 	node->redirect = NULL;
 	return (node);
+}
+
+void ft_safelst_add_back(void *content, t_list **list)
+{
+	t_list	*new;
+
+	new = ft_lstnew(content);
+	malloc_protection(new);
+	ft_lstadd_back(list, new);
 }

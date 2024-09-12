@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 20:10:21 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/12 16:12:15 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,40 +28,6 @@ void	init(t_data *data, char **envp)
 		exit(1);
 	}
 	getcwd(data->cwd, PATH_MAX);
-}
-
-void	print_argv_from_nodes(t_data *data)
-{
-	t_list			*current;
-	int				j;
-	t_parse_node	*node;
-	char			**argv;
-	//t_list			*redirect;
-
-	current = data->node_list;
-	j = 0;
-	while (current != NULL)
-	{
-		node = (t_parse_node *)current->content;
-		argv = node->argv;
-		printf("Node %d\n", j++);
-		printf("Arguments:\n");
-		for (int i = 0; argv[i] != NULL; i++)
-		{
-			printf("  %s\n", argv[i]);
-		}
-		// Use temporary pointers to iterate through the list
-		//input_src = node->input_src
-		// while(redirect)
-		// {
-		// 	printf("Input: %s\n", ((t_token *)redirect->content)->value);
-		// 	printf("Input TYPE: %i\n", ((t_token *)redirect->content)->type);
-		// 	redirect = redirect->next;
-		// }
-		if (node->is_last)
-			printf("Last node\n");
-		current = current->next;
-	}
 }
 
 static void	cmd_handl(t_data *data, char *cmd, t_sigact sa_int)

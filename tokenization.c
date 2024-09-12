@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenization.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 16:16:56 by phartman          #+#    #+#             */
+/*   Updated: 2024/09/12 16:18:00 by phartman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -15,13 +25,13 @@ int	tokenize(char *cmd, t_list **token_list)
 		if (*cmd == ' ' || *cmd == '\t')
 		{
 			cmd++;
-			if(!*cmd)
+			if (!*cmd)
 				return (1);
-			if(*token_list)
+			if (*token_list)
 				((t_token *)ft_lstlast(*token_list)->content)->inword = false;
 		}
 		else if (ft_strncmp(cmd, "\"", 1) == 0 || ft_strncmp(cmd, "'", 1) == 0
-				|| ft_strncmp(cmd, "||", 2) == 0)
+			|| ft_strncmp(cmd, "||", 2) == 0)
 		{
 			if (handle_quotes(&cmd, token_list) == -1)
 				return (1);
@@ -72,7 +82,7 @@ static int	add_word(char *cmd, t_list **token_list)
 
 static int	handle_other_tokens(char *cmd, t_list **token_list)
 {
-	if(*token_list)
+	if (*token_list)
 		((t_token *)ft_lstlast(*token_list)->content)->inword = false;
 	if (ft_strncmp(cmd, "<<", 2) == 0)
 		return (append_token(token_list, HEREDOC, cmd, 2));

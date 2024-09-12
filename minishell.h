@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 20:08:30 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/12 16:54:15 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,30 +71,30 @@ typedef struct s_parse_node
 {
 	bool					is_builtin;
 	bool					is_last;
-	bool 					heredoc_fail;
+	bool					heredoc_fail;
 	char					*exec;
 	char					**argv;
-	//t_list					*output_dest;
-	//t_list					*input_src;
+	// t_list					*output_dest;
+	// t_list					*input_src;
 	t_list					*redirect;
 }							t_parse_node;
 
 typedef struct s_exec_node
 {
-	t_parse_node	*parse;
-	t_list			*parse_nodes;
-	int				fd_in;
-	int				fd_out;
-	int				**pipes;
-	int				pindex;
-	int				list_size;
-	int				nofork;
-	int				error_code;
-	bool			run_cmd;
-	char			*fullcmd;
-	t_token			*infile;
-	t_token			*outfile;
-}				t_exec_node;
+	t_parse_node			*parse;
+	t_list					*parse_nodes;
+	int						fd_in;
+	int						fd_out;
+	int						**pipes;
+	int						pindex;
+	int						list_size;
+	int						nofork;
+	int						error_code;
+	bool					run_cmd;
+	char					*fullcmd;
+	t_token					*infile;
+	t_token					*outfile;
+}							t_exec_node;
 
 typedef struct s_data
 {
@@ -109,7 +109,7 @@ typedef struct s_data
 }							t_data;
 
 typedef struct sigaction	t_sigaction;
-typedef	t_sigaction			t_sigact;
+typedef t_sigaction			t_sigact;
 
 // parse
 int							parse(t_data *data, char *cmd);
@@ -125,12 +125,12 @@ void						combine_inword(t_list **tokens);
 // parse_handlers
 t_list						*handle_redirects(t_list *tokens,
 								t_parse_node *node, t_data data);
-int	handle_heredoc(char *delimiter, t_data data, t_token *token);
+int							handle_heredoc(char *delimiter, t_data data,
+								t_token *token);
 void						handle_args(t_list *tokens, t_parse_node *node,
 								int argc);
 char						*handle_env(char *envpointer, t_data data,
 								size_t len);
-int fork_heredoc(char *filename, char *delimiter, t_data data);
 
 // expand_env
 void						expand_env(t_token *token, char *envpointer,
@@ -139,7 +139,11 @@ void						expand_env(t_token *token, char *envpointer,
 // parse utils
 int							get_builtin_index(char *token);
 bool						is_valid_filename(t_list *tokens);
-int get_tempfile_name(char *tempfile);
+int							get_tempfile_name(char *tempfile);
+
+// heredoc
+int							handle_heredoc(char *delimiter, t_data data,
+								t_token *token);
 
 void						print_prompt(t_data *data);
 void						print_argv(t_parse_node *node);
@@ -186,19 +190,21 @@ void						process_running_sigint_handler(int signum);
 void						sigquit_handler(int signum);
 void						init_signal_handlers(t_sigaction *sa_int,
 								t_sigaction *sa_quit);
-								void heredoc_sigint_handler(int signum);
 // Utils
-void			clean_exit(t_data *d, t_exec_node *enode, t_list *pnodes, int status);
-void			close_fds(int fd_in, int fd_out, int **pipes);
-void			ft_puterr(char *str1, char *str2, char *str3);
-char			*ft_strjoin2(char *s1, char const *s2);
-int				arrncontains(char **haystack, char *needle, int cmplen);
-t_parse_node	*create_parse_node(void);
-bool			isdir(char *dname);
-int				ft_isint(char *str);
-char			**get_path(void);
-char			*find_full_path(char *cmd, char *path[]);
-void			malloc_protection(void *ptr);
+void						clean_exit(t_data *d, t_exec_node *enode,
+								t_list *pnodes, int status);
+void						close_fds(int fd_in, int fd_out, int **pipes);
+void						ft_puterr(char *str1, char *str2, char *str3);
+char						*ft_strjoin2(char *s1, char const *s2);
+int							arrncontains(char **haystack, char *needle,
+								int cmplen);
+t_parse_node				*create_parse_node(void);
+bool						isdir(char *dname);
+int							ft_isint(char *str);
+char						**get_path(void);
+char						*find_full_path(char *cmd, char *path[]);
+void						malloc_protection(void *ptr);
+void ft_safelst_add_back(void *content, t_list **list);
 
 // Clean up
 void						cleanup(t_data *data);
