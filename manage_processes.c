@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 19:28:53 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 17:20:28 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/12 15:47:29 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ pid_t	*fork_processes(t_data *data, t_execution *exec)
 	t_list		*enodes;
 
 	pids = malloc(exec->lsize * sizeof(pid_t));
+	if (!pids)
+		clean_exit(data, NULL, exec->pnodes, 1);
 	enodes = exec->enodes;
 	i = 0;
 	while (enodes != NULL)

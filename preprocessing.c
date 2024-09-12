@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:59:44 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 16:58:20 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/12 15:33:29 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ t_list	*create_exec_nodes(t_data *data, t_execution *exec)
 		if (!enode || !node)
 			exit(cleanup_prep(exec->pipes, lst, enode));
 		ft_lstadd_back(&exec->enodes, node);
+		if (enode->parse->heredoc_fail)
+			enode->error_code = 130;
 		enode->run_cmd = !enode->parse->heredoc_fail
 			&& check_fds(data, enode->parse->redirect, enode);
 		enode->run_cmd = enode->run_cmd && check_cmd(data, enode);

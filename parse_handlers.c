@@ -4,7 +4,7 @@ static int	process_line(char *line, char *delimiter, t_data data, int fd)
 {
 	t_token	*token;
 
-	token = malloc(sizeof(t_token));
+	token = malloc(sizeof(t_token)); // Protect malloc
 	if (!line || (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
 			&& line[ft_strlen(delimiter)] == '\0'))
 	{
@@ -82,7 +82,7 @@ int	handle_heredoc(char *delimiter, t_data data, t_token *token)
 	int return_val;
 
 	return_val = 0;
-	filename = (char *)malloc(12*sizeof(char));
+	filename = (char *)malloc(12*sizeof(char)); // Protect malloc
 	get_tempfile_name(filename);
 	token->value = filename;
 	token->type = HEREDOC;
@@ -111,7 +111,7 @@ t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data data)
 		if (token->type == HEREDOC)
 			if(handle_heredoc(content_copy->value, data, content_copy))
 				node->heredoc_fail = true;
-		ft_lstadd_back(&node->redirect, ft_lstnew(content_copy));
+		ft_lstadd_back(&node->redirect, ft_lstnew(content_copy)); // Deal with NULL from ft_lstnew
 	}
 	if (current->next != NULL)
 		return (current->next->next);
@@ -126,7 +126,7 @@ void	handle_args(t_list *tokens, t_parse_node *node, int argc)
 
 	token = (t_token *)tokens->content;
 	i = 0;
-	node->argv = malloc(sizeof(char *) * (argc + 1));
+	node->argv = malloc(sizeof(char *) * (argc + 1)); // Protect malloc
 	while (i < argc && tokens)
 	{
 		token = (t_token *)tokens->content;

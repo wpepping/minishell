@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 18:43:25 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/10 17:45:35 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/12 15:39:26 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@ int	**create_pipes(int n)
 	while (i < n)
 	{
 		pipes[i] = malloc(2 * sizeof(int));
+		if (pipes[i] == NULL)
+		{
+			free_array((void **) pipes);
+			return (NULL);
+		}
 		pipe(pipes[i++]);
 		pipes[i] = NULL;
 	}
