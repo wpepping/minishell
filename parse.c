@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/10 15:45:14 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/12 15:55:29 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
 	t_token	*token;
 	t_list	*head;
 	int		argc;
-	
+
 	head = *tokens;
 	argc = 0;
 	while (*tokens != NULL && ((t_token *)(*tokens)->content)->type != PIPE)
@@ -102,7 +102,7 @@ static int	parse_command(t_list *tokens, t_data *data)
 				node->is_builtin = true;
 		if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
 			node->is_last = true;
-		ft_lstadd_back(&data->node_list, ft_lstnew(node));
+		ft_lstadd_back(&data->node_list, ft_lstnew(node)); // Deal with NULL from ft_lstnew
 		if (tokens)
 			parse_pipe(&tokens, data);
 	}

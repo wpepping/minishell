@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 15:27:58 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 20:11:38 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/12 15:54:01 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ static void	one_enode_init(t_data *data, t_exec_node *enode, t_list *pnodes)
 	enode->infile = NULL;
 	enode->outfile = NULL;
 	enode->fullcmd = NULL;
+	enode->fd_in = -1;
+	enode->fd_out = -1;
 }
 
 static int	run_one(t_data *data, t_list *parse_nodes)
