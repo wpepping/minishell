@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 18:35:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/10 18:08:06 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/12 13:52:50 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ void	process_running_sigint_handler(int signum)
 {
 	ft_putendl_fd("", STDOUT_FILENO);
 	(void)signum;
+}
+
+void	heredoc_sigint_handler(int signum)
+{
+	(void)signum;
+	exit (130);
 }
 
 void	sigquit_handler(int signum)

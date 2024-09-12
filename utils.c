@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:18:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 18:51:55 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/11 17:11:45 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ int	arrncontains(char **haystack, char *needle, int cmplen)
 	return (0);
 }
 
-
 t_parse_node	*create_parse_node(void)
 {
 	t_parse_node	*node;
@@ -68,4 +67,3 @@ t_parse_node	*create_parse_node(void)
 	node->redirect = NULL;
 	return (node);
 }
-

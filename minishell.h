@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/10 18:50:16 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/12 13:52:42 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,10 @@
 
 # define ERR_COMMAND_NOT_FOUND "minishell: command not found: "
 # define ERR_OUT_OF_MEMORY "minishell: out of memory error"
-# define ERR_NO_SUCH_FILE "minishell: no such file or directory: "
-# define ERR_PERMISSION_DENIED "minishell: permission denied: "
+# define ERR_M_NO_SUCH_FILE "minishell: no such file or directory: "
+# define ERR_NO_SUCH_FILE ": no such file or directory: "
+# define ERR_M_PERMISSION_DENIED "minishell: permission denied: "
+# define ERR_PERMISSION_DENIED ": permission denied: "
 # define ERR_IS_DIR "minishell: Is a directory: "
 # define ERR_CANNOT_EXEC " cannot execute binary file: Exec format error"
 # define ERR_EXIT_TOO_MANY_ARG "minishell: exit: too many arguments"
@@ -100,12 +102,15 @@ typedef struct s_data
 	char					cwd[PATH_MAX];
 	t_list					*node_list;
 	int						exit;
+	int						fd_stdin;
+	int						fd_stdout;
 	char					**envp;
 	int						last_exit_code;
 	t_list					*error_list;
 }							t_data;
 
 typedef struct sigaction	t_sigaction;
+typedef	t_sigaction			t_sigact;
 
 // parse
 int							parse(t_data *data, char *cmd);

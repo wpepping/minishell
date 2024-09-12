@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 18:18:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 18:44:37 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/11 18:25:12 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,3 @@ void	malloc_protection(void *ptr)
 		exit(1);
 	}
 }
-
-

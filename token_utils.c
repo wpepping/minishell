@@ -73,7 +73,7 @@ void	combine_inword(t_list **tokens)
 			|| next_token->value[0] == '\0')
 		{
 			token->inword = next_token->inword;
-			token->value = ft_strjoin2(token->value, next_token->value);
+			token->value = ft_strjoin2(token->value, next_token->value); // Deal with NULL
 			next = current->next;
 			current->next = current->next->next;
 			ft_lstdelone(next, free_token);

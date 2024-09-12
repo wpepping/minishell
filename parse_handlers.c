@@ -46,8 +46,8 @@ int fork_heredoc(char *filename, char *delimiter, t_data data)
 		sigaddset(&sa.sa_mask, SIGINT);
 		sa.sa_flags = 0;
 		sigaction(SIGINT, &sa, NULL);
-	
-		
+
+
 		continue_reading = 1;
 		fd = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0644);
 		if (fd == -1)
@@ -63,7 +63,7 @@ int fork_heredoc(char *filename, char *delimiter, t_data data)
 	}
 	else
 	{
-		
+
 		if(waitpid(pid, &status, 0) == -1)
 		{
 			ft_puterr("failed to wait for heredoc process", NULL, NULL);
@@ -80,7 +80,7 @@ int	handle_heredoc(char *delimiter, t_data data, t_token *token)
 {
 	char	*filename;
 	int return_val;
-	
+
 	return_val = 0;
 	filename = (char *)malloc(12*sizeof(char));
 	get_tempfile_name(filename);
@@ -103,7 +103,7 @@ t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data data)
 	content_copy = malloc(sizeof(t_token));
 	malloc_protection(content_copy);
 	content_copy->type = token->type;
-	content_copy->value = ft_strdup(((t_token *)(current->next->content))->value);
+	content_copy->value = ft_strdup(((t_token *)(current->next->content))->value); // Deal with NULL
 	malloc_protection(content_copy->value);
 	if (token->type == REDIRECT_IN || token->type == HEREDOC ||
 	 token->type == REDIRECT_OUT || token->type == APPEND)
@@ -154,7 +154,7 @@ char	*handle_env(char *envpointer, t_data data, size_t len)
 	char	*env_val;
 
 	if (len == 0)
-		return (ft_strdup("$"));
+		return (ft_strdup("$")); // Deal with NULL
 	temp = ft_substr(envpointer, 0, len);
 	malloc_protection(temp);
 	if (temp[0] == '?')
