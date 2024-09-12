@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 15:59:30 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/12 16:54:15 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,7 @@ int							ft_isint(char *str);
 char						**get_path(void);
 char						*find_full_path(char *cmd, char *path[]);
 void						malloc_protection(void *ptr);
+void ft_safelst_add_back(void *content, t_list **list);
 
 // Clean up
 void						cleanup(t_data *data);

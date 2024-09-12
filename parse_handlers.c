@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:12:12 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/12 16:31:50 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/12 16:55:18 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_list	*handle_redirects(t_list *tokens, t_parse_node *node, t_data data)
 		if (token->type == HEREDOC)
 			if (handle_heredoc(content_copy->value, data, content_copy))
 				node->heredoc_fail = true;
-		ft_lstadd_back(&node->redirect, ft_lstnew(content_copy)); // Deal with NULL from ft_lstnew
+		ft_safelst_add_back(content_copy, &node->redirect);
 	}
 	if (current->next != NULL)
 		return (current->next->next);

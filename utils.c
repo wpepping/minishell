@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:18:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 15:52:07 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/12 16:52:59 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,13 @@ t_parse_node	*create_parse_node(void)
 	node->argv = NULL;
 	node->redirect = NULL;
 	return (node);
+}
+
+void ft_safelst_add_back(void *content, t_list **list)
+{
+	t_list	*new;
+	
+	new = ft_lstnew(content);
+	malloc_protection(new);
+	ft_lstadd_back(list, new);
 }

@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/18 19:22:33 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 16:28:37 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/12 17:04:36 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ static int	parse_command(t_list *tokens, t_data *data)
 			node->is_builtin = true;
 		if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
 			node->is_last = true;
-		ft_lstadd_back(&data->node_list, ft_lstnew(node));
+		ft_safelst_add_back(node ,&data->node_list);
 		if (tokens)
 			parse_pipe(&tokens, data);
 	}
