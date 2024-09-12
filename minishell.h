@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 16:54:15 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/12 20:31:52 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,15 +196,16 @@ void						clean_exit(t_data *d, t_exec_node *enode,
 void						close_fds(int fd_in, int fd_out, int **pipes);
 void						ft_puterr(char *str1, char *str2, char *str3);
 char						*ft_strjoin2(char *s1, char const *s2);
-int							arrncontains(char **haystack, char *needle,
-								int cmplen);
+int							arrnstr(char **haystack, char *needle, int cmplen);
 t_parse_node				*create_parse_node(void);
 bool						isdir(char *dname);
 int							ft_isint(char *str);
 char						**get_path(void);
 char						*find_full_path(char *cmd, char *path[]);
 void						malloc_protection(void *ptr);
-void ft_safelst_add_back(void *content, t_list **list);
+void						ft_safelst_add_back(void *content, t_list **list);
+char						*ft_strchr2(char *str, char c);
+int							ft_envncmp(const char *s1, const char *s2, size_t n);
 
 // Clean up
 void						cleanup(t_data *data);

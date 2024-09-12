@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:58:35 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 17:42:30 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/12 20:29:48 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	**envp_remove(char **envp, char **names)
 	n = 0;
 	while (envp[++i])
 	{
-		if (!arrncontains(names, envp[i], ft_strchr(envp[i], '=') - envp[i]))
+		if (!arrnstr(names, envp[i], ft_strchr2(envp[i], '=') - envp[i] + 1))
 			n++;
 	}
 	new = malloc((n + 1) * sizeof(char *));
@@ -73,7 +73,7 @@ char	**envp_remove(char **envp, char **names)
 	n = 0;
 	while (envp[++i])
 	{
-		if (!arrncontains(names, envp[i], ft_strchr(envp[i], '=') - envp[i]))
+		if (!arrnstr(names, envp[i], ft_strchr2(envp[i], '=') - envp[i] + 1))
 			new[n++] = envp[i];
 	}
 	new[n] = NULL;
@@ -93,13 +93,13 @@ int	envp_set(char ***envp, char *value)
 	i = 0;
 	while ((*envp)[i])
 	{
-		if (ft_strncmp((*envp)[i], value, cmplen) == 0)
+		if (ft_envncmp((*envp)[i], value, cmplen) == 0)
 			break ;
 		i++;
 	}
-	if ((*envp)[i])
+	if ((*envp)[i] && ft_strchr(value, '='))
 		(*envp)[i] = value;
-	else
+	else if (!(*envp)[i])
 	{
 		temp = *envp;
 		if (envp_add(envp, value, i))

@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:07:44 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 17:08:08 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/12 20:30:16 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,11 @@ void	close_fds(int fd_in, int fd_out, int **pipes)
 	}
 }
 
-int	arrncontains(char **haystack, char *needle, int cmplen)
+int	arrnstr(char **haystack, char *needle, int cmplen)
 {
 	while (*haystack)
 	{
-		if (ft_strncmp(*haystack, needle, cmplen) == 0)
+		if (ft_envncmp(*haystack, needle, cmplen) == 0)
 			return (1);
 		haystack++;
 	}
