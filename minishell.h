@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 16:54:15 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:54:42 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ typedef enum e_token_type
 	REDIRECT_IN,
 	DOUBLE_QUOTE,
 	SINGLE_QUOTE,
-	PIPE
+	PIPE,
+	EMPTY
 }							t_token_type;
 
 typedef struct s_token

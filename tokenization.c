@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:16:56 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/12 16:18:00 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/12 17:25:47 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	tokenize(char *cmd, t_list **token_list)
 		if (*cmd == ' ' || *cmd == '\t')
 		{
 			cmd++;
-			if (!*cmd)
+			if (!*cmd && !*token_list)
 				return (1);
 			if (*token_list)
 				((t_token *)ft_lstlast(*token_list)->content)->inword = false;

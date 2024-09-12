@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:15:12 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/12 17:00:02 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:57:26 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	append_token(t_list **token_list, t_token_type type, char *cmd, int len)
 	token->value = ft_substr(cmd, 0, len);
 	malloc_protection(token->value);
 	token->type = type;
-	ft_lstadd_back(token_list, ft_lstnew(token)); // Deal with NULL from ft_lstnew
+	ft_safelst_add_back(token, token_list);
 	return (len);
 }
 
@@ -55,7 +55,7 @@ static void	delete_leading_token(t_list **tokens, t_list **current)
 	t_token	*token;
 
 	token = (t_token *)(*current)->content;
-	if (token->value[0] == '\0')
+	if (token->value[0] == '\0' && token->type == EMPTY)
 	{
 		if (*current == *tokens)
 		{

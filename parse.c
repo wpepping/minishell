@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:07:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 17:08:14 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:54:55 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,8 @@ static void	process_tokens(t_list *tokens, t_data *data)
 		if ((token->type == DOUBLE_QUOTE || token->type == WORD)
 			&& ft_strchr(token->value, '$'))
 			expand_env(token, ft_strchr(token->value, '$'), *data);
+		if(token->type == WORD && token->value[0] != '\0')
+			token->type = EMPTY;
 		if (token->type == DOUBLE_QUOTE || token->type == SINGLE_QUOTE)
 			token->type = WORD;
 		tokens = tokens->next;
