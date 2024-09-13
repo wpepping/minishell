@@ -27,6 +27,8 @@ int	handle_heredoc(char *delimiter, t_data data, t_token *token)
 	token->value = filename;
 	token->type = HEREDOC;
 	return_val = fork_heredoc(filename, delimiter, data);
+	if (access(filename, F_OK) == 0 && return_val == 130)
+		unlink(filename);
 	free(delimiter);
 	return (return_val);
 }
@@ -48,11 +50,13 @@ static int	process_line(char *line, char *delimiter, t_data data, int fd)
 		expand_env(token, ft_strchr(line, '$'), data);
 	write(fd, token->value, ft_strlen(token->value));
 	write(fd, "\n", 1);
-	if(token->value == line)
-		free(token->value);
+	free(token->value);
 	free(token);
 	return (1);
 }
+
+
+
 
 static int	read_heredoc(char *filename, char *delimiter, t_data data)
 {
