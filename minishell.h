@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/13 15:32:09 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/13 17:03:27 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,7 @@ int							arrnstr(char **haystack, char *needle, int cmplen);
 t_parse_node				*create_parse_node(void);
 bool						isdir(char *dname);
 int							ft_isint(char *str);
-char						**get_path(void);
+char						**get_path(t_data *data);
 char						*find_full_path(char *cmd, char *path[]);
 void						malloc_protection(void *ptr);
 void						ft_safelst_add_back(void *content, t_list **list);

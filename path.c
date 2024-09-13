@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 19:37:20 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 17:44:53 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/13 17:02:53 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,11 @@ static char	*ft_pathjoin(char const *s1, char const *s2)
 	return (result);
 }
 
-char	**get_path(void)
+char	**get_path(t_data *data)
 {
 	char	*path_var;
 
-	path_var = getenv("PATH");
+	path_var = envp_get(data->envp, "PATH");
 	if (path_var == NULL)
 		return (ft_split("", ':'));
 	return (ft_split(path_var, ':'));

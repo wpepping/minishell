@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:29:14 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/13 11:44:14 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/13 17:06:18 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,26 +56,26 @@ static int	export_print_line(char *str)
 static int	export_list(t_data *d)
 {
 	int		i;
-	char	*str;
+	char	*st;
 	char	*prev;
 
 	prev = NULL;
 	while (1)
 	{
 		i = -1;
-		str = NULL;
+		st = NULL;
 		while (d->envp[++i])
-			if ((!prev || strncmp(d->envp[i], prev, ft_strlen(prev) + 1) > 0)
-				&& (!str || strncmp(d->envp[i], str, ft_strlen(str) + 1) < 0))
-				str = d->envp[i];
-		if (!str)
+			if ((!prev || ft_strncmp(d->envp[i], prev, ft_strlen(prev) + 1) > 0)
+				&& (!st || ft_strncmp(d->envp[i], st, ft_strlen(st) + 1) < 0))
+				st = d->envp[i];
+		if (!st)
 			break ;
-		if (export_print_line(str) == -1)
+		if (export_print_line(st) == -1)
 		{
 			ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
 			return (1);
 		}
-		prev = str;
+		prev = st;
 	}
 	return (0);
 }

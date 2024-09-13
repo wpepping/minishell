@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:42:40 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/13 15:24:36 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/13 17:03:16 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ bool	check_cmd(t_data *data, t_exec_node *node)
 	node->error_code = 139;
 	if (!node->parse->argv[0] || !node->parse->argv[0][0])
 		return (err_handl(NULL, NULL, data));
-	path = get_path();
+	path = get_path(data);
 	if (path == NULL)
 		err_handl(ERR_OUT_OF_MEMORY, NULL, data);
 	node->fullcmd = find_full_path(node->parse->argv[0], path);
