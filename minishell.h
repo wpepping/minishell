@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 18:54:42 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/13 17:03:27 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,15 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# define ERR_COMMAND_NOT_FOUND "minishell: command not found: "
+# define ERR_COMMAND_NOT_FOUND "command not found"
 # define ERR_OUT_OF_MEMORY "minishell: out of memory error"
-# define ERR_M_NO_SUCH_FILE "minishell: no such file or directory: "
-# define ERR_NO_SUCH_FILE ": no such file or directory: "
-# define ERR_M_PERMISSION_DENIED "minishell: permission denied: "
-# define ERR_PERMISSION_DENIED ": permission denied: "
-# define ERR_IS_DIR "minishell: Is a directory: "
-# define ERR_CANNOT_EXEC " cannot execute binary file: Exec format error"
+# define ERR_NO_SUCH_FILE "no such file or directory"
+# define ERR_PERMISSION_DENIED "permission denied"
+# define ERR_IS_DIR "Is a directory"
+# define ERR_CANNOT_EXEC "cannot execute binary file: Exec format error"
 # define ERR_EXIT_TOO_MANY_ARG "minishell: exit: too many arguments"
 # define PROMPT_END "$ "
+# define DECLARE_X "declare -x "
 
 typedef enum e_token_type
 {
@@ -196,15 +195,16 @@ void						clean_exit(t_data *d, t_exec_node *enode,
 void						close_fds(int fd_in, int fd_out, int **pipes);
 void						ft_puterr(char *str1, char *str2, char *str3);
 char						*ft_strjoin2(char *s1, char const *s2);
-int							arrncontains(char **haystack, char *needle,
-								int cmplen);
+int							arrnstr(char **haystack, char *needle, int cmplen);
 t_parse_node				*create_parse_node(void);
 bool						isdir(char *dname);
 int							ft_isint(char *str);
-char						**get_path(void);
+char						**get_path(t_data *data);
 char						*find_full_path(char *cmd, char *path[]);
 void						malloc_protection(void *ptr);
-void ft_safelst_add_back(void *content, t_list **list);
+void						ft_safelst_add_back(void *content, t_list **list);
+char						*ft_strchr2(char *str, char c);
+int							ft_envncmp(const char *s1, const char *s2, size_t n);
 
 // Clean up
 void						cleanup(t_data *data);

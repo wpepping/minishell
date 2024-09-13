@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 19:01:08 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/13 15:13:48 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ int	main(int argc, char **argv, char **envp)
 			data.exit = 1;
 		else if (*cmd != '\0')
 			cmd_handl(&data, cmd, sa_int);
+		else
+			free(cmd);
 	}
 	cleanup(&data);
 	return (data.last_exit_code);

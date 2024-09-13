@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 17:38:27 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/13 14:21:38 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	ft_echo(t_data *data, t_exec_node *node)
 	int	arg_no_newln;
 
 	(void)data;
-	if (node->parse->argv[1] && ft_strncmp(node->parse->argv[1], "-n", 3) == 0)
+	if (node->parse->argv[1] && ft_strncmp(node->parse->argv[1], "-n", 2) == 0)
 		arg_no_newln = 1;
 	else
 		arg_no_newln = 0;
