@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 21:20:00 by wouter            #+#    #+#             */
-/*   Updated: 2024/09/11 20:11:18 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/13 15:31:27 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	runcmd(t_data *data, t_exec_node *node)
 	free_array((void **)node->pipes);
 	cleanup_cmd(NULL, node->parse_nodes);
 	execve(node->fullcmd, argv, data->envp);
-	ft_puterr(argv[0], ERR_CANNOT_EXEC, NULL);
+	ft_puterr(argv[0], ": ", ERR_CANNOT_EXEC);
 	free(node->fullcmd);
 	clean_exit(data, NULL, NULL, 1);
 }

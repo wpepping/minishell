@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/13 11:26:27 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/13 15:32:09 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,12 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# define ERR_COMMAND_NOT_FOUND "minishell: command not found: "
+# define ERR_COMMAND_NOT_FOUND "command not found"
 # define ERR_OUT_OF_MEMORY "minishell: out of memory error"
-# define ERR_M_NO_SUCH_FILE "minishell: no such file or directory: "
-# define ERR_NO_SUCH_FILE ": no such file or directory: "
-# define ERR_M_PERMISSION_DENIED "minishell: permission denied: "
-# define ERR_PERMISSION_DENIED ": permission denied: "
-# define ERR_IS_DIR "minishell: Is a directory: "
-# define ERR_CANNOT_EXEC " cannot execute binary file: Exec format error"
+# define ERR_NO_SUCH_FILE "no such file or directory"
+# define ERR_PERMISSION_DENIED "permission denied"
+# define ERR_IS_DIR "Is a directory"
+# define ERR_CANNOT_EXEC "cannot execute binary file: Exec format error"
 # define ERR_EXIT_TOO_MANY_ARG "minishell: exit: too many arguments"
 # define PROMPT_END "$ "
 # define DECLARE_X "declare -x "

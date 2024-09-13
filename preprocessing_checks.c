@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:42:40 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 17:45:25 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/13 15:24:36 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,13 @@ static bool	err_handl(char *msg, char *fname, t_data *data)
 
 	if (!msg)
 		return (false);
-	errmsg = ft_strdup(msg);
+	errmsg = ft_strdup("minishell: ");
 	if (fname != NULL)
+	{
 		errmsg = ft_strjoin2(errmsg, fname);
+		errmsg = ft_strjoin2(errmsg, ": ");
+	}
+	errmsg = ft_strjoin2(errmsg, msg);
 	node = ft_lstnew(errmsg);
 	if (node)
 		ft_lstadd_back(&data->error_list, node);
@@ -53,12 +57,12 @@ bool	check_cmd(t_data *data, t_exec_node *node)
 	if (node->fullcmd == NULL)
 		return (err_handl(ERR_COMMAND_NOT_FOUND, node->parse->argv[0], data));
 	if (access(node->fullcmd, F_OK) != 0)
-		return (err_handl(ERR_M_NO_SUCH_FILE, node->parse->argv[0], data));
+		return (err_handl(ERR_NO_SUCH_FILE, node->parse->argv[0], data));
 	node->error_code = 126;
 	if (isdir(node->fullcmd))
 		return (err_handl(ERR_IS_DIR, node->parse->argv[0], data));
 	if (access(node->fullcmd, X_OK) != 0)
-		return (err_handl(ERR_M_PERMISSION_DENIED, node->parse->argv[0], data));
+		return (err_handl(ERR_PERMISSION_DENIED, node->parse->argv[0], data));
 	node->error_code = 0;
 	return (true);
 }
@@ -76,9 +80,9 @@ bool	check_fds(t_data *data, t_list *files, t_exec_node *enode)
 		fd = open(file->value, oflag, 0644);
 		if ((fd == -1) && (file->type == REDIRECT_IN || file->type == HEREDOC)
 			&& access(file->value, F_OK) != 0)
-			return (err_handl(ERR_M_NO_SUCH_FILE, file->value, data));
+			return (err_handl(ERR_NO_SUCH_FILE, file->value, data));
 		if (fd == -1)
-			return (err_handl(ERR_M_PERMISSION_DENIED, file->value, data));
+			return (err_handl(ERR_PERMISSION_DENIED, file->value, data));
 		if ((file->type == REDIRECT_IN || file->type == HEREDOC))
 			enode->infile = file;
 		else
