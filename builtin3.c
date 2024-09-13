@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:29:14 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 20:52:46 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/13 11:44:14 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,30 @@ static bool	is_valid_varname(char *name)
 	return (1);
 }
 
-static int	export_list(t_data *data)
+static int	export_print_line(char *str)
+{
+	char	*pos;
+	char	*varname;
+
+	ft_putstr_fd(DECLARE_X, STDOUT_FILENO);
+	pos = ft_strchr(str, '=');
+	if (pos)
+	{
+		varname = ft_substr(str, 0, pos - str + 1);
+		if (!varname)
+			return (-1);
+		ft_putstr_fd(varname, STDOUT_FILENO);
+		ft_putstr_fd("\"", STDOUT_FILENO);
+		ft_putstr_fd(pos + 1, STDOUT_FILENO);
+		ft_putendl_fd("\"", STDOUT_FILENO);
+		free(varname);
+	}
+	else
+		ft_putendl_fd(str, STDOUT_FILENO);
+	return (0);
+}
+
+static int	export_list(t_data *d)
 {
 	int		i;
 	char	*str;
@@ -39,18 +62,19 @@ static int	export_list(t_data *data)
 	prev = NULL;
 	while (1)
 	{
-		i = 0;
+		i = -1;
 		str = NULL;
-		while (data->envp[i])
-		{
-			if ((!prev || strncmp(data->envp[i], prev, ft_strlen(prev) + 1) > 0)
-				&& (!str || strncmp(data->envp[i], str, ft_strlen(str) + 1) < 0))
-				str = data->envp[i];
-			i++;
-		}
+		while (d->envp[++i])
+			if ((!prev || strncmp(d->envp[i], prev, ft_strlen(prev) + 1) > 0)
+				&& (!str || strncmp(d->envp[i], str, ft_strlen(str) + 1) < 0))
+				str = d->envp[i];
 		if (!str)
 			break ;
-		ft_putendl_fd(str, STDOUT_FILENO);
+		if (export_print_line(str) == -1)
+		{
+			ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
+			return (1);
+		}
 		prev = str;
 	}
 	return (0);

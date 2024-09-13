@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 20:31:52 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/13 11:26:27 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 # define ERR_CANNOT_EXEC " cannot execute binary file: Exec format error"
 # define ERR_EXIT_TOO_MANY_ARG "minishell: exit: too many arguments"
 # define PROMPT_END "$ "
+# define DECLARE_X "declare -x "
 
 typedef enum e_token_type
 {
