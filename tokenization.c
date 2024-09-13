@@ -34,7 +34,7 @@ int	tokenize(char *cmd, t_list **token_list)
 			|| ft_strncmp(cmd, "||", 2) == 0)
 		{
 			if (handle_quotes(&cmd, token_list) == -1)
-				return (1);
+				return (2);
 		}
 		else if (ft_strncmp(cmd, ">", 1) == 0 || ft_strncmp(cmd, "<", 1) == 0
 			|| ft_strncmp(cmd, "|", 1) == 0)

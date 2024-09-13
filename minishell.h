@@ -48,8 +48,7 @@ typedef enum e_token_type
 	REDIRECT_IN,
 	DOUBLE_QUOTE,
 	SINGLE_QUOTE,
-	PIPE,
-	EMPTY
+	PIPE
 }							t_token_type;
 
 typedef struct s_token
