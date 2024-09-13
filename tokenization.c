@@ -50,7 +50,7 @@ static int	add_quote(char *cmd, char quote, t_list **token_list)
 	int	i;
 
 	i = 1;
-	if (strchr(cmd + 1, quote) == NULL)
+	if (ft_strchr(cmd + 1, quote) == NULL)
 	{
 		ft_puterr("no matching quote", NULL, NULL);
 		return (-1);

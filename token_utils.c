@@ -55,7 +55,7 @@ static void	delete_leading_token(t_list **tokens, t_list **current)
 	t_token	*token;
 
 	token = (t_token *)(*current)->content;
-	if (token->value[0] == '\0' && token->type == EMPTY)
+	if (token->value[0] == '\0')
 	{
 		if (*current == *tokens)
 		{

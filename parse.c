@@ -122,8 +122,6 @@ static void	process_tokens(t_list *tokens, t_data *data)
 		if ((token->type == DOUBLE_QUOTE || token->type == WORD)
 			&& ft_strchr(token->value, '$'))
 			expand_env(token, ft_strchr(token->value, '$'), *data);
-		if(token->type == WORD && token->value[0] != '\0')
-			token->type = EMPTY;
 		if (token->type == DOUBLE_QUOTE || token->type == SINGLE_QUOTE)
 			token->type = WORD;
 		tokens = tokens->next;
