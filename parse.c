@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:07:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 17:08:14 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:54:55 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	parse(t_data *data, char *cmd)
 				|| ((t_token *)(tokens)->content)->type == PIPE))
 		{
 			ft_puterr(NULL, "syntax error near unexpected token '|'", NULL);
-			return_value = 1;
+			return_value = 2;
 		}
 		else
 		{
@@ -60,8 +60,7 @@ static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
 		token = (t_token *)(*tokens)->content;
 		if (token->type == WORD)
 		{
-			if (ft_strncmp(token->value, "", 1) != 0)
-				argc++;
+			argc++;
 			*tokens = (*tokens)->next;
 		}
 		else if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN
@@ -70,6 +69,8 @@ static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
 			if (!is_valid_filename((*tokens)->next))
 				return (1);
 			*tokens = handle_redirects(*tokens, node, data);
+			if (node->heredoc_fail == true)
+				return (130);
 		}
 	}
 	handle_args(head, node, argc);
@@ -92,12 +93,14 @@ static int	parse_pipe(t_list **tokens, t_data *data)
 static int	parse_command(t_list *tokens, t_data *data)
 {
 	t_parse_node	*node;
+	int				return_value;
 
 	if (tokens)
 	{
 		node = create_parse_node();
-		if (parse_args_and_redirects(&tokens, node, *data))
-			return (1);
+		return_value = parse_args_and_redirects(&tokens, node, *data);
+		if (return_value)
+			return (return_value);
 		if (node->argv[0] != NULL && get_builtin_index(node->argv[0]) != -1)
 			node->is_builtin = true;
 		if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)

@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:16:56 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/12 16:18:00 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/12 17:25:47 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	tokenize(char *cmd, t_list **token_list)
 		if (*cmd == ' ' || *cmd == '\t')
 		{
 			cmd++;
-			if (!*cmd)
+			if (!*cmd && !*token_list)
 				return (1);
 			if (*token_list)
 				((t_token *)ft_lstlast(*token_list)->content)->inword = false;
@@ -34,7 +34,7 @@ int	tokenize(char *cmd, t_list **token_list)
 			|| ft_strncmp(cmd, "||", 2) == 0)
 		{
 			if (handle_quotes(&cmd, token_list) == -1)
-				return (1);
+				return (2);
 		}
 		else if (ft_strncmp(cmd, ">", 1) == 0 || ft_strncmp(cmd, "<", 1) == 0
 			|| ft_strncmp(cmd, "|", 1) == 0)
@@ -50,7 +50,7 @@ static int	add_quote(char *cmd, char quote, t_list **token_list)
 	int	i;
 
 	i = 1;
-	if (strchr(cmd + 1, quote) == NULL)
+	if (ft_strchr(cmd + 1, quote) == NULL)
 	{
 		ft_puterr("no matching quote", NULL, NULL);
 		return (-1);

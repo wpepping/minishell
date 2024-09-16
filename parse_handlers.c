@@ -59,7 +59,7 @@ void	handle_args(t_list *tokens, t_parse_node *node, int argc)
 		}
 		if (token->type == WORD)
 		{
-			node->argv[i] = strdup(token->value);
+			node->argv[i] = ft_strdup(token->value);
 			malloc_protection(node->argv[i]);
 			i++;
 		}
