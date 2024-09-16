@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/16 17:43:35 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/16 19:31:48 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@
 
 # define ERR_COMMAND_NOT_FOUND "command not found"
 # define ERR_OUT_OF_MEMORY "minishell: out of memory error"
-# define ERR_NO_SUCH_FILE "no such file or directory"
-# define ERR_PERMISSION_DENIED "permission denied"
+# define ERR_NO_SUCH_FILE "No such file or directory"
+# define ERR_PERMISSION_DENIED "Permission denied"
 # define ERR_IS_DIR "Is a directory"
 # define ERR_CANNOT_EXEC "cannot execute binary file: Exec format error"
 # define ERR_EXIT_TOO_MANY_ARG "minishell: exit: too many arguments"
