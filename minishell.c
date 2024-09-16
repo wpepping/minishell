@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/13 15:13:48 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/16 17:15:26 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,14 @@ void	init(t_data *data, char **envp)
 	getcwd(data->cwd, PATH_MAX);
 }
 
-static void	cmd_handl(t_data *data, char *cmd, t_sigact sa_int)
+static void	cmd_handl(t_data *data, char *cmd,
+	t_sigact *sa_int, t_sigact *sa_quit)
 {
 	add_history(cmd);
-	sa_int.sa_handler = process_running_sigint_handler;
-	sigaction(SIGINT, &sa_int, NULL);
+	switch_signal_handlers(sa_int, sa_quit, true);
 	if (!parse(data, cmd) && data->node_list)
 		execution(data, data->node_list);
-	sa_int.sa_handler = default_sigint_handler;
-	sigaction(SIGINT, &sa_int, NULL);
+	switch_signal_handlers(sa_int, sa_quit, false);
 	clean_heredocs(data->node_list);
 	cleanup_cmd(cmd, data->node_list);
 	data->node_list = NULL;
@@ -64,7 +63,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!cmd)
 			data.exit = 1;
 		else if (*cmd != '\0')
-			cmd_handl(&data, cmd, sa_int);
+			cmd_handl(&data, cmd, &sa_int, &sa_quit);
 		else
 			free(cmd);
 	}

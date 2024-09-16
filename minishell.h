@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/13 17:03:27 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/16 17:43:35 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,8 +187,11 @@ char						*envp_get(char **envp, char *name);
 void						default_sigint_handler(int signum);
 void						process_running_sigint_handler(int signum);
 void						sigquit_handler(int signum);
+void						process_running_sigquit_handler(int signum);
 void						init_signal_handlers(t_sigaction *sa_int,
 								t_sigaction *sa_quit);
+void						switch_signal_handlers(t_sigact *sa_int,
+								t_sigact *sa_quit, bool pr);
 // Utils
 void						clean_exit(t_data *d, t_exec_node *enode,
 								t_list *pnodes, int status);
