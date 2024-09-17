@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/13 17:03:27 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:45:55 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,5 +213,6 @@ void						cleanup_execution(t_execution *exec);
 void						cleanup_run_one(void *node);
 void						clean_heredocs(t_list *node);
 void						free_array(void **arr);
+void						free_parse_node(void *node);
 
 #endif

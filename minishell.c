@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 17:11:46 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/13 15:13:48 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:14:24 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ static void	cmd_handl(t_data *data, char *cmd, t_sigact sa_int)
 	sigaction(SIGINT, &sa_int, NULL);
 	if (!parse(data, cmd) && data->node_list)
 		execution(data, data->node_list);
+	else if(data->node_list)
+		free_parse_node(data->node_list);
 	sa_int.sa_handler = default_sigint_handler;
 	sigaction(SIGINT, &sa_int, NULL);
 	clean_heredocs(data->node_list);

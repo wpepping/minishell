@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:07:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 18:54:55 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:47:17 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,10 @@ static int	parse_command(t_list *tokens, t_data *data)
 		node = create_parse_node();
 		return_value = parse_args_and_redirects(&tokens, node, *data);
 		if (return_value)
+		{
+			free_parse_node(node);
 			return (return_value);
+		}
 		if (node->argv[0] != NULL && get_builtin_index(node->argv[0]) != -1)
 			node->is_builtin = true;
 		if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)

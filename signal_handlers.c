@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 18:35:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 15:11:13 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:04:09 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,6 @@ void	init_signal_handlers(t_sigaction *sa_int, t_sigaction *sa_quit)
 	sigemptyset(&sa_quit->sa_mask);
 	sigaddset(&sa_quit->sa_mask, SIGQUIT);
 	sa_quit->sa_handler = sigquit_handler;
+	sa_quit->sa_flags = 0;
 	sigaction(SIGQUIT, sa_quit, NULL);
 }

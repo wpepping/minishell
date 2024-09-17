@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:40:54 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/12 17:40:48 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 12:54:41 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ bool	is_valid_filename(t_list *tokens)
 
 	if (!tokens || !tokens->content)
 	{
-		ft_puterr(" syntax error near unexpected token `newline'", NULL, NULL);
+		ft_puterr("syntax error near unexpected token `newline'", NULL, NULL);
 		return (false);
 	}
 	token = (t_token *)tokens->content;
