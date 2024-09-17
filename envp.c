@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:58:35 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 15:55:33 by wpepping         ###   ########.fr       */
+/*   Created: 2024/09/17 16:01:47 by wpepping          #+#    #+#             */
+/*   Updated: 2024/09/17 16:01:49 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,14 @@ char	**envp_create(char **envp)
 	while (envp[i])
 	{
 		result[i] = ft_strdup(envp[i]);
+<<<<<<< HEAD
 		if (result[i] == NULL)
 		{
 			free_array((void *) result);
 			return (NULL);
 		}
+=======
+>>>>>>> da4fef477134ec401d81fcdad6c7e0420de309b6
 		i++;
 	}
 	result[i] = NULL;

@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 18:29:04 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/09 18:45:34 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:44:46 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	free_exec_node(void *node)
 	free(node);
 }
 
-static void	free_parse_node(void *node)
+void	free_parse_node(void *node)
 {
 	t_parse_node	*pnode;
 

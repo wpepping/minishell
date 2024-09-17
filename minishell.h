@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/16 19:31:48 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/17 14:46:41 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,7 +207,8 @@ char						*find_full_path(char *cmd, char *path[]);
 void						malloc_protection(void *ptr);
 void						ft_safelst_add_back(void *content, t_list **list);
 char						*ft_strchr2(char *str, char c);
-int							ft_envncmp(const char *s1, const char *s2, size_t n);
+int							ft_envncmp(const char *s1, const char *s2,
+								size_t n);
 
 // Clean up
 void						cleanup(t_data *data);
@@ -216,5 +217,6 @@ void						cleanup_execution(t_execution *exec);
 void						cleanup_run_one(void *node);
 void						clean_heredocs(t_list *node);
 void						free_array(void **arr);
+void						free_parse_node(void *node);
 
 #endif

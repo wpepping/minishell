@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:15:12 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/12 18:57:26 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 14:18:51 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,9 @@ static void	free_token(void *content)
 	t_token	*token;
 
 	token = (t_token *)content;
-	if (token)
-	{
+	if (token->value)
 		free(token->value);
-		free(token);
-	}
+	free(token);
 }
 
 void	clear_tokens_list(t_list **tokens)

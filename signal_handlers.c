@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handlers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 18:35:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/16 17:44:16 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:59:50 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	init_signal_handlers(t_sigaction *sa_int, t_sigaction *sa_quit)
 	sigaction(SIGINT, sa_int, NULL);
 	sigemptyset(&sa_quit->sa_mask);
 	sigaddset(&sa_quit->sa_mask, SIGQUIT);
+	sa_quit->sa_flags = 0;
 	sa_quit->sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, sa_quit, NULL);
 }

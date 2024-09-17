@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:40:54 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/12 17:40:48 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 14:35:02 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int	get_builtin_index(char *token)
 	i = 0;
 	while (i < 7)
 	{
-		if (ft_strncmp(token, builtin_str[i], ft_strlen(builtin_str[i]) + 1) == 0)
+		if (ft_strncmp(token, builtin_str[i], ft_strlen(builtin_str[i])
+				+ 1) == 0)
 		{
 			return (i);
 		}
@@ -36,7 +37,7 @@ bool	is_valid_filename(t_list *tokens)
 
 	if (!tokens || !tokens->content)
 	{
-		ft_puterr(" syntax error near unexpected token `newline'", NULL, NULL);
+		ft_puterr("syntax error near unexpected token `newline'", NULL, NULL);
 		return (false);
 	}
 	token = (t_token *)tokens->content;

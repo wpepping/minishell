@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:07:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 18:54:55 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 15:03:56 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ int	parse(t_data *data, char *cmd)
 	return_value = tokenize(cmd, &tokens);
 	if (!return_value)
 	{
-		if ((return_value == 0 && tokens != NULL)
-			&& (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
+		if ((tokens) && (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
 				|| ((t_token *)(tokens)->content)->type == PIPE))
 		{
 			ft_puterr(NULL, "syntax error near unexpected token '|'", NULL);
@@ -59,10 +58,7 @@ static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
 	{
 		token = (t_token *)(*tokens)->content;
 		if (token->type == WORD)
-		{
 			argc++;
-			*tokens = (*tokens)->next;
-		}
 		else if (token->type == REDIRECT_OUT || token->type == REDIRECT_IN
 			|| token->type == APPEND || token->type == HEREDOC)
 		{
@@ -71,7 +67,9 @@ static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
 			*tokens = handle_redirects(*tokens, node, data);
 			if (node->heredoc_fail == true)
 				return (130);
+			continue ;
 		}
+		*tokens = (*tokens)->next;
 	}
 	handle_args(head, node, argc);
 	return (0);
@@ -100,12 +98,15 @@ static int	parse_command(t_list *tokens, t_data *data)
 		node = create_parse_node();
 		return_value = parse_args_and_redirects(&tokens, node, *data);
 		if (return_value)
+		{
+			free_parse_node(node);
 			return (return_value);
+		}
 		if (node->argv[0] != NULL && get_builtin_index(node->argv[0]) != -1)
 			node->is_builtin = true;
 		if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
 			node->is_last = true;
-		ft_safelst_add_back(node ,&data->node_list);
+		ft_safelst_add_back(node, &data->node_list);
 		if (tokens)
 			parse_pipe(&tokens, data);
 	}
@@ -115,13 +116,17 @@ static int	parse_command(t_list *tokens, t_data *data)
 static void	process_tokens(t_list *tokens, t_data *data)
 {
 	t_token	*token;
+	char	*temp;
 
 	while (tokens)
 	{
 		token = (t_token *)tokens->content;
 		if (token->type == DOUBLE_QUOTE || token->type == SINGLE_QUOTE)
-			token->value = ft_substr(token->value, 1, ft_strlen(token->value)
-					- 2);
+		{
+			temp = ft_substr(token->value, 1, ft_strlen(token->value) - 2);
+			free(token->value);
+			token->value = temp;
+		}
 		if ((token->type == DOUBLE_QUOTE || token->type == WORD)
 			&& ft_strchr(token->value, '$'))
 			expand_env(token, ft_strchr(token->value, '$'), *data);
