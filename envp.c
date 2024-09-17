@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:58:35 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 20:29:48 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/17 15:55:33 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,12 @@ char	**envp_create(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		result[i] = ft_strdup(envp[i]); // Deal with NULL
+		result[i] = ft_strdup(envp[i]);
+		if (result[i] == NULL)
+		{
+			free_array((void *) result);
+			return (NULL);
+		}
 		i++;
 	}
 	result[i] = NULL;
