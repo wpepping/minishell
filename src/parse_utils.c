@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:40:54 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/17 17:57:23 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:56:14 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,13 @@ int	get_tempfile_name(char *tempfile)
 {
 	int	i;
 
-	ft_memcpy(tempfile, "tmphered000", 12);
+	ft_memcpy(tempfile, ".tmphered000", 13);
 	i = 1;
 	while (i < 1000)
 	{
-		tempfile[10] = '0' + (i % 10);
-		tempfile[9] = '0' + ((i / 10) % 10);
-		tempfile[8] = '0' + (i / 100);
+		tempfile[11] = '0' + (i % 10);
+		tempfile[10] = '0' + ((i / 10) % 10);
+		tempfile[9] = '0' + (i / 100);
 		if (access(tempfile, F_OK) != 0)
 			return (0);
 		i++;

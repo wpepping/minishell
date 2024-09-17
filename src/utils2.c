@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:14:03 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 17:28:16 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:54:09 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ bool	ft_islong(char *str)
 	char			*p;
 	bool			negative;
 
-	while (*str == ' ' || *str == '\f' || *str == '\n'
-		|| *str == '\r' || *str == '\t' || *str == '\v')
+	negative = false;
+	while (*str == ' ' || (*str >= 9 && *str <= 13))
 		str++;
 	if (*str == '-')
 		negative = true;

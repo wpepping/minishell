@@ -1,3 +1,4 @@
+NAME := minishell
 CC := cc
 CFLAGS := -Wall -Wextra -Werror -g
 LIBS = -Llibft -lreadline -lft
@@ -13,8 +14,6 @@ OBJS := $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
-
-NAME := minishell
 
 $(NAME): $(OBJS)
 	$(MAKE) -C libft

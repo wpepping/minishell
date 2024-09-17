@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:01:47 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 16:20:18 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 19:14:46 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,8 @@ char	**envp_remove(char **envp, char **names)
 	i = -1;
 	n = 0;
 	while (envp[++i])
-	{
 		if (!arrnstr(names, envp[i], ft_strchr2(envp[i], '=') - envp[i] + 1))
 			n++;
-	}
 	new = malloc((n + 1) * sizeof(char *));
 	if (!new)
 		return (NULL);
@@ -78,7 +76,9 @@ char	**envp_remove(char **envp, char **names)
 	n = 0;
 	while (envp[++i])
 	{
-		if (!arrnstr(names, envp[i], ft_strchr2(envp[i], '=') - envp[i] + 1))
+		if (arrnstr(names, envp[i], ft_strchr2(envp[i], '=') - envp[i] + 1))
+			free(envp[i]);
+		else
 			new[n++] = envp[i];
 	}
 	new[n] = NULL;
@@ -97,13 +97,13 @@ int	envp_set(char ***envp, char *value)
 	cmplen++;
 	i = 0;
 	while ((*envp)[i])
-	{
-		if (ft_envncmp((*envp)[i], value, cmplen) == 0)
+		if (ft_envncmp((*envp)[i++], value, cmplen) == 0)
 			break ;
-		i++;
-	}
 	if ((*envp)[i] && ft_strchr(value, '='))
+	{
+		free((*envp)[i]);
 		(*envp)[i] = value;
+	}
 	else if (!(*envp)[i])
 	{
 		temp = *envp;
