@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 18:35:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 13:04:09 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:59:50 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	process_running_sigint_handler(int signum)
 
 void	sigquit_handler(int signum)
 {
+	ft_putendl_fd("Quit", STDOUT_FILENO);
 	(void)signum;
 }
 
@@ -42,7 +43,25 @@ void	init_signal_handlers(t_sigaction *sa_int, t_sigaction *sa_quit)
 	sigaction(SIGINT, sa_int, NULL);
 	sigemptyset(&sa_quit->sa_mask);
 	sigaddset(&sa_quit->sa_mask, SIGQUIT);
-	sa_quit->sa_handler = sigquit_handler;
 	sa_quit->sa_flags = 0;
+	sa_quit->sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, sa_quit, NULL);
+}
+
+void	switch_signal_handlers(t_sigact *sa_int, t_sigact *sa_quit, bool pr)
+{
+	if (pr)
+	{
+		sa_int->sa_handler = process_running_sigint_handler;
+		sigaction(SIGINT, sa_int, NULL);
+		sa_quit->sa_handler = sigquit_handler;
+		sigaction(SIGQUIT, sa_quit, NULL);
+	}
+	else
+	{
+		sa_int->sa_handler = default_sigint_handler;
+		sigaction(SIGINT, sa_int, NULL);
+		sa_quit->sa_handler = SIG_IGN;
+		sigaction(SIGQUIT, sa_quit, NULL);
+	}
 }

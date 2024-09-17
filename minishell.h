@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 13:45:55 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:59:43 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@
 
 # define ERR_COMMAND_NOT_FOUND "command not found"
 # define ERR_OUT_OF_MEMORY "minishell: out of memory error"
-# define ERR_NO_SUCH_FILE "no such file or directory"
-# define ERR_PERMISSION_DENIED "permission denied"
+# define ERR_NO_SUCH_FILE "No such file or directory"
+# define ERR_PERMISSION_DENIED "Permission denied"
 # define ERR_IS_DIR "Is a directory"
 # define ERR_CANNOT_EXEC "cannot execute binary file: Exec format error"
 # define ERR_EXIT_TOO_MANY_ARG "minishell: exit: too many arguments"
@@ -187,8 +187,11 @@ char						*envp_get(char **envp, char *name);
 void						default_sigint_handler(int signum);
 void						process_running_sigint_handler(int signum);
 void						sigquit_handler(int signum);
+void						process_running_sigquit_handler(int signum);
 void						init_signal_handlers(t_sigaction *sa_int,
 								t_sigaction *sa_quit);
+void						switch_signal_handlers(t_sigact *sa_int,
+								t_sigact *sa_quit, bool pr);
 // Utils
 void						clean_exit(t_data *d, t_exec_node *enode,
 								t_list *pnodes, int status);

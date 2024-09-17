@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/13 14:21:38 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/16 19:34:30 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,12 @@ static bool	ft_cd_check_errors(int errnr, char *dir)
 	if (errnr == EACCES)
 		ft_puterr("cd: ", dir, ERR_PERMISSION_DENIED);
 	else if (errnr)
-		ft_puterr("cd: ", dir, ERR_NO_SUCH_FILE);
+	{
+		ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
+		ft_putstr_fd(dir, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putendl_fd(ERR_NO_SUCH_FILE, STDERR_FILENO);
+	}
 	else
 		return (0);
 	return (1);
