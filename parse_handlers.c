@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_handlers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:12:12 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/13 17:04:26 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/17 15:04:18 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

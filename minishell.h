@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 13:59:43 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 14:46:41 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,7 +207,8 @@ char						*find_full_path(char *cmd, char *path[]);
 void						malloc_protection(void *ptr);
 void						ft_safelst_add_back(void *content, t_list **list);
 char						*ft_strchr2(char *str, char c);
-int							ft_envncmp(const char *s1, const char *s2, size_t n);
+int							ft_envncmp(const char *s1, const char *s2,
+								size_t n);
 
 // Clean up
 void						cleanup(t_data *data);

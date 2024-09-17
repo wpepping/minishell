@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:58:35 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 20:29:48 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/17 14:37:12 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ char	**envp_create(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		result[i] = ft_strdup(envp[i]); // Deal with NULL
+		result[i] = ft_strdup(envp[i]);
+		malloc_protection(result[i]);
 		i++;
 	}
 	result[i] = NULL;

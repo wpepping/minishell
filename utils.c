@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:07:44 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 20:30:16 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/17 14:35:50 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ t_parse_node	*create_parse_node(void)
 	return (node);
 }
 
-void ft_safelst_add_back(void *content, t_list **list)
+void	ft_safelst_add_back(void *content, t_list **list)
 {
 	t_list	*new;
 

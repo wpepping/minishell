@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:12:04 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/12 16:13:51 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 14:35:27 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,6 @@ static int	process_line(char *line, char *delimiter, t_data data, int fd)
 	free(token);
 	return (1);
 }
-
-
-
 
 static int	read_heredoc(char *filename, char *delimiter, t_data data)
 {
