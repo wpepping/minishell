@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 19:36:57 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 20:29:40 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/17 17:13:31 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 char	*ft_strchr2(char *str, char c)
 {
@@ -38,4 +38,20 @@ int	ft_envncmp(const char *s1, const char *s2, size_t n)
 	if ((s1[i] == '\0' && s2[i] == '=') || (s1[i] == '=' && s2[i] == '\0'))
 		return (0);
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+bool	is_valid_exit_code(char *nptr)
+{
+	char	*temp;
+
+	temp = nptr;
+	while (*nptr == ' ' || (*nptr >= 9 && *nptr <= 13))
+		nptr++;
+	if (*nptr == '-' || *nptr == '+')
+		nptr++;
+	while (ft_isdigit(*nptr))
+		nptr++;
+	if (*nptr != '\0')
+		return (false);
+	return (ft_islong(temp));
 }

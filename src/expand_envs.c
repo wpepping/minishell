@@ -6,11 +6,11 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:53:56 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/12 16:10:13 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 16:19:34 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 static size_t	count_to_next_env(char *start);
 static char		*add_until_env(char *start, char *expanded_str);

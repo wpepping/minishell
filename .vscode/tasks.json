@@ -10,7 +10,7 @@
                 "-Werror",
                 "-g",
                 "*.c",
-                "libft/*.c",
+                "../libft/*.c",
                 "-lreadline",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"

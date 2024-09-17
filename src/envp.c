@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:01:47 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 16:01:49 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/17 16:20:18 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 char	**envp_create(char **envp)
 {
@@ -27,14 +27,11 @@ char	**envp_create(char **envp)
 	while (envp[i])
 	{
 		result[i] = ft_strdup(envp[i]);
-<<<<<<< HEAD
 		if (result[i] == NULL)
 		{
 			free_array((void *) result);
 			return (NULL);
 		}
-=======
->>>>>>> da4fef477134ec401d81fcdad6c7e0420de309b6
 		i++;
 	}
 	result[i] = NULL;

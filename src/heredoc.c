@@ -6,11 +6,11 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:12:04 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/17 14:35:27 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 16:19:34 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 static int	process_line(char *line, char *delimiter, t_data data, int fd);
 static int	read_heredoc(char *filename, char *delimiter, t_data data);

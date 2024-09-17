@@ -6,11 +6,11 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:07:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 15:03:56 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 18:19:59 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 static void	process_tokens(t_list *tokens, t_data *data);
 static int	parse_command(t_list *tokens, t_data *data);
@@ -29,10 +29,10 @@ int	parse(t_data *data, char *cmd)
 		if ((tokens) && (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
 				|| ((t_token *)(tokens)->content)->type == PIPE))
 		{
-			ft_puterr(NULL, "syntax error near unexpected token '|'", NULL);
+			ft_puterr(NULL, "syntax error near unexpected token `|'", NULL);
 			return_value = 2;
 		}
-		else
+		else if (!return_value)
 		{
 			process_tokens(tokens, data);
 			combine_inword(&tokens);
@@ -63,7 +63,7 @@ static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
 			|| token->type == APPEND || token->type == HEREDOC)
 		{
 			if (!is_valid_filename((*tokens)->next))
-				return (1);
+				return (2);
 			*tokens = handle_redirects(*tokens, node, data);
 			if (node->heredoc_fail == true)
 				return (130);
@@ -107,8 +107,12 @@ static int	parse_command(t_list *tokens, t_data *data)
 		if (tokens == NULL || ((t_token *)tokens->content)->type != PIPE)
 			node->is_last = true;
 		ft_safelst_add_back(node, &data->node_list);
-		if (tokens)
-			parse_pipe(&tokens, data);
+		if (tokens && return_value == 0)
+		{
+			return_value = parse_pipe(&tokens, data);
+			if (return_value)
+				return (return_value);
+		}
 	}
 	return (0);
 }

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 19:14:03 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/11 17:23:00 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/17 17:28:16 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 char	*ft_strjoin2(char *s1, char const *s2)
 {
@@ -65,24 +65,31 @@ bool	isdir(char *dname)
 	return (true);
 }
 
-int	ft_isint(char *str)
+bool	ft_islong(char *str)
 {
-	long	l;
-	char	*p;
+	unsigned long	l;
+	char			*p;
+	bool			negative;
 
-	p = str;
+	while (*str == ' ' || *str == '\f' || *str == '\n'
+		|| *str == '\r' || *str == '\t' || *str == '\v')
+		str++;
+	if (*str == '-')
+		negative = true;
 	if (*str == '-' || *str == '+')
 		str++;
-	if (*str == '\0' || ft_strlen(str) > 10)
+	p = str;
+	if (*str == '\0' || ft_strlen(str) > 19)
 		return (0);
 	while (*str)
 	{
 		if (!ft_isdigit(*str))
-			return (0);
+			return (false);
 		str++;
 	}
-	l = ft_atol(p);
-	if (l > 2147483647 || l < -2147483648)
-		return (0);
-	return (1);
+	l = ft_atoul(p);
+	if ((!negative && l > (unsigned long)LLONG_MAX)
+		|| (negative && l > (unsigned long)LLONG_MAX + 1UL))
+		return (false);
+	return (true);
 }

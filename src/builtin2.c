@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtin2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:40:27 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/12 20:16:59 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/17 17:30:45 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 int	ft_unset(t_data *data, t_exec_node *node)
 {
@@ -58,22 +58,23 @@ int	ft_exit(t_data *data, t_exec_node *node)
 	int	val;
 
 	exit_code = 0;
+	ft_putendl_fd("exit", STDOUT_FILENO);
 	if (node->parse->argv[1])
 	{
-		val = ft_atoi(node->parse->argv[1]);
+		val = ft_atol(node->parse->argv[1]);
 		exit_code = val % 256;
 		if (exit_code < 0)
 			exit_code += 256;
-		if (val == 0)
+		if (node->parse->argv[2])
+		{
+			ft_puterr(ERR_EXIT_TOO_MANY_ARG, NULL, NULL);
+			exit_code = 1;
+		}
+		else if (!is_valid_exit_code(node->parse->argv[1]))
 		{
 			ft_puterr("exit: ", node->parse->argv[1],
 				": numeric argument required");
 			exit_code = 2;
-		}
-		else if (node->parse->argv[2])
-		{
-			ft_puterr(ERR_EXIT_TOO_MANY_ARG, NULL, NULL);
-			exit_code = 1;
 		}
 	}
 	data->exit = 1;

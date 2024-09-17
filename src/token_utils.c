@@ -6,11 +6,11 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:15:12 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/17 14:18:51 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 16:19:34 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 static void	delete_leading_token(t_list **tokens, t_list **current);
 static void	free_token(void *content);

@@ -6,11 +6,11 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:40:54 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/17 14:35:02 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 17:57:23 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 int	get_builtin_index(char *token)
 {

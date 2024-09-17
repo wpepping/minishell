@@ -6,11 +6,11 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 18:35:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 13:59:50 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 17:51:05 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 void	default_sigint_handler(int signum)
 {
@@ -43,7 +43,7 @@ void	init_signal_handlers(t_sigaction *sa_int, t_sigaction *sa_quit)
 	sigaction(SIGINT, sa_int, NULL);
 	sigemptyset(&sa_quit->sa_mask);
 	sigaddset(&sa_quit->sa_mask, SIGQUIT);
-	sa_quit->sa_flags = 0;
+	sa_quit->sa_flags = SA_RESTART;
 	sa_quit->sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, sa_quit, NULL);
 }

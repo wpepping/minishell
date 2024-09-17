@@ -6,11 +6,11 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:16:56 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/12 17:25:47 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 17:53:24 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 static int	handle_quotes(char **cmd, t_list **token_list);
 static int	handle_other_tokens(char *cmd, t_list **token_list);
@@ -119,7 +119,7 @@ static int	handle_quotes(char **cmd, t_list **token_list)
 	}
 	else if (ft_strncmp(*cmd, "||", 2) == 0)
 	{
-		ft_puterr(NULL, "syntax error near unexpected token '|'", NULL);
+		ft_puterr(NULL, "syntax error near unexpected token `|'", NULL);
 		return (-1);
 	}
 	((t_token *)ft_lstlast(*token_list)->content)->inword = true;

@@ -6,14 +6,14 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 14:46:41 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 17:07:29 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "libft/libft.h"
+# include "../libft/libft.h"
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
@@ -27,6 +27,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <limits.h>
 
 # define ERR_COMMAND_NOT_FOUND "command not found"
 # define ERR_OUT_OF_MEMORY "minishell: out of memory error"
@@ -73,8 +74,6 @@ typedef struct s_parse_node
 	bool					heredoc_fail;
 	char					*exec;
 	char					**argv;
-	// t_list					*output_dest;
-	// t_list					*input_src;
 	t_list					*redirect;
 }							t_parse_node;
 
@@ -201,7 +200,7 @@ char						*ft_strjoin2(char *s1, char const *s2);
 int							arrnstr(char **haystack, char *needle, int cmplen);
 t_parse_node				*create_parse_node(void);
 bool						isdir(char *dname);
-int							ft_isint(char *str);
+bool						ft_islong(char *str);
 char						**get_path(t_data *data);
 char						*find_full_path(char *cmd, char *path[]);
 void						malloc_protection(void *ptr);
@@ -209,6 +208,7 @@ void						ft_safelst_add_back(void *content, t_list **list);
 char						*ft_strchr2(char *str, char c);
 int							ft_envncmp(const char *s1, const char *s2,
 								size_t n);
+bool						is_valid_exit_code(char *nptr);
 
 // Clean up
 void						cleanup(t_data *data);
