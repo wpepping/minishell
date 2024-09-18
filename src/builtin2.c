@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:40:27 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 17:30:45 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/18 19:39:36 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,18 @@
 int	ft_unset(t_data *data, t_exec_node *node)
 {
 	char	**temp;
-	int		return_value;
 
-	return_value = 1;
 	temp = envp_remove(data->envp, node->parse->argv + 1);
-	if (temp != NULL)
+	if (temp == NULL)
 	{
-		free(data->envp);
-		data->envp = temp;
-		return_value = 0;
-	}
-	else
 		ft_putendl_fd(ERR_OUT_OF_MEMORY, STDERR_FILENO);
-	return (return_value);
+		return (1);
+	}
+	free(data->envp);
+	data->envp = temp;
+	return (0);
 }
+
 
 int	ft_env(t_data *data, t_exec_node *node)
 {
@@ -68,7 +66,7 @@ int	ft_exit(t_data *data, t_exec_node *node)
 		if (node->parse->argv[2])
 		{
 			ft_puterr(ERR_EXIT_TOO_MANY_ARG, NULL, NULL);
-			exit_code = 1;
+			return (1);
 		}
 		else if (!is_valid_exit_code(node->parse->argv[1]))
 		{

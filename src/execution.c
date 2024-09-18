@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 15:27:58 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 16:19:34 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/18 20:00:23 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ static int	run_one(t_data *data, t_list *parse_nodes)
 	if (!check_fds(data, enode.parse->redirect, &enode))
 	{
 		output_errors(&data->error_list);
+		cleanup_run_one(&enode);
 		return (1);
 	}
 	get_fds(data, &enode, enode.pipes);
