@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   preprocessing_checks.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:42:40 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 17:38:54 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/18 20:28:02 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ bool	check_cmd(t_data *data, t_exec_node *node)
 {
 	char	**path;
 
+	node->error_code = 0;
 	if (!node->parse->argv[0] || !node->parse->argv[0][0])
 		return (err_handl(NULL, NULL, data));
 	path = get_path(data);
