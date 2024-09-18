@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 15:03:29 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 17:07:29 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 19:41:40 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 # define ERR_IS_DIR "Is a directory"
 # define ERR_CANNOT_EXEC "cannot execute binary file: Exec format error"
 # define ERR_EXIT_TOO_MANY_ARG "minishell: exit: too many arguments"
+# define ERR_NUMERIC_ARG ": numeric argument required"
 # define PROMPT_END "$ "
 # define DECLARE_X "declare -x "
 

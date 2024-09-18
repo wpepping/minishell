@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:40:27 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 17:30:45 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/17 19:42:11 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ int	ft_exit(t_data *data, t_exec_node *node)
 	int	val;
 
 	exit_code = 0;
-	ft_putendl_fd("exit", STDOUT_FILENO);
+	if (node->nofork)
+		ft_putendl_fd("exit", STDOUT_FILENO);
 	if (node->parse->argv[1])
 	{
 		val = ft_atol(node->parse->argv[1]);
@@ -72,8 +73,7 @@ int	ft_exit(t_data *data, t_exec_node *node)
 		}
 		else if (!is_valid_exit_code(node->parse->argv[1]))
 		{
-			ft_puterr("exit: ", node->parse->argv[1],
-				": numeric argument required");
+			ft_puterr("exit: ", node->parse->argv[1], ERR_NUMERIC_ARG);
 			exit_code = 2;
 		}
 	}
