@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/24 18:40:27 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/18 19:39:36 by wpepping         ###   ########.fr       */
+/*   Created: 2024/09/18 20:17:39 by wpepping          #+#    #+#             */
+/*   Updated: 2024/09/18 20:17:42 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ int	ft_exit(t_data *data, t_exec_node *node)
 	int	val;
 
 	exit_code = 0;
-	ft_putendl_fd("exit", STDOUT_FILENO);
+	if (node->nofork)
+		ft_putendl_fd("exit", STDOUT_FILENO);
 	if (node->parse->argv[1])
 	{
 		val = ft_atol(node->parse->argv[1]);
@@ -70,8 +71,7 @@ int	ft_exit(t_data *data, t_exec_node *node)
 		}
 		else if (!is_valid_exit_code(node->parse->argv[1]))
 		{
-			ft_puterr("exit: ", node->parse->argv[1],
-				": numeric argument required");
+			ft_puterr("exit: ", node->parse->argv[1], ERR_NUMERIC_ARG);
 			exit_code = 2;
 		}
 	}
