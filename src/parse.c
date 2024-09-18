@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:07:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/18 15:47:50 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/18 19:43:08 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@ int	parse(t_data *data, char *cmd)
 	t_list	*tokens;
 	int		return_value;
 
-	return_value = tokenize(cmd, &tokens);
-	if (!return_value)
+	return_value = 0;
+	tokenize(cmd, &tokens);
+	if (tokens)
 	{
 		if ((tokens) && (((t_token *)ft_lstlast(tokens)->content)->type == PIPE
 				|| ((t_token *)(tokens)->content)->type == PIPE))
@@ -80,11 +81,11 @@ static int	parse_pipe(t_list **tokens, t_data *data)
 	t_token	*token;
 	
 	token = (t_token *)(*tokens)->content;
-	// if(((t_token*)(*tokens)->next->content)->type == PIPE)
-	// {
-	// 	ft_puterr(NULL, "syntax error near unexpected token `|'", NULL);
-	// 	return (2);
-	// }
+	if(((t_token*)(*tokens)->next->content)->type == PIPE)
+	{
+		ft_puterr(NULL, "syntax error near unexpected token `|'", NULL);
+		return (2);
+	}
 	if (token->type == PIPE)
 	{
 		*tokens = (*tokens)->next;

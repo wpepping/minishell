@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:12:04 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/17 18:55:59 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/18 20:14:21 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,20 @@ int	handle_heredoc(char *delimiter, t_data data, t_token *token)
 static int	process_line(char *line, char *delimiter, t_data data, int fd)
 {
 	t_token	*token;
+	static int line_count;
+	char *tmp;
+	
 
 	if (!line || (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
 			&& line[ft_strlen(delimiter)] == '\0'))
 	{
+		if(!line)
+		{
+			tmp = ft_itoa(line_count);
+			ft_puterr("warning: here-document at line " , ft_itoa(tmp), " delimited by end-of-file");
+			ft_puterr("(wanted `", delimiter, "')");
+			free(tmp);
+		}
 		free(line);
 		return (0);
 	}
@@ -50,6 +60,7 @@ static int	process_line(char *line, char *delimiter, t_data data, int fd)
 		expand_env(token, ft_strchr(line, '$'), data);
 	write(fd, token->value, ft_strlen(token->value));
 	write(fd, "\n", 1);
+	line_count++;
 	free(token->value);
 	free(token);
 	return (1);

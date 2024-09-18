@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:15:12 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/17 16:19:34 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/18 19:34:21 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,7 @@ void	combine_inword(t_list **tokens)
 	{
 		token = (t_token *)current->content;
 		next_token = (t_token *)current->next->content;
-		if ((token->inword && next_token->type == WORD)
-			|| next_token->value[0] == '\0')
+		if ((token->inword && next_token->type == WORD))
 		{
 			token->inword = next_token->inword;
 			token->value = ft_strjoin2(token->value, next_token->value);
