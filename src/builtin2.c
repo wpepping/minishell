@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 20:17:39 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/18 20:17:42 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:24:58 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	ft_unset(t_data *data, t_exec_node *node)
 	data->envp = temp;
 	return (0);
 }
-
 
 int	ft_env(t_data *data, t_exec_node *node)
 {
