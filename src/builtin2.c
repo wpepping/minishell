@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 20:17:39 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/20 16:24:58 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:36:24 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	ft_exit(t_data *data, t_exec_node *node)
 		if (node->parse->argv[2])
 		{
 			ft_puterr(ERR_EXIT_TOO_MANY_ARG, NULL, NULL);
-			return (1);
+			exit_code = 1;
 		}
 		else if (!is_valid_exit_code(node->parse->argv[1]))
 		{
