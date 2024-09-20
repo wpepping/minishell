@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:12:04 by phartman          #+#    #+#             */
-/*   Updated: 2024/09/18 20:14:21 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/20 15:44:09 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,6 @@ static int	process_line(char *line, char *delimiter, t_data data, int fd)
 	if (!line || (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
 			&& line[ft_strlen(delimiter)] == '\0'))
 	{
-		if(!line)
-		{
-			tmp = ft_itoa(line_count);
-			ft_puterr("warning: here-document at line " , ft_itoa(tmp), " delimited by end-of-file");
-			ft_puterr("(wanted `", delimiter, "')");
-			free(tmp);
-		}
 		free(line);
 		return (0);
 	}
