@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:07:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/20 16:09:24 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:12:29 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,11 @@ static int	parse_pipe(t_list **tokens, t_data *data)
 	t_token	*token;
 	
 	token = (t_token *)(*tokens)->content;
-	// if(((t_token*)(*tokens)->next->content)->type == PIPE)
-	// {
-	// 	ft_puterr(NULL, "syntax error near unexpected token `|'", NULL);
-	// 	return (2);
-	// }
+	if(((t_token*)(*tokens)->next->content)->type == PIPE)
+	{
+		ft_puterr(NULL, "syntax error near unexpected token `|'", NULL);
+		return (2);
+	}
 	if (token->type == PIPE)
 	{
 		*tokens = (*tokens)->next;
