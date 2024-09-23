@@ -6,7 +6,7 @@
 /*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:07:24 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/20 16:12:29 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/20 16:35:49 by phartman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int	parse(t_data *data, char *cmd)
 	}
 	if (tokens)
 		clear_tokens_list(&tokens);
-	data->last_exit_code = return_value;
+	if (return_value != 1)
+		data->last_exit_code = return_value;
 	return (return_value);
 }
 
@@ -78,9 +79,9 @@ static int	parse_args_and_redirects(t_list **tokens, t_parse_node *node,
 static int	parse_pipe(t_list **tokens, t_data *data)
 {
 	t_token	*token;
-	
+
 	token = (t_token *)(*tokens)->content;
-	if(((t_token*)(*tokens)->next->content)->type == PIPE)
+	if (((t_token *)(*tokens)->next->content)->type == PIPE)
 	{
 		ft_puterr(NULL, "syntax error near unexpected token `|'", NULL);
 		return (2);
