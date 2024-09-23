@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phartman <phartman@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 17:23:32 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/17 16:19:34 by phartman         ###   ########.fr       */
+/*   Updated: 2024/09/23 16:27:11 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	ft_cd(t_data *data, t_exec_node *node)
 	int		return_value;
 
 	return_value = 1;
-	if (node->parse->argv[2])
+	if (node->parse->argv[1] && node->parse->argv[2])
 		ft_putendl_fd("minishell: cd: too many arguments", STDERR_FILENO);
 	else if (node->parse->argv[1] && node->parse->argv[1][0] == '-')
 		invalid_option("cd", node->parse->argv[1]);
