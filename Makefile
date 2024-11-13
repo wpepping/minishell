@@ -1,6 +1,6 @@
 NAME := minishell
 CC := cc
-CFLAGS := -Wall -Wextra -Werror
+CFLAGS := -Wall -Wextra -Werror -g
 LIBS = -Llibft -lreadline -lft
 SRCDIR = src
 OBJDIR = objs

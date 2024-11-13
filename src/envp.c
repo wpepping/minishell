@@ -6,7 +6,7 @@
 /*   By: wpepping <wpepping@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 16:01:47 by wpepping          #+#    #+#             */
-/*   Updated: 2024/09/18 19:37:36 by wpepping         ###   ########.fr       */
+/*   Updated: 2024/09/23 16:28:29 by wpepping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,9 @@ int	envp_set(char ***envp, char *value)
 	while (value[cmplen] != '=' && value[cmplen] != '\0')
 		cmplen++;
 	cmplen++;
-	i = -1;
-	while ((*envp)[++i])
-		if (ft_envncmp((*envp)[i], value, cmplen) == 0)
+	i = 0;
+	while ((*envp)[i])
+		if (ft_envncmp((*envp)[i++], value, cmplen) == 0)
 			break ;
 	if ((*envp)[i] && ft_strchr(value, '='))
 	{
